@@ -1,0 +1,38 @@
+/*--------------------------------------------
+  inertia box
+--------------------------------------------*/
+
+/*--------------------------------------------
+  content main
+--------------------------------------------*/
+.l-container {
+  //overflow: hidden;
+}
+.l-content {
+  &.-under{
+  }
+  &.-bdb{
+    padding-bottom: 10rem;
+    border-bottom: 1px solid #ddd;
+  }
+  @include mq(sm) {
+    &.-under{
+    }
+  }
+}
+.l-main {
+  width: 80%;
+  @include mq(md) {
+    width: 75%;
+  }
+  @include mq(sm) {
+    width: 100%;
+  }
+}
+
+.c-section {
+  padding: 6.25em 0;
+  @include mq(sm) {
+    padding: 4.25em 0;
+  }
+}

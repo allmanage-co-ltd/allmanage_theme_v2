@@ -1,0 +1,15 @@
+parameters:
+    level: 8
+    paths:
+        - app
+    excludePaths:
+        - vendor
+        - node_modules
+    ignoreErrors:
+        - '#Function get_field not found#'
+        - '#Function the_field not found#'
+        - '#Function get_fields not found#'
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    wordpress:
+        # ACFスタブ追加

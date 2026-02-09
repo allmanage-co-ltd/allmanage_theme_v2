@@ -1,0 +1,76 @@
+html {
+  /* ログイン画面のロゴ・サイズ */
+  --login-logo-img: url('./../img/logo.png');
+  --login-logo-width: 200px;
+  --login-logo-height: 80px;
+
+  /* メニューバーの背景色 */
+  --menubar-bg-main: #1d2327;
+  /* サブメニュー内の背景色 */
+  --memubar-bg-inner: #2c3338;
+
+  /* 現在選択中のメニュー */
+  --current-menu-bg: #a57a44;
+  /* ホバー時のメニュー */
+  --hover-menu-bg: #a57a44;
+
+  /* 保存ボタンなど */
+  --main-btn-color: #a57a44;
+}
+
+/* ログイン画面のロゴを変更 */
+.login h1 a {
+  background-image: var(--login-logo-img) !important;
+  width: var(--login-logo-width);
+  height: var(--login-logo-height);
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* 管理バーの色を変更 */
+#wpadminbar,
+#adminmenuback,
+#adminmenuwrap,
+#adminmenu {
+  background: var(--menubar-bg-main);
+}
+
+/* サブメニュー */
+#adminmenu .wp-submenu {
+  background: var(--memubar-bg-inner);
+}
+
+/* メニューホバー時 */
+#adminmenu .wp-submenu a:focus,
+#adminmenu .wp-submenu a:hover,
+#adminmenu a:hover,
+#adminmenu li.menu-top>a:focus,
+#adminmenu li.menu-top:hover,
+#adminmenu li.opensub>a.menu-top,
+#adminmenu li>a.menu-top:focus,
+#adminmenu li a:focus div.wp-menu-image:before,
+#adminmenu li.opensub div.wp-menu-image:before,
+#adminmenu li:hover div.wp-menu-image:before {
+  color: var(--hover-menu-bg);
+  /* font-weight: 500; */
+}
+
+/* 現在のメニュー */
+#adminmenu .wp-has-current-submenu a.wp-has-current-submenu,
+#adminmenu .wp-menu-arrow,
+#adminmenu .wp-has-current-submenu .wp-submenu .wp-submenu-head {
+  background-color: var(--current-menu-bg) !important;
+  color: #fff !important;
+}
+
+/* メニューを閉じるボタン */
+#collapse-button:hover {
+  color: var(--main-color) !important;
+}
+
+/* メインボタン */
+.wp-core-ui .button-primary {
+  background: var(--main-btn-color) !important;
+  border-color: var(--main-btn-color) !important;
+}

@@ -1,0 +1,1066 @@
+/*--------------------------------------------
+  media query
+--------------------------------------------*/
+@mixin mq($media: sm) {
+  @media #{map-get($media_list, $media)} {
+    @content;
+  }
+}
+
+/*--------------------------------------------
+  transition
+--------------------------------------------*/
+@mixin transition($prop: all, $time: 0.4, $delay: 0, $media: pc) {
+  @if $media == pc {
+    @include mq(sm-) {
+      transition: $prop $time + s $delay + s;
+    }
+  } @else {
+    transition: $prop $time + s $delay + s;
+  }
+}
+
+/*--------------------------------------------
+  hover image
+--------------------------------------------*/
+@mixin hover_img($scale: 1.1) {
+  .c-ofi {
+    overflow: hidden;
+
+    &__img {
+      backface-visibility: hidden;
+      @include transition();
+    }
+  }
+
+  &:hover {
+    .c-ofi {
+      &__img {
+        transform: scale($scale);
+      }
+    }
+  }
+}
+
+/*--------------------------------------------
+  hover opacity
+--------------------------------------------*/
+@mixin hover_opa($opa: $opacity) {
+  &:hover {
+    opacity: $opa;
+  }
+}
+
+/*--------------------------------------------
+  slick slider dot nav
+--------------------------------------------*/
+@mixin sld_dot() {
+  > .slick-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > li {
+      & + li {
+        margin-left: 0.4em;
+      }
+
+      > button {
+        position: relative;
+        display: block;
+        width: 2rem;
+        height: 2rem;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        font-size: 0;
+        cursor: pointer;
+
+        &::before {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          width: 1rem;
+          height: 1rem;
+          background-color: $gray;
+          border-radius: 50%;
+          transition: background-color 0.4s;
+        }
+
+        &:hover {
+          &::before {
+            background-color: $sub;
+          }
+        }
+      }
+
+      &.slick-active {
+        > button {
+          pointer-events: none;
+
+          &::before {
+            background-color: $main;
+          }
+        }
+      }
+    }
+  }
+}
+
+/*--------------------------------------------
+  icon
+--------------------------------------------*/
+@mixin icon($type: "window_bold_01") {
+  font-family: "icomoon" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @if $type == "user-fill_14" {
+    content: "\e900";
+  } @else if $type == "user-fill_01" {
+    content: "\e901";
+  } @else if $type == "user-fill_06" {
+    content: "\e902";
+  } @else if $type == "user-bold_09" {
+    content: "\e903";
+  } @else if $type == "user-fill_10" {
+    content: "\e904";
+  } @else if $type == "user-bold_16" {
+    content: "\e905";
+  } @else if $type == "user-bold_03" {
+    content: "\e906";
+  } @else if $type == "user-bold_11" {
+    content: "\e907";
+  } @else if $type == "user-fill_04" {
+    content: "\e908";
+  } @else if $type == "user-bold_01" {
+    content: "\e909";
+  } @else if $type == "user-fill_07" {
+    content: "\e90a";
+  } @else if $type == "user-bold_08" {
+    content: "\e90b";
+  } @else if $type == "user-bold_14" {
+    content: "\e90c";
+  } @else if $type == "user-fill_03" {
+    content: "\e90d";
+  } @else if $type == "user-fill_02" {
+    content: "\e90e";
+  } @else if $type == "user-fill_11" {
+    content: "\e90f";
+  } @else if $type == "user-bold_04" {
+    content: "\e910";
+  } @else if $type == "user-bold_13" {
+    content: "\e911";
+  } @else if $type == "user-bold_06" {
+    content: "\e912";
+  } @else if $type == "user-bold_12" {
+    content: "\e913";
+  } @else if $type == "user-fill_05" {
+    content: "\e914";
+  } @else if $type == "user-bold_10" {
+    content: "\e915";
+  } @else if $type == "user-fill_09" {
+    content: "\e916";
+  } @else if $type == "user-fill_08" {
+    content: "\e917";
+  } @else if $type == "user-fill_16" {
+    content: "\e918";
+  } @else if $type == "user-bold_17" {
+    content: "\e919";
+  } @else if $type == "user-fill_13" {
+    content: "\e91a";
+  } @else if $type == "user-bold_07" {
+    content: "\e91b";
+  } @else if $type == "user-male-thin_01" {
+    content: "\e91c";
+  } @else if $type == "user-bold_05" {
+    content: "\e91d";
+  } @else if $type == "user-fill_12" {
+    content: "\e91e";
+  } @else if $type == "user-bold_02" {
+    content: "\e91f";
+  } @else if $type == "user-fill_15" {
+    content: "\e920";
+  } @else if $type == "user-bold_15" {
+    content: "\e921";
+  } @else if $type == "user-circle-thin_01" {
+    content: "\e922";
+  } @else if $type == "facebook-bold_01" {
+    content: "\e923";
+  } @else if $type == "facebook-like-bold_01" {
+    content: "\e924";
+  } @else if $type == "facebook-messenger-bold_01" {
+    content: "\e925";
+  } @else if $type == "line-fill_04" {
+    content: "\e926";
+  } @else if $type == "line-fill_02" {
+    content: "\e927";
+  } @else if $type == "line-fill_03" {
+    content: "\e928";
+  } @else if $type == "facebook-fill_06" {
+    content: "\e929";
+  } @else if $type == "facebook-fill_05" {
+    content: "\e92a";
+  } @else if $type == "facebook-fill_07" {
+    content: "\e92b";
+  } @else if $type == "facebook-fill_04" {
+    content: "\e92c";
+  } @else if $type == "facebook-like-fill_03" {
+    content: "\e92d";
+  } @else if $type == "facebook-messenger-fill_02" {
+    content: "\e92e";
+  } @else if $type == "facebook-messenger-fill_03" {
+    content: "\e92f";
+  } @else if $type == "facebook-like-fill_02" {
+    content: "\e930";
+  } @else if $type == "facebook-messenger-fill_01" {
+    content: "\e931";
+  } @else if $type == "facebook-like-fill_01" {
+    content: "\e932";
+  } @else if $type == "square-bold_01" {
+    content: "\e933";
+  } @else if $type == "checkbox-bold_05" {
+    content: "\e934";
+  } @else if $type == "checkbox-bold_10" {
+    content: "\e935";
+  } @else if $type == "checkbox-bold_09" {
+    content: "\e936";
+  } @else if $type == "square-bold_02" {
+    content: "\e937";
+  } @else if $type == "square-bold_03" {
+    content: "\e938";
+  } @else if $type == "square-bold_04" {
+    content: "\e939";
+  } @else if $type == "checkbox-bold_06" {
+    content: "\e93a";
+  } @else if $type == "square-fill_01" {
+    content: "\e93b";
+  } @else if $type == "square-fill_03" {
+    content: "\e93c";
+  } @else if $type == "checkbox-bold_12" {
+    content: "\e93d";
+  } @else if $type == "square-fill_02" {
+    content: "\e93e";
+  } @else if $type == "checkbox-bold_19" {
+    content: "\e93f";
+  } @else if $type == "checkbox-checked-thin_02" {
+    content: "\e940";
+  } @else if $type == "checkbox-checked-extended-thin_01" {
+    content: "\e941";
+  } @else if $type == "check-mark-thin" {
+    content: "\e942";
+  } @else if $type == "check-mark-circle-thin_01" {
+    content: "\e943";
+  } @else if $type == "check-mark-bold_03" {
+    content: "\e944";
+  } @else if $type == "check-mark-bold_10" {
+    content: "\e945";
+  } @else if $type == "check-mark-bold_09" {
+    content: "\e946";
+  } @else if $type == "checkbox-bold_02" {
+    content: "\e947";
+  } @else if $type == "check-mark-bold_04" {
+    content: "\e948";
+  } @else if $type == "check-mark-bold_12" {
+    content: "\e949";
+  } @else if $type == "checkbox-bold_03" {
+    content: "\e94a";
+  } @else if $type == "checkbox-bold_15" {
+    content: "\e94b";
+  } @else if $type == "checkbox-bold_01" {
+    content: "\e94c";
+  } @else if $type == "checkbox-bold_07" {
+    content: "\e94d";
+  } @else if $type == "checkbox-bold_14" {
+    content: "\e94e";
+  } @else if $type == "checkbox-bold_13" {
+    content: "\e94f";
+  } @else if $type == "checkbox-bold_17" {
+    content: "\e950";
+  } @else if $type == "checkbox-bold_16" {
+    content: "\e951";
+  } @else if $type == "check-mark-bold_13" {
+    content: "\e952";
+  } @else if $type == "speech-bubble-bold35" {
+    content: "\e953";
+  } @else if $type == "checkbox-bold_04" {
+    content: "\e954";
+  } @else if $type == "checkbox-bold_11" {
+    content: "\e955";
+  } @else if $type == "checkbox-bold_18" {
+    content: "\e956";
+  } @else if $type == "checkbox-fill_05" {
+    content: "\e957";
+  } @else if $type == "checkbox-fill_06" {
+    content: "\e958";
+  } @else if $type == "speech-bubble-fill34" {
+    content: "\e959";
+  } @else if $type == "checkbox-fill_02" {
+    content: "\e95a";
+  } @else if $type == "checkbox-fill_03" {
+    content: "\e95b";
+  } @else if $type == "checkbox-fill_01" {
+    content: "\e95c";
+  } @else if $type == "check-mark-fill16" {
+    content: "\e95d";
+  } @else if $type == "check-mark-bold_11" {
+    content: "\e95e";
+  } @else if $type == "check-mark-bold_05" {
+    content: "\e95f";
+  } @else if $type == "check-mark-bold_02" {
+    content: "\e960";
+  } @else if $type == "check-mark-fill7" {
+    content: "\e961";
+  } @else if $type == "checkbox-fill_04" {
+    content: "\e962";
+  } @else if $type == "check-mark-bold_06" {
+    content: "\e963";
+  } @else if $type == "check-mark-bold_07" {
+    content: "\e964";
+  } @else if $type == "check-mark-bold_08" {
+    content: "\e965";
+  } @else if $type == "check-mark-fill_01" {
+    content: "\e966";
+  } @else if $type == "check-mark-fill6" {
+    content: "\e967";
+  } @else if $type == "check-mark-bold_01" {
+    content: "\e968";
+  } @else if $type == "checkbox-bold_08" {
+    content: "\e969";
+  } @else if $type == "cart-thin_01" {
+    content: "\e96a";
+  } @else if $type == "pin-fill_13" {
+    content: "\e96b";
+  } @else if $type == "pin-fill_16" {
+    content: "\e96c";
+  } @else if $type == "pin-fill_18" {
+    content: "\e96d";
+  } @else if $type == "pin-fill_14" {
+    content: "\e96e";
+  } @else if $type == "pin-fill_12" {
+    content: "\e96f";
+  } @else if $type == "pin-fill_17" {
+    content: "\e970";
+  } @else if $type == "pin-fill_19" {
+    content: "\e971";
+  } @else if $type == "pin-fill_07" {
+    content: "\e972";
+  } @else if $type == "pin-fill_08" {
+    content: "\e973";
+  } @else if $type == "pin-fill_20" {
+    content: "\e974";
+  } @else if $type == "pin-fill_15" {
+    content: "\e975";
+  } @else if $type == "pin-fill_11" {
+    content: "\e976";
+  } @else if $type == "pin-fill_09" {
+    content: "\e977";
+  } @else if $type == "pin-fill_06" {
+    content: "\e978";
+  } @else if $type == "pin-fill_02" {
+    content: "\e979";
+  } @else if $type == "pin-fill_01" {
+    content: "\e97a";
+  } @else if $type == "pin-bold_1" {
+    content: "\e97b";
+  } @else if $type == "pin-fill_05" {
+    content: "\e97c";
+  } @else if $type == "pin-bold_02" {
+    content: "\e97d";
+  } @else if $type == "pin-fill_04" {
+    content: "\e97e";
+  } @else if $type == "pin-fill_10" {
+    content: "\e97f";
+  } @else if $type == "pin-fill_03" {
+    content: "\e980";
+  } @else if $type == "pin-bold_01" {
+    content: "\e981";
+  } @else if $type == "pin-thin_01" {
+    content: "\e982";
+  } @else if $type == "map-bold_05" {
+    content: "\e983";
+  } @else if $type == "map-bold_04" {
+    content: "\e984";
+  } @else if $type == "map-bold_01" {
+    content: "\e985";
+  } @else if $type == "map-bold_06" {
+    content: "\e986";
+  } @else if $type == "map-bold_03" {
+    content: "\e987";
+  } @else if $type == "map-bold_02" {
+    content: "\e988";
+  } @else if $type == "map-thin_01" {
+    content: "\e989";
+  } @else if $type == "building-bold_04" {
+    content: "\e98a";
+  } @else if $type == "home-fill_01" {
+    content: "\e98b";
+  } @else if $type == "home-fill_03" {
+    content: "\e98c";
+  } @else if $type == "building-fill_05" {
+    content: "\e98d";
+  } @else if $type == "building-fill_06" {
+    content: "\e98e";
+  } @else if $type == "home-fill_04" {
+    content: "\e98f";
+  } @else if $type == "school-fill_01" {
+    content: "\e990";
+  } @else if $type == "home-fill_02" {
+    content: "\e991";
+  } @else if $type == "building-fill_03" {
+    content: "\e992";
+  } @else if $type == "building-fill_02" {
+    content: "\e993";
+  } @else if $type == "building-fill_04" {
+    content: "\e994";
+  } @else if $type == "building-fill_07" {
+    content: "\e995";
+  } @else if $type == "building-fill_01" {
+    content: "\e996";
+  } @else if $type == "home-fill_05" {
+    content: "\e997";
+  } @else if $type == "home-fill_07" {
+    content: "\e998";
+  } @else if $type == "home-fill_06" {
+    content: "\e999";
+  } @else if $type == "home-bold_01" {
+    content: "\e99a";
+  } @else if $type == "building-bold_05" {
+    content: "\e99b";
+  } @else if $type == "building-bold_07" {
+    content: "\e99c";
+  } @else if $type == "school-bold_01" {
+    content: "\e99d";
+  } @else if $type == "building-bold_02" {
+    content: "\e99e";
+  } @else if $type == "building-bold_06" {
+    content: "\e99f";
+  } @else if $type == "building-bold_01" {
+    content: "\e9a0";
+  } @else if $type == "building-bold_03" {
+    content: "\e9a1";
+  } @else if $type == "home-bold_02" {
+    content: "\e9a2";
+  } @else if $type == "home-thin_01" {
+    content: "\e9a3";
+  } @else if $type == "building-thin_01" {
+    content: "\e9a4";
+  } @else if $type == "star-bold_05" {
+    content: "\e9a5";
+  } @else if $type == "star-fill_03" {
+    content: "\e9a6";
+  } @else if $type == "star-fill_04" {
+    content: "\e9a7";
+  } @else if $type == "star-bold_02" {
+    content: "\e9a8";
+  } @else if $type == "star-fill_01" {
+    content: "\e9a9";
+  } @else if $type == "star-fill_02" {
+    content: "\e9aa";
+  } @else if $type == "star-bold_04" {
+    content: "\e9ab";
+  } @else if $type == "star-bold_03" {
+    content: "\e9ac";
+  } @else if $type == "star-bold_01" {
+    content: "\e9ad";
+  } @else if $type == "star-thin_01" {
+    content: "\e9ae";
+  } @else if $type == "heart-fill_05" {
+    content: "\e9af";
+  } @else if $type == "heart-fill_04" {
+    content: "\e9b0";
+  } @else if $type == "heart-fill_03" {
+    content: "\e9b1";
+  } @else if $type == "heart-fill_02" {
+    content: "\e9b2";
+  } @else if $type == "heart-fill_01" {
+    content: "\e9b3";
+  } @else if $type == "heart-bold_04" {
+    content: "\e9b4";
+  } @else if $type == "heart-bold_06" {
+    content: "\e9b5";
+  } @else if $type == "heart-bold_03" {
+    content: "\e9b6";
+  } @else if $type == "heart-bold_02" {
+    content: "\e9b7";
+  } @else if $type == "heart-bold_07" {
+    content: "\e9b8";
+  } @else if $type == "heart-bold_05" {
+    content: "\e9b9";
+  } @else if $type == "heart-bold_01" {
+    content: "\e9ba";
+  } @else if $type == "heart-thin_01" {
+    content: "\e9bb";
+  } @else if $type == "globe-fill_02" {
+    content: "\e9bc";
+  } @else if $type == "globe-fill_03" {
+    content: "\e9bd";
+  } @else if $type == "globe-bold_01" {
+    content: "\e9be";
+  } @else if $type == "globe-fill_01" {
+    content: "\e9bf";
+  } @else if $type == "globe-thin_01" {
+    content: "\e9c0";
+  } @else if $type == "calendar-bold_04" {
+    content: "\e9c1";
+  } @else if $type == "calendar-bold_03" {
+    content: "\e9c2";
+  } @else if $type == "calendar-bold_02" {
+    content: "\e9c3";
+  } @else if $type == "calendar-bold_01" {
+    content: "\e9c4";
+  } @else if $type == "calendar-thin_01" {
+    content: "\e9c5";
+  } @else if $type == "basket-fill_03" {
+    content: "\e9c6";
+  } @else if $type == "basket-fill_05" {
+    content: "\e9c7";
+  } @else if $type == "basket-fill_04" {
+    content: "\e9c8";
+  } @else if $type == "cart-fill_06" {
+    content: "\e9c9";
+  } @else if $type == "cart-fill_04" {
+    content: "\e9ca";
+  } @else if $type == "basket-fill_02" {
+    content: "\e9cb";
+  } @else if $type == "cart-fill_05" {
+    content: "\e9cc";
+  } @else if $type == "cart-fill_03" {
+    content: "\e9cd";
+  } @else if $type == "basket-fill_01" {
+    content: "\e9ce";
+  } @else if $type == "cart-fill_01" {
+    content: "\e9cf";
+  } @else if $type == "cart-fill_02" {
+    content: "\e9d0";
+  } @else if $type == "basket-bold_04" {
+    content: "\e9d1";
+  } @else if $type == "basket-bold_05" {
+    content: "\e9d2";
+  } @else if $type == "cart-bold_05" {
+    content: "\e9d3";
+  } @else if $type == "cart-bold_04" {
+    content: "\e9d4";
+  } @else if $type == "basket-bold_06" {
+    content: "\e9d5";
+  } @else if $type == "basket-bold_03" {
+    content: "\e9d6";
+  } @else if $type == "cart-bold_03" {
+    content: "\e9d7";
+  } @else if $type == "cart-bold_06" {
+    content: "\e9d8";
+  } @else if $type == "cart-bold_02" {
+    content: "\e9d9";
+  } @else if $type == "basket-bold_02" {
+    content: "\e9da";
+  } @else if $type == "basket-bold_01" {
+    content: "\e9db";
+  } @else if $type == "cart-bold_01" {
+    content: "\e9dc";
+  } @else if $type == "door-fill_01" {
+    content: "\e9dd";
+  } @else if $type == "door-fill_04" {
+    content: "\e9de";
+  } @else if $type == "door-fill_02" {
+    content: "\e9df";
+  } @else if $type == "door-fill_03" {
+    content: "\e9e0";
+  } @else if $type == "file-fill_14" {
+    content: "\e9e1";
+  } @else if $type == "script-fill_01" {
+    content: "\e9e2";
+  } @else if $type == "file-fill_13" {
+    content: "\e9e3";
+  } @else if $type == "ticket-fill_01" {
+    content: "\e9e4";
+  } @else if $type == "note-fill_01" {
+    content: "\e9e5";
+  } @else if $type == "file-fill_02" {
+    content: "\e9e6";
+  } @else if $type == "script-fill_02" {
+    content: "\e9e7";
+  } @else if $type == "file-fill_12" {
+    content: "\e9e8";
+  } @else if $type == "file-fill_09" {
+    content: "\e9e9";
+  } @else if $type == "file-fill_01" {
+    content: "\e9ea";
+  } @else if $type == "file-fill_07" {
+    content: "\e9eb";
+  } @else if $type == "file-fill_10" {
+    content: "\e9ec";
+  } @else if $type == "file-fill_08" {
+    content: "\e9ed";
+  } @else if $type == "file-fill_05" {
+    content: "\e9ee";
+  } @else if $type == "file-fill_04" {
+    content: "\e9ef";
+  } @else if $type == "file-fill_03" {
+    content: "\e9f0";
+  } @else if $type == "file-fill_06" {
+    content: "\e9f1";
+  } @else if $type == "file-fill_11" {
+    content: "\e9f2";
+  } @else if $type == "note-fill_02" {
+    content: "\e9f3";
+  } @else if $type == "help-fill_02" {
+    content: "\e9f4";
+  } @else if $type == "help-fill_01" {
+    content: "\e9f5";
+  } @else if $type == "script-bold_06" {
+    content: "\e9f6";
+  } @else if $type == "script-bold_07" {
+    content: "\e9f7";
+  } @else if $type == "script-bold_03" {
+    content: "\e9f8";
+  } @else if $type == "file-bold_14" {
+    content: "\e9f9";
+  } @else if $type == "script-bold_02" {
+    content: "\e9fa";
+  } @else if $type == "script-bold_05" {
+    content: "\e9fb";
+  } @else if $type == "note-bold_02" {
+    content: "\e9fc";
+  } @else if $type == "script-bold_04" {
+    content: "\e9fd";
+  } @else if $type == "script-bold_01" {
+    content: "\e9fe";
+  } @else if $type == "note-bold_10" {
+    content: "\e9ff";
+  } @else if $type == "file-bold_08" {
+    content: "\ea00";
+  } @else if $type == "note-bold_15" {
+    content: "\ea01";
+  } @else if $type == "file-bold_03" {
+    content: "\ea02";
+  } @else if $type == "note-bold_03" {
+    content: "\ea03";
+  } @else if $type == "note-bold_05" {
+    content: "\ea04";
+  } @else if $type == "file-bold_10" {
+    content: "\ea05";
+  } @else if $type == "note-bold_11" {
+    content: "\ea06";
+  } @else if $type == "ticket-bold_01" {
+    content: "\ea07";
+  } @else if $type == "note-bold_17" {
+    content: "\ea08";
+  } @else if $type == "file-bold_05" {
+    content: "\ea09";
+  } @else if $type == "note-bold_01" {
+    content: "\ea0a";
+  } @else if $type == "file-bold_04" {
+    content: "\ea0b";
+  } @else if $type == "note-bold_13" {
+    content: "\ea0c";
+  } @else if $type == "note-bold_20" {
+    content: "\ea0d";
+  } @else if $type == "file-bold_12" {
+    content: "\ea0e";
+  } @else if $type == "file-bold_09" {
+    content: "\ea0f";
+  } @else if $type == "note-bold_16" {
+    content: "\ea10";
+  } @else if $type == "note-bold_12" {
+    content: "\ea11";
+  } @else if $type == "file-bold_13" {
+    content: "\ea12";
+  } @else if $type == "note-bold_07" {
+    content: "\ea13";
+  } @else if $type == "file-bold_01" {
+    content: "\ea14";
+  } @else if $type == "file-bold_06" {
+    content: "\ea15";
+  } @else if $type == "note-bold_18" {
+    content: "\ea16";
+  } @else if $type == "note-bold_19" {
+    content: "\ea17";
+  } @else if $type == "note-bold_09" {
+    content: "\ea18";
+  } @else if $type == "file-bold_02" {
+    content: "\ea19";
+  } @else if $type == "file-bold_11" {
+    content: "\ea1a";
+  } @else if $type == "note-bold_08" {
+    content: "\ea1b";
+  } @else if $type == "note-bold_14" {
+    content: "\ea1c";
+  } @else if $type == "file-bold_07" {
+    content: "\ea1d";
+  } @else if $type == "note-bold_04" {
+    content: "\ea1e";
+  } @else if $type == "note-bold_06" {
+    content: "\ea1f";
+  } @else if $type == "help-bold_02" {
+    content: "\ea20";
+  } @else if $type == "help-bold_01" {
+    content: "\ea21";
+  } @else if $type == "file-thin_03" {
+    content: "\ea22";
+  } @else if $type == "file-thin_02" {
+    content: "\ea23";
+  } @else if $type == "help-thin_01" {
+    content: "\ea24";
+  } @else if $type == "file-thin_01" {
+    content: "\ea25";
+  } @else if $type == "folder-fill_04" {
+    content: "\ea26";
+  } @else if $type == "folder-fill_03" {
+    content: "\ea27";
+  } @else if $type == "folder-fill_05" {
+    content: "\ea28";
+  } @else if $type == "folder-fill_02" {
+    content: "\ea29";
+  } @else if $type == "folder-fill_01" {
+    content: "\ea2a";
+  } @else if $type == "folder-bold_03" {
+    content: "\ea2b";
+  } @else if $type == "folder-bold_02" {
+    content: "\ea2c";
+  } @else if $type == "folder-bold_01" {
+    content: "\ea2d";
+  } @else if $type == "folder-thin_02" {
+    content: "\ea2e";
+  } @else if $type == "folder-thin_01" {
+    content: "\ea2f";
+  } @else if $type == "magnifier-bold_02" {
+    content: "\ea30";
+  } @else if $type == "window_bold_01" {
+    content: "\ea31";
+  } @else if $type == "magnifier-bold_01" {
+    content: "\ea32";
+  } @else if $type == "magnifier-bold_06" {
+    content: "\ea33";
+  } @else if $type == "magnifier-bold_03" {
+    content: "\ea34";
+  } @else if $type == "magnifier-bold_04" {
+    content: "\ea35";
+  } @else if $type == "magnifier-bold_05" {
+    content: "\ea36";
+  } @else if $type == "magnifier-thin_03" {
+    content: "\ea37";
+  } @else if $type == "magnifier-thin_02" {
+    content: "\ea38";
+  } @else if $type == "magnifier-thin_01" {
+    content: "\ea39";
+  } @else if $type == "download-bold_02" {
+    content: "\ea3a";
+  } @else if $type == "download-bold_03" {
+    content: "\ea3b";
+  } @else if $type == "download-fill_07" {
+    content: "\ea3c";
+  } @else if $type == "download-bold_01" {
+    content: "\ea3d";
+  } @else if $type == "download-fill_03" {
+    content: "\ea3e";
+  } @else if $type == "download-thin_01" {
+    content: "\ea3f";
+  } @else if $type == "download-thin_02" {
+    content: "\ea40";
+  } @else if $type == "download-fill_06" {
+    content: "\ea41";
+  } @else if $type == "download-fill_08" {
+    content: "\ea42";
+  } @else if $type == "download-fill_05" {
+    content: "\ea43";
+  } @else if $type == "download-fill_04" {
+    content: "\ea44";
+  } @else if $type == "download-fill_02" {
+    content: "\ea45";
+  } @else if $type == "download-fill_01" {
+    content: "\ea46";
+  } @else if $type == "freedial-fill_01" {
+    content: "\ea47";
+  } @else if $type == "email-fill_08" {
+    content: "\ea48";
+  } @else if $type == "email-fill_05" {
+    content: "\ea49";
+  } @else if $type == "email-fill_07" {
+    content: "\ea4a";
+  } @else if $type == "email-fill_03" {
+    content: "\ea4b";
+  } @else if $type == "email-fill_04" {
+    content: "\ea4c";
+  } @else if $type == "email-fill_06" {
+    content: "\ea4d";
+  } @else if $type == "email-fill_02" {
+    content: "\ea4e";
+  } @else if $type == "email-fill_01" {
+    content: "\ea4f";
+  } @else if $type == "email-bold_04" {
+    content: "\ea50";
+  } @else if $type == "email-bold_03" {
+    content: "\ea51";
+  } @else if $type == "email-bold_02" {
+    content: "\ea52";
+  } @else if $type == "email-bold_01" {
+    content: "\ea53";
+  } @else if $type == "mail-thin_01" {
+    content: "\ea54";
+  } @else if $type == "smartphone-fill_01" {
+    content: "\ea55";
+  } @else if $type == "device-fill_01" {
+    content: "\ea56";
+  } @else if $type == "device-fill_02" {
+    content: "\ea57";
+  } @else if $type == "phone-fill_03" {
+    content: "\ea58";
+  } @else if $type == "smartphone-fill_02" {
+    content: "\ea59";
+  } @else if $type == "phone-fill_02" {
+    content: "\ea5a";
+  } @else if $type == "phone-fill_04" {
+    content: "\ea5b";
+  } @else if $type == "phone-bold_05" {
+    content: "\ea5c";
+  } @else if $type == "phone-fill_01" {
+    content: "\ea5d";
+  } @else if $type == "phone-bold_04" {
+    content: "\ea5e";
+  } @else if $type == "phone-bold_02" {
+    content: "\ea5f";
+  } @else if $type == "phone-bold_01" {
+    content: "\ea60";
+  } @else if $type == "smartphone-thin_01" {
+    content: "\ea61";
+  } @else if $type == "phone-bold_03" {
+    content: "\ea62";
+  } @else if $type == "line-fill_01" {
+    content: "\ea63";
+  } @else if $type == "facebook-fill_03" {
+    content: "\ea64";
+  } @else if $type == "facebook-fill_02" {
+    content: "\ea65";
+  } @else if $type == "facebook-fill_01" {
+    content: "\ea66";
+  } @else if $type == "instagram-fill_04" {
+    content: "\ea67";
+  } @else if $type == "twitter-fill_01" {
+    content: "\ea68";
+  } @else if $type == "youtube-fill_03" {
+    content: "\ea69";
+  } @else if $type == "youtube-fill_01" {
+    content: "\ea6a";
+  } @else if $type == "youtube-fill_02" {
+    content: "\ea6b";
+  } @else if $type == "arrow-fill_53" {
+    content: "\ea6c";
+  } @else if $type == "arrow-fill_52" {
+    content: "\ea6d";
+  } @else if $type == "arrow-fill_67" {
+    content: "\ea6e";
+  } @else if $type == "arrow-fill_66" {
+    content: "\ea6f";
+  } @else if $type == "arrow-fill_56" {
+    content: "\ea70";
+  } @else if $type == "arrow-fill_63" {
+    content: "\ea71";
+  } @else if $type == "arrow-fill_64" {
+    content: "\ea72";
+  } @else if $type == "arrow-fill_65" {
+    content: "\ea73";
+  } @else if $type == "arrow-fill_44" {
+    content: "\ea74";
+  } @else if $type == "arrow-bold_14" {
+    content: "\ea75";
+  } @else if $type == "arrow-fill_31" {
+    content: "\ea76";
+  } @else if $type == "arrow-fill_04" {
+    content: "\ea77";
+  } @else if $type == "arrow-bold_16" {
+    content: "\ea78";
+  } @else if $type == "arrow-fill_34" {
+    content: "\ea79";
+  } @else if $type == "arrow-fill_43" {
+    content: "\ea7a";
+  } @else if $type == "arrow-fill_57" {
+    content: "\ea7b";
+  } @else if $type == "arrow-fill_54" {
+    content: "\ea7c";
+  } @else if $type == "arrow-fill_59" {
+    content: "\ea7d";
+  } @else if $type == "arrow-fill_33" {
+    content: "\ea7e";
+  } @else if $type == "arrow-fill_51" {
+    content: "\ea7f";
+  } @else if $type == "arrow-fill_60" {
+    content: "\ea80";
+  } @else if $type == "arrow-fill_58" {
+    content: "\ea81";
+  } @else if $type == "arrow-fill_03" {
+    content: "\ea82";
+  } @else if $type == "arrow-fill_17" {
+    content: "\ea83";
+  } @else if $type == "arrow-fill_49" {
+    content: "\ea84";
+  } @else if $type == "arrow-fill_32" {
+    content: "\ea85";
+  } @else if $type == "arrow-fill_55" {
+    content: "\ea86";
+  } @else if $type == "arrow-fill_05" {
+    content: "\ea87";
+  } @else if $type == "arrow-fill_50" {
+    content: "\ea88";
+  } @else if $type == "arrow-fill_69" {
+    content: "\ea89";
+  } @else if $type == "arrow-fill_72" {
+    content: "\ea8a";
+  } @else if $type == "arrow-fill_71" {
+    content: "\ea8b";
+  } @else if $type == "arrow-fill_47" {
+    content: "\ea8c";
+  } @else if $type == "arrow-fill_09" {
+    content: "\ea8d";
+  } @else if $type == "arrow-fill_61" {
+    content: "\ea8e";
+  } @else if $type == "arrow-fill_30" {
+    content: "\ea8f";
+  } @else if $type == "arrow-fill_06" {
+    content: "\ea90";
+  } @else if $type == "arrow-bold_19" {
+    content: "\ea91";
+  } @else if $type == "arrow-fill_08" {
+    content: "\ea92";
+  } @else if $type == "arrow-fill_42" {
+    content: "\ea93";
+  } @else if $type == "arrow-fill_62" {
+    content: "\ea94";
+  } @else if $type == "arrow-fill_41" {
+    content: "\ea95";
+  } @else if $type == "arrow-fill_77" {
+    content: "\ea96";
+  } @else if $type == "arrow-fill_36" {
+    content: "\ea97";
+  } @else if $type == "arrow-fill_37" {
+    content: "\ea98";
+  } @else if $type == "arrow-fill_70" {
+    content: "\ea99";
+  } @else if $type == "arrow-fill_10" {
+    content: "\ea9a";
+  } @else if $type == "arrow-fill_16" {
+    content: "\ea9b";
+  } @else if $type == "arrow-bold_22" {
+    content: "\ea9c";
+  } @else if $type == "arrow-fill_11" {
+    content: "\ea9d";
+  } @else if $type == "arrow-fill_26" {
+    content: "\ea9e";
+  } @else if $type == "arrow-fill_29" {
+    content: "\ea9f";
+  } @else if $type == "arrow-fill_39" {
+    content: "\eaa0";
+  } @else if $type == "arrow-fill_18" {
+    content: "\eaa1";
+  } @else if $type == "arrow-fill_35" {
+    content: "\eaa2";
+  } @else if $type == "arrow-fill_27" {
+    content: "\eaa3";
+  } @else if $type == "arrow-fill_01" {
+    content: "\eaa4";
+  } @else if $type == "arrow-fill_02" {
+    content: "\eaa5";
+  } @else if $type == "arrow-fill_14" {
+    content: "\eaa6";
+  } @else if $type == "arrow-fill_48" {
+    content: "\eaa7";
+  } @else if $type == "arrow-fill_76" {
+    content: "\eaa8";
+  } @else if $type == "arrow-fill_73" {
+    content: "\eaa9";
+  } @else if $type == "arrow-fill_23" {
+    content: "\eaaa";
+  } @else if $type == "arrow-fill_40" {
+    content: "\eaab";
+  } @else if $type == "arrow-fill_13" {
+    content: "\eaac";
+  } @else if $type == "arrow-fill_46" {
+    content: "\eaad";
+  } @else if $type == "arrow-fill_75" {
+    content: "\eaae";
+  } @else if $type == "arrow-bold_20" {
+    content: "\eaaf";
+  } @else if $type == "arrow-fill_07" {
+    content: "\eab0";
+  } @else if $type == "arrow-bold_17" {
+    content: "\eab1";
+  } @else if $type == "arrow-fill_24" {
+    content: "\eab2";
+  } @else if $type == "arrow-fill_25" {
+    content: "\eab3";
+  } @else if $type == "arrow-fill_12" {
+    content: "\eab4";
+  } @else if $type == "arrow-fill_45" {
+    content: "\eab5";
+  } @else if $type == "arrow-fill_38" {
+    content: "\eab6";
+  } @else if $type == "arrow-fill_22" {
+    content: "\eab7";
+  } @else if $type == "arrow-fill_28" {
+    content: "\eab8";
+  } @else if $type == "arrow-fill_21" {
+    content: "\eab9";
+  } @else if $type == "arrow-fill_15" {
+    content: "\eaba";
+  } @else if $type == "arrow-fill_19" {
+    content: "\eabb";
+  } @else if $type == "arrow-fill_20" {
+    content: "\eabc";
+  } @else if $type == "arrow-bold_03" {
+    content: "\eabd";
+  } @else if $type == "arrow-bold_08" {
+    content: "\eabe";
+  } @else if $type == "arrow-bold_15" {
+    content: "\eabf";
+  } @else if $type == "arrow-bold_09" {
+    content: "\eac0";
+  } @else if $type == "arrow-bold_10" {
+    content: "\eac1";
+  } @else if $type == "arrow-bold_18" {
+    content: "\eac2";
+  } @else if $type == "arrow-bold_05" {
+    content: "\eac3";
+  } @else if $type == "arrow-bold_11" {
+    content: "\eac4";
+  } @else if $type == "arrow-bold_01" {
+    content: "\eac5";
+  } @else if $type == "arrow-bold_06" {
+    content: "\eac6";
+  } @else if $type == "arrow-bold_12" {
+    content: "\eac7";
+  } @else if $type == "arrow-fill_74" {
+    content: "\eac8";
+  } @else if $type == "arrow-bold_21" {
+    content: "\eac9";
+  } @else if $type == "arrow-bold_07" {
+    content: "\eaca";
+  } @else if $type == "arrow-bold_02" {
+    content: "\eacb";
+  } @else if $type == "arrow-bold_13" {
+    content: "\eacc";
+  } @else if $type == "arrow-bold_04" {
+    content: "\eacd";
+  } @else if $type == "arrow-fill_68" {
+    content: "\eace";
+  } @else if $type == "arrow-thin_05" {
+    content: "\eacf";
+  } @else if $type == "arrow-thin_03" {
+    content: "\ead0";
+  } @else if $type == "arrow-thin_01" {
+    content: "\ead1";
+  } @else if $type == "arrow-thin_02" {
+    content: "\ead2";
+  } @else if $type == "arrow-thin_04" {
+    content: "\ead3";
+  }
+}

@@ -1,0 +1,169 @@
+/*--------------------------------------------
+  display
+--------------------------------------------*/
+
+.u-none {
+  display: none;
+}
+.u-none_imp {
+  display: none !important;
+}
+
+.u-show {
+  display: block;
+}
+.u-show_imp {
+  display: block !important;
+}
+
+// visible & hidden
+@include mq(ss) {
+  .u-visible_xs:not(.u-visible_ss),
+  .u-visible_sm:not(.u-visible_ss),
+  .u-visible_md:not(.u-visible_ss),
+  .u-visible_lg:not(.u-visible_ss),
+  .u-visible_xl:not(.u-visible_ss),
+  .u-visible_xxl:not(.u-visible_ss),
+  .u-hidden_ss {
+    display: none !important;
+  }
+}
+@include mq(ss-xs) {
+  .u-visible_ss:not(.u-visible_xs),
+  .u-visible_sm:not(.u-visible_xs),
+  .u-visible_md:not(.u-visible_xs),
+  .u-visible_lg:not(.u-visible_xs),
+  .u-visible_xl:not(.u-visible_xs),
+  .u-visible_xxl:not(.u-visible_xs),
+  .u-hidden_xs {
+    display: none !important;
+  }
+}
+@include mq(xs-sm) {
+  .u-visible_ss:not(.u-visible_sm),
+  .u-visible_xs:not(.u-visible_sm),
+  .u-visible_md:not(.u-visible_sm),
+  .u-visible_lg:not(.u-visible_sm),
+  .u-visible_xl:not(.u-visible_sm),
+  .u-visible_xxl:not(.u-visible_sm),
+  .u-hidden_sm {
+    display: none !important;
+  }
+}
+@include mq(sm-md) {
+  .u-visible_ss:not(.u-visible_md),
+  .u-visible_xs:not(.u-visible_md),
+  .u-visible_sm:not(.u-visible_md),
+  .u-visible_lg:not(.u-visible_md),
+  .u-visible_xl:not(.u-visible_md),
+  .u-visible_xxl:not(.u-visible_md),
+  .u-hidden_md {
+    display: none !important;
+  }
+}
+@include mq(md-lg) {
+  .u-visible_ss:not(.u-visible_lg),
+  .u-visible_xs:not(.u-visible_lg),
+  .u-visible_sm:not(.u-visible_lg),
+  .u-visible_md:not(.u-visible_lg),
+  .u-visible_xl:not(.u-visible_lg),
+  .u-visible_xxl:not(.u-visible_lg),
+  .u-hidden_lg {
+    display: none !important;
+  }
+}
+@include mq(lg-xl) {
+  .u-visible_ss:not(.u-visible_xl),
+  .u-visible_xs:not(.u-visible_xl),
+  .u-visible_sm:not(.u-visible_xl),
+  .u-visible_md:not(.u-visible_xl),
+  .u-visible_lg:not(.u-visible_xl),
+  .u-visible_xxl:not(.u-visible_xl),
+  .u-hidden_xl {
+    display: none !important;
+  }
+}
+@include mq(xl-) {
+  .u-visible_ss:not(.u-visible_xxl),
+  .u-visible_xs:not(.u-visible_xxl),
+  .u-visible_sm:not(.u-visible_xxl),
+  .u-visible_md:not(.u-visible_xxl),
+  .u-visible_lg:not(.u-visible_xxl),
+  .u-visible_xl:not(.u-visible_xxl),
+  .u-hidden_xxl {
+    display: none !important;
+  }
+}
+
+// device
+@include mq(xs-) {
+  .u-visible_sp {
+    display: none !important;
+  }
+}
+@include mq(sm-) {
+  .u-visible_tb {
+    display: none !important;
+  }
+}
+@include mq(sm) {
+  .u-visible_pc {
+    display: none !important;
+  }
+}
+@include mq(lg) {
+  .u-visible_dt {
+    display: none !important;
+  }
+}
+
+@include mq(xs) {
+  .u-hidden_sp {
+    display: none !important;
+  }
+}
+@include mq(sm) {
+  .u-hidden_tb {
+    display: none !important;
+  }
+}
+@include mq(sm-) {
+  .u-hidden_pc {
+    display: none !important;
+  }
+}
+@include mq(md-) {
+  .u-hidden_dt {
+    display: none !important;
+  }
+}
+
+// print
+@include mq(screen) {
+  .u-visible_print {
+    display: none !important;
+  }
+}
+
+@include mq(print) {
+  .u-hidden_print {
+    display: none !important;
+  }
+}
+
+// MW
+.u-display_input {
+  display: none;
+
+  .mw_wp_form_input & {
+    display: block;
+  }
+}
+
+.u-display_confirm {
+  display: none;
+
+  .mw_wp_form_confirm & {
+    display: block;
+  }
+}

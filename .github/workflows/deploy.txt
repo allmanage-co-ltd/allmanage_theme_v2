@@ -1,0 +1,33 @@
+name: Deploy to Server
+
+on:
+  pull_request:
+    branches:
+      - staging
+    types:
+      - closed
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: staging # この行を追加
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=accept-new -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            cd /home/webchecker4/web-checker4.net/public_html/demo.web-checker4.net/wp/wp-content/themes/allmanage_theme &&
+            git checkout staging &&
+            git pull origin staging
+          "

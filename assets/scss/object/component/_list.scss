@@ -1,0 +1,104 @@
+/*--------------------------------------------
+  faq
+--------------------------------------------*/
+.c-list_faq {
+  $amp: &;
+  &__item{
+    background: #FAFAFA;
+    &:not(:first-child){
+      margin-top: 2.4rem;
+    }
+  }
+  &__icon{
+    font-weight: 500;
+    font-size: 3.6rem;
+    line-height: 1;
+    margin-right: 3rem;
+    &.-q{
+      color: $main;
+    }
+    &.-a{
+      color: #fff;
+    }
+  }
+  &__q{
+    padding: 2.5rem 4rem;
+    display: flex;
+    position: relative;
+    &:before,
+    &:after{
+      content: "";
+      width: 2.4rem;
+      height: 2px;
+      background: #094271;
+      position: absolute;
+      right: 4rem;
+      top: 0;
+      bottom: 0;
+      margin: auto;
+      transition: 0.4s;
+    }
+    &:after{
+      transform: rotate(90deg);
+    }
+    &.open{
+      &:after {
+        transform: rotate(0);
+      }
+    }
+    #{$amp}__txt{
+      padding-right: 5rem;
+    }
+  }
+  &__a{
+    width: 91.5%;
+    margin-left: auto;
+    background: $main;
+    padding: 2.5rem 4rem;
+    display: flex;
+    #{$amp}__txt{
+      color: #fff;
+    }
+  }
+  &__txt{
+    width: calc(100% - 6.5rem);
+  }
+  @include mq(md){
+  }
+  @include mq(sm) {
+  }
+  
+  @include mq(xs) {
+    &__q{
+      padding: 2rem 3rem;
+      &:before,
+      &:after{
+        width: 1em;
+      }
+    }
+    &__a{
+      padding: 2rem 3rem;
+    }
+    &__icon{
+      font-size: 3rem;
+    }
+  }
+  @include mq(ss){
+    &__q{
+      padding: 2rem;
+      &:before,
+      &:after{
+        right: 2rem;
+      }
+    }
+    &__a{
+      padding: 2rem;
+    }
+    &__icon{
+      font-size: 2.2rem;
+      margin-right: 0.5em;
+    }
+  }
+}
+
+

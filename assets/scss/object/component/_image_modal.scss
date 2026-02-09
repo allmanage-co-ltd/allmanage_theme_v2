@@ -1,0 +1,63 @@
+.item-image {
+  position: relative;
+  cursor: pointer;
+}
+
+.item-image::before {
+  content: "拡大表示";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.69);
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.4rem;
+  letter-spacing: 0.08rem;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.item-image:hover::before {
+  opacity: 1;
+}
+
+.item-image img {
+  cursor: pointer;
+  width: 100%;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal img {
+  max-height: 80%;
+  max-width: 90%;
+  width: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+.modal img.zoomed {
+  cursor: grab;
+  transition: none;
+  max-height: none;
+  max-width: none;
+}
+
+.modal img.dragging {
+  cursor: grabbing;
+}

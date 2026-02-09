@@ -1,0 +1,73 @@
+/*--------------------------------------------
+  breadcrumb wrap
+--------------------------------------------*/
+.l-breadcrumb {
+  @include mq(sm) {}
+
+  @include mq(xs) {
+    display: none;
+  }
+}
+
+/*--------------------------------------------
+  breadcrumb ol
+--------------------------------------------*/
+.l-breadcrumb_list {
+  display: flex;
+  align-items: center;
+
+  >li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    font-size: 1.2rem;
+
+    &+* {
+      &::before {
+        content: "";
+        width: 3.5px;
+        height: 6px;
+        display: inline-block;
+        margin-right: 0.66em;
+        background: url(../../assets/img/icon_chevron_right.svg) no-repeat center / contain;
+      }
+    }
+
+    >a {
+      display: block;
+      text-decoration: none;
+      color: #212121;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &:not(:first-child) {
+      margin-left: 0.66em;
+    }
+
+    &:first-child {
+      >a {
+        color: #666666;
+      }
+    }
+
+    &:last-child {
+      >a {
+        text-decoration: none;
+        pointer-events: none;
+        color: $font;
+      }
+    }
+  }
+
+  @include mq(sm) {
+    &__item {
+      font-size: 1.4rem;
+    }
+  }
+
+  @include mq(xs) {}
+}

@@ -1,0 +1,25 @@
+.skiptranslate,
+.VIpgJd-ZVi9od-ORHb-OEVmcd .skiptranslate {
+  top: -100vh;
+}
+
+#google_translate_element {
+  position: absolute;
+  top: -100vh;
+  left: -300vw;
+  z-index: 999999;
+  background: red !important;
+  padding: 10px !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+.c-translate {
+  .link {
+    &.-current {
+      //
+    }
+  }
+}

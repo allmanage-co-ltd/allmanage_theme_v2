@@ -1,0 +1,71 @@
+/*--------------------------------------------
+  Print
+--------------------------------------------*/
+@include mq(print) {
+	@page {
+		margin: 8mm;
+		margin: 10mm 8mm 10mm 8mm;
+	}
+	* {
+		-webkit-print-color-adjust: exact !important;
+		background-attachment: initial !important;
+		overflow-y: visible !important;
+	}
+	html {
+		overflow: visible !important;
+		zoom: 0.7 !important;
+	}
+	body {
+		min-width: 1240px !important;
+		padding-top: 0px !important;
+		padding-bottom: 0px !important;
+	}
+	*,
+	*:before,
+	*:after {
+		color: $font !important;
+		text-shadow: none !important;
+		background: transparent !important;
+		-webkit-box-shadow: none !important;
+		box-shadow: none !important;
+	}
+	a,
+	a:visited {
+		text-decoration: underline;
+	}
+	a[href]:after {
+		content: " (" attr(href) ")";
+	}
+	abbr[title]:after {
+		content: " (" attr(title) ")";
+	}
+	a[href^="#"]:after,
+	a[href^="javascript:"]:after {
+		content: "";
+	}
+	pre,
+	blockquote {
+		border: 1px solid $bd;
+		page-break-inside: avoid;
+	}
+	thead {
+		display: table-header-group;
+	}
+	tr,
+	img {
+		page-break-inside: avoid;
+	}
+	img {
+		max-width: 100% !important;
+	}
+	p,
+	h2,
+	h3 {
+		orphans: 3;
+		widows: 3;
+	}
+	h2,
+	h3 {
+		page-break-after: avoid;
+	}
+}

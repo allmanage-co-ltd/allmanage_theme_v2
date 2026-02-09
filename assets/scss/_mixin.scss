@@ -1,0 +1,25 @@
+$sp: 575.9px;
+$tb: 767.9px;
+$pc: 991.9px;
+
+@mixin mq($bp, $type: max) {
+  @if $type ==max {
+    @media (max-width: #{$bp}) {
+      @content;
+    }
+  }
+
+  @else {
+    @media (min-width: #{$bp + 0.1px}) {
+      @content;
+    }
+  }
+}
+
+@function vw($px, $base: 1920) {
+  @return ($px / $base) * 100vw;
+}
+
+@function fluid($min, $mid, $max, $base: 1920) {
+  @return clamp(#{$min}px, #{$mid}, #{$max}px);
+}

@@ -1,0 +1,81 @@
+/*--------------------------------------------
+  color & background-color
+--------------------------------------------*/
+
+// color
+.u-font {
+  color: $font;
+}
+.u-main {
+  color: $main;
+}
+.u-sub {
+  color: $sub;
+}
+.u-point {
+  color: $point;
+}
+
+.u-white {
+  color: $white;
+}
+.u-black {
+  color: $black;
+}
+.u-gray {
+  color: $gray_d;
+}
+.u-red {
+  color: $red;
+}
+.u-pink {
+  color: $pink;
+}
+.u-purple {
+  color: $purple;
+}
+.u-navy {
+  color: $navy;
+}
+.u-blue {
+  color: $blue;
+}
+.u-sky {
+  color: $sky;
+}
+.u-green {
+  color: $green;
+}
+.u-yellow {
+  color: $yellow;
+}
+.u-orange {
+  color: $orange;
+}
+.u-brown {
+  color: $brown;
+}
+
+// background-color
+.u-bg_main {
+  background-color: $main;
+}
+.u-bg_sub {
+  background-color: $sub;
+}
+
+.u-bg_white {
+  background-color: $white;
+}
+.u-bg_gray {
+  background-color: $gray;
+}
+.u-bg_lgray {
+  background-color: $gray_l;
+}
+.u-bg_dgray {
+  background-color: $gray_d;
+}
+.u-bg_lorange {
+  background-color: $orange_l;
+}

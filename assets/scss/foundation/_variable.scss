@@ -1,0 +1,106 @@
+/*--------------------------------------------
+  value
+--------------------------------------------*/
+
+// font-face
+@font-face {
+  font-family: "icomoon";
+  src: url("../fonts/icomoon.eot?fsx2ee");
+  src: url("../fonts/icomoon.eot?fsx2ee#iefix") format("embedded-opentype"),
+    url("../fonts/icomoon.ttf?fsx2ee") format("truetype"), url("../fonts/icomoon.woff?fsx2ee") format("woff"),
+    url("../fonts/icomoon.svg?fsx2ee#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+@font-face {
+  font-family: "avenir-next";
+  src: url("../fonts/avenir-next-ultra-light.ttf") format("truetype");
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+// media
+$media_list: (
+  "screen": "screen",
+  "print": "print",
+  "ss": "(max-width: 575.9px)",
+  "ss-": "(min-width: 576px)",
+  "ss-xs": "(min-width: 576px) and (max-width: 767.9px)",
+  "xs": "(max-width: 767.9px)",
+  "xs-": "(min-width: 768px)",
+  "xs-sm": "(min-width: 768px) and (max-width: 991.9px)",
+  "sm": "(max-width: 991.9px)",
+  "sm-": "(min-width: 992px)",
+  "sm-md": "(min-width: 992px) and (max-width: 1199.9px)",
+  "md": "(max-width: 1199.9px)",
+  "md-": "(min-width: 1200px)",
+  "md-lg": "(min-width: 1200px) and (max-width: 1399.9px)",
+  "lg": "(max-width: 1399.9px)",
+  "lg-": "(min-width: 1400px)",
+  "lg-xl": "(min-width: 1400px) and (max-width: 1599.9px)",
+  "xl": "(max-width: 1599.9px)",
+  "xl-": "(min-width: 1600px)",
+);
+
+// content gutter
+$gutter: 5vw;
+
+// color
+$font: #000000;
+$main: #FC7231;
+$sub: #404040;
+$point: #FFE89E;
+$link: #25b4e0;
+
+$bd_l: #f4f4f4; // #f4f4f4
+$bd: #efefef; // #eeeeee
+$bd_ld: #dcdcdc;
+$bd_d: #afafaf; // #aaaaaa
+$bd_input: #ddd; // #eeeeee
+
+$white: #ffffff; // #ffffff
+$black: #111111; // #111111
+$black_l: #333;
+
+$gray_l: #fafafa; // #f4f4f4
+$gray: #ddd; // #cccccc
+$gray_d: #777777; // #777777
+$gray_blue: #ecf0f5;
+
+$red: #dc0000; // #cc1111
+$pink: #ff33bb; // #ff33bb
+$purple: #8000ff; // #8000ff
+$navy: #0000cc; // #0000cc
+$blue: #0080ff; // #0080ff
+$sky: #f0fcff; // #00bfe6
+$green: #00e626; // #00e626
+$yellow: #ffff00; // #ffff00
+$orange: #ff8000; // #ff8000
+$orange_l: #ffd6ad;
+$brown: #99331f; // #99331f
+
+// font
+$ff_base: "Zen Kaku Gothic New",sans-serif;
+$ff_option: "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "Hiragino Sans", Meiryo, "Yu Gothic Medium",
+  "Yu Gothic", Verdana, arial, sans-serif;
+$ff_sans: "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "Hiragino Sans", Meiryo, "Yu Gothic Medium",
+  "Yu Gothic", Verdana, arial, sans-serif;
+$ff_serif: "Noto Serif JP",serif;
+$ff_num: "Roboto",sans-serif;
+$ff_en: "Roboto",sans-serif;
+$ff_cursive: "HG行書体", cursive, serif;
+$ff_gothic: "Zen Kaku Gothic New", sans-serif;
+$ff_tegaki: "Zen Kurenaido",sans-serif;
+
+// transition
+$timing: cubic-bezier(0.19, 1, 0.22, 1);
+
+// opacity
+$opacity: 0.8;
+
+// border-radius
+$bdrs: 0.4em;
+
+// box shadow
+$box_shadow: 0 0.6em 0.6em rgba($font, 0.1);

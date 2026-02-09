@@ -1,0 +1,38 @@
+{
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "phpstan/phpstan": "^1.0",
+    "szepeviktor/phpstan-wordpress": "^1.0",
+    "php-stubs/wordpress-stubs": "^6.0",
+    "tareq1988/wp-php-cs-fixer": "^1.0",
+    "rector/rector": "^1.2",
+    "kint-php/kint": "^5.0",
+    "phpunit/phpunit": "^10"
+  },
+  "scripts": {
+    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "vendor/bin/php-cs-fixer fix",
+    "analyse": "vendor/bin/phpstan analyse",
+    "rector": "vendor/bin/rector process --dry-run",
+    "rector:fix": "vendor/bin/rector process"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/"
+    },
+    "files": [
+      "app/functions.php"
+    ]
+  },
+  "require": {
+    "monolog/monolog": "^3.0"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    },
+    "platform": {
+      "php": "8.2.0"
+    }
+  }
+}

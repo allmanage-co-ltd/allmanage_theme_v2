@@ -1,0 +1,154 @@
+/*--------------------------------------------
+  header main
+--------------------------------------------*/
+.l-header {
+  $amp:&;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: transparent;
+  transition: all 0.4s;
+  background: #fff;
+  &.is-act  {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    //background: rgba(255,255,255,0.8);
+    @include mq(sm-) {
+    }
+    
+  }
+  &__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s;
+    padding: 3.4rem 3.6vw 2.2rem 5.6vw;
+  }
+  &__logo {
+    width: 13%;
+    img{
+    }
+    a {
+      @include mq(sm-){
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+  &__navi{
+    width: 87%;
+    // display: flex;
+    // justify-content: flex-end;
+  }
+
+  &__hamburger{
+    width: 5rem;
+    height: 5rem;
+    background: transparent;
+    z-index: 115;
+    position: relative;
+    padding: 0;
+    border-radius: 1rem;
+    margin-left: auto;
+    z-index: 999;
+    span{
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      background: $main;
+      left: 50%;
+      transform: translateX(-50%);
+      top: calc(60% - 1px);
+      transition:all 0.4s;
+      &:before,
+      &:after{
+        position: absolute;
+        content:"";
+        right: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        transform-origin: center center;
+        background: $main;
+        transition:inherit;
+      }
+      &:before{
+        top: 0;
+        width: 50%;
+        transform:translateY(-1.5rem);
+      }
+      &:after{
+        bottom: 0;
+        width: 75%;
+        transform:translateY(-0.75rem);
+      }
+    }
+    .slideout-open &{
+      span{
+        background: transparent;
+        &:before{
+          transform:rotate(45deg);
+          width: 70%;
+          background: #fff;
+        }
+        &:after{
+          transform:rotate(-45deg);
+          width: 70%;
+          background: #fff;
+        }
+      }
+    }
+  }
+  @media screen and (max-width:1800px) {
+    &__inner{
+      padding-right: 2vw;
+      padding-left: 2vw;
+    }
+  }
+  @include mq(xl) {
+  }
+  @include mq(lg) {
+    
+  }
+  @include mq(md) {
+    &__logo {
+      width: 20%;
+    }
+  }
+  @include mq(sm) {
+    &__inner {
+      padding: 1rem 3vw;
+    }
+    &__logo{
+      width: 30%;
+    }
+    &__navi{
+      width: auto;
+    }
+
+  }
+  @include mq(xs) {
+    &__inner{
+      padding: 0.5rem 3vw;
+    }
+    &__logo {
+    }
+    &__hamburger{
+      .slideout-open &{
+        span{
+          &:before,
+          &:after{
+            background: $main;
+          }
+        }
+      }
+    }
+  }
+  @include mq(ss) {
+    &__logo{
+    }
+  }
+}
+

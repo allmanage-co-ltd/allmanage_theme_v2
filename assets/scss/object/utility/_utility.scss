@@ -1,0 +1,261 @@
+/*--------------------------------------------
+  common
+--------------------------------------------*/
+
+// font
+.u-palt {
+  font-feature-settings: "palt";
+}
+
+.u-italic {
+  font-style: italic;
+}
+
+.u-va_sup {
+  font-size: 70%;
+  vertical-align: super;
+}
+.u-va_sub {
+  font-size: 70%;
+  vertical-align: sub;
+}
+
+.u-cursive {
+  font-family: $ff_cursive;
+}
+
+.u-vertical {
+  -ms-writing-mode: tb-rl;
+  writing-mode: vertical-rl;
+}
+
+.u-upr {
+  -webkit-text-combine: horizontal;
+  -ms-text-combine-horizontal: all;
+  text-combine-upright: all;
+}
+
+.u-fw {
+  font-weight: 700;
+
+  &400 {
+    font-weight: 400;
+  }
+  &500 {
+    font-weight: 500;
+  }
+}
+
+.u-lh {
+  line-height: 1.8;
+
+  &_ss {
+    line-height: 1.1;
+  }
+  &_xs {
+    line-height: 1.3;
+  }
+  &_sm {
+    line-height: 1.5;
+  }
+  &_md {
+    line-height: 2;
+  }
+}
+
+.u-fs {
+  font-size: 1.6rem;
+
+  &_xs {
+    font-size: 1.2rem;
+  }
+  &_sm {
+    font-size: 1.4rem;
+  }
+  &_md {
+    font-size: 1.8rem;
+  }
+  &_lg {
+    font-size: 2rem;
+  }
+  &_xl {
+    font-size: 2.4rem;
+  }
+  &_xxl {
+    font-size: 3rem;
+  }
+
+  @include mq(sm) {
+    font-size: 1.4rem;
+
+    &_xs {
+      font-size: 1rem;
+    }
+    &_sm {
+      font-size: 1.2rem;
+    }
+    &_md {
+      font-size: 1.6rem;
+    }
+    &_lg {
+      font-size: 1.8rem;
+    }
+    &_xl {
+      font-size: 2rem;
+    }
+    &_xxl {
+      font-size: 2.4rem;
+    }
+  }
+}
+
+// z-index
+.u-z1 {
+  position: relative;
+  z-index: 1;
+}
+
+// width & height
+.u-w100p {
+  width: 100%;
+}
+.u-h100p {
+  height: 100%;
+}
+
+// flex
+.u-fx_wrap {
+  flex-wrap: wrap;
+}
+
+.u-row {
+  flex-direction: row;
+}
+.u-row_reverse {
+  flex-direction: row-reverse;
+}
+.u-column {
+  flex-direction: column;
+}
+.u-column_reverse {
+  flex-direction: column-reverse;
+}
+
+.u-ai {
+  align-items: stretch;
+}
+.u-ai_start {
+  align-items: flex-start;
+}
+.u-ai_center {
+  align-items: center;
+}
+.u-ai_end {
+  align-items: flex-end;
+}
+
+.u-jc_start {
+  justify-content: flex-start;
+}
+.u-jc_center {
+  justify-content: center;
+}
+.u-jc_end {
+  justify-content: flex-end;
+}
+.u-jc_sb {
+  justify-content: space-between;
+}
+
+// pointer-events
+.u-pe {
+  &_none {
+    pointer-events: none;
+  }
+
+  body.is-pc &,
+  body.is-pc &_color {
+    pointer-events: none;
+    cursor: default;
+  }
+  body.is-tb &,
+  body.is-sp & {
+    // color: $link;
+    text-decoration: underline;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  body.is-tb &_color,
+  body.is-sp &_color {
+    color: $link;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// border
+.u-bdt {
+  border-top: 1px solid $bd_l;
+}
+.u-bdb {
+  border-bottom: 1px solid $bd_l;
+}
+
+// white-space
+.u-nowrap {
+  white-space: nowrap;
+}
+
+// overflow
+.u-of_hidden {
+  overflow: hidden;
+}
+
+// backface-visibility
+.u-bv_hidden {
+  backface-visibility: hidden;
+}
+
+// block center
+.u-center_block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+// JS
+.u-align_height {
+  display: block !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+// clearfix
+.clearfix {
+  &::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+}
+
+
+//underline
+.u-underline {
+  text-decoration: underline;
+  @include mq(sm-) {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+.u-indent{
+  text-indent: -1em;
+  padding-left: 1em;
+}

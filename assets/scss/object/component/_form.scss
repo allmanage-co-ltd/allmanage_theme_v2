@@ -1,0 +1,537 @@
+@charset "utf-8";
+/*============================================
+
+  FORM
+
+============================================*/
+.c-form{
+  $amp: &;
+  &__sheet{
+    >tbody{
+      >tr{
+        border-bottom: 1px solid #dddddd;
+        // &:first-child {
+        //   th{
+        //     border-top: 2px solid $main;
+        //   }
+        //   td {
+        //     border-top: 1px solid #b7b7b7;
+        //   }
+        // }
+        >th,
+        >td{
+          text-align: left;
+          line-height: 1.5;
+          padding: 4rem;
+          vertical-align: top;
+        }
+        >th{
+          width: 26.7%;
+          text-align: left;
+          vertical-align: middle;
+          font-weight: 700;
+          padding-left: 3rem;
+          padding-right: 0;
+          // border-bottom: 2px solid $main;
+        }
+        >td{
+          width: 73.3%;
+          // border-bottom: 1px solid #b7b7b7;
+        }
+      }
+    }
+    // @include mq(sm) {
+    //   >tbody{
+    //     >tr{
+    //       >th,
+    //       >td {
+    //         padding: 1em;
+    //       }
+    //       th {
+    //         width: 28%;
+    //       }
+    //       td {
+    //         width: 72%;
+    //       }
+    //     }
+    //   }
+    // }
+    @include mq(sm){
+      border-collapse: collapse;
+      >tbody{
+        >tr{
+          &:first-child{
+            th,td{
+              border-top: none;
+            }
+          }
+          >th,
+          >td{
+            display: block;
+            padding: 1em;
+            padding: 0.75em 0.75em;
+          }
+          >th{
+            width: 100%;
+            border-bottom: none;
+            background: $font;
+            color: #fff;
+          }
+          >td{
+            width: 100%;
+            border-bottom: none;
+            padding-top: 1em;
+            padding-bottom: 1em;
+          }
+          &:nth-last-child(n+2){
+            //margin-bottom: 1.125em;
+          }
+        }
+      }
+    }
+    @include mq(ss) {
+      >tbody{
+        >tr{
+          >th {
+          }
+          >td {
+            padding: 1em 0 2em;
+          }
+        }
+      }
+    }
+  }
+  &__ttl{
+    display: inline-block;
+    padding-right: .75em;
+    font-weight: inherit;
+    &.-required{
+      position: relative;
+      &:after{
+        content:"必須";
+        color: #fff;
+        background: $main;
+        line-height: 1;
+        padding: 0.5rem 1rem;
+        display: inline-block;
+        margin-left: 1.5em;
+        font-size: 0.8em;
+      }
+    }
+    @include mq(sm){
+    }
+  }
+  &__row{
+    >#{$amp}__field {
+      display: flex;
+      align-items: center;
+      >#{$amp}__subttl{
+        margin-right: 1em;
+        display: inline-block;
+        width: 22%;
+      }
+    }
+    @include mq(sm){
+      >#{$amp}__field {
+        >#{$amp}__subttl{
+          width: 25%;
+        }
+      }
+    }
+    @include mq(xs){
+      >#{$amp}__field{
+        display: block;
+        >#{$amp}__subttl{
+          width: 100%;
+          margin-bottom: 0.5em;
+        }
+      }
+    }
+  }
+  &__rowgroup{
+    th,
+    td{
+      padding-bottom: .75em;
+    }
+    th{
+      white-space: nowrap;
+      font-weight: 400;
+      padding-right: 2em;
+    }
+  }
+  @include mq(xs){
+    th,td{
+      display: block;
+      width: 100%;
+    }
+    th{
+      padding-right: 0;
+      padding-bottom: 0.5em;
+    }
+    td{
+      padding-bottom: 1em;
+    }
+  }
+  &__field{
+    &:nth-child(n+2){
+      margin-top: 1em;
+    }
+    label.error{
+      display: block;
+      color:#c11;
+      font-size: .875em;
+      margin-top: .5em;
+    }
+    .c-form__check {
+      + label.error {
+        display: inline-block;
+      }
+    }
+    &.-pe_none{
+      label{
+        pointer-events: none;
+        input{
+          pointer-events: none;
+        }
+      }
+    }
+    &.-radio,
+    &.-check{
+      li{
+        &:nth-child(n+2){
+          margin-top: .5em;
+        }
+      }
+      >span {
+        //margin-bottom: 1em;
+        //display: inline-block;
+      }
+    }
+    &.-horizontal {
+      margin: 0 -2rem;
+    }
+  }
+  &__error{
+    color: #c11;
+    font-size: .875em;
+    margin-top: .5em;
+  }
+  &__notes{
+    position: relative;
+    margin-top: .5em;
+    font-size: .875em;
+    opacity: .75;
+    padding-left: 1em;
+    font-weight: 500;
+    &:before{
+      position: absolute;
+      content:"※";
+      left: 0;
+      top: 0;
+    }
+  }
+
+  &__input{
+    &.-text,
+    &.-textarea{
+      display: inline-block;
+      vertical-align: middle;
+      border: solid 1px #B7B7B7;
+      background: #fff;
+      &.-short{
+        width: 40%;
+      }
+      &.-middle{
+        width: 80%;
+      }
+      &.-long{
+        width: 100%;
+      }
+      &.-half{
+        width: calc((100% - 2em) / 2);
+        &:nth-child(n+2){
+          margin-left: 1em;
+        }
+      }
+      &.-full{
+        width: 100%;
+      }
+      @include mq(sm){
+        &.-text,
+        &.-textarea{
+          padding: 0.75em;
+        }
+        &.-short{
+          width: 50%;
+        }
+        &.-middle{
+          width: 100%;
+        }
+        &.-long{
+          width: 100%;
+        }
+      }
+    }
+    &.-textarea{
+      min-height:10.5em;
+      line-height: 1.5;
+    }
+  }
+  &__select{
+    // background: #f5f5f5;
+    // display: inline-block;
+    // max-width: 100%;
+    // padding: 1em 1.25em;
+    // line-height: 1;
+    border-color: #b7b7b7;
+  }
+
+  &__check,
+  &__radio{
+    + *{
+      position: relative;
+      display: inline-block;
+      padding: .25em 0 .25em 2.25em;
+      line-height: 1;
+    }
+  }
+  &__radio{
+    display: none;
+    + *{
+      &:before,
+      &:after{
+        position: absolute;
+        content: "";
+        left: 0;
+        top: 0;
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 50%;
+        background: #ffffff;
+        border: solid 1px #9a9a9a;
+        box-shadow: 0 0 1px rgba(0,0,0,.15);
+      }
+      &:after{
+        transform: scale(.4);
+        visibility: hidden;
+        background: $main;
+      }
+    }
+    &:checked{
+      + *{
+        &:after{
+          visibility: visible;
+        }
+      }
+    }
+  }
+  &__check{
+    + *{
+      &:before{
+        position: absolute;
+        content:"";
+        left: 0;
+        top: 0;
+        width: 1.5em;
+        height: 1.5em;
+        background: #ffffff;
+        border: solid 1px #9a9a9a;
+      }
+      &:after{
+        position: absolute;
+        content:"";
+        left: 0;
+        width: 1em;
+        height: .65em;
+        transform:rotate(-45deg) translate(0,50%);
+        top: 0;
+        border-left:solid 3px $main;
+        border-bottom:solid 3px $main;
+        visibility: hidden;
+      }
+    }
+    &:checked{
+      + *{
+        &:after{
+          visibility: visible;
+        }
+      }
+    }
+  }
+  &__file {
+    border: none;
+    padding: 0;
+  }
+  &__agreement{
+    text-align: center;
+    font-weight: 500;
+    a{
+      text-decoration: underline;
+      font-weight: 500;
+      @include mq(sm-){
+        &:hover{
+          text-decoration: none;
+        }
+      }
+    }
+    .error{
+      color:#c11;
+    }
+  }
+  &__checkBox {
+    text-align: center;
+    color: $main!important;
+    font-weight: bold!important;
+    margin-top: 2rem;
+    span {
+      font-weight: bold;
+    }
+  }
+  &__button{
+    margin-top: 5rem;
+    @include mq(xs-){
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  &__btn{
+    cursor: pointer;
+    width: 100%;
+    &.-back{
+      background: #aaa;
+      border-color: #aaa;
+      color: #fff;
+      &:before{
+        display: none;
+      }
+    }
+    &.-center {
+      margin: 0 auto;
+    }
+    @include mq(sm-){
+      &:hover {
+        
+      }
+      &.-back {
+        &:hover {
+          opacity: 0.4;
+          background: #aaa;
+          border-color: #aaa;
+          color: #fff;
+        }
+      }
+    }
+    @include mq(xs-){
+      //width: 28rem;
+      &:nth-child(n+2){
+        margin-left: 2em;
+      }
+    }
+    @include mq(sm){
+    }
+    @include mq(xs){
+      width: 50%;
+      margin:0 auto;
+      &:nth-child(n+2){
+        margin-top: 1.5em;
+      }
+    }
+    @include mq(ss){
+      // width: 100%;
+    }
+  }
+
+  &.-confirm{
+    #{$amp}__notes{
+      display: none;
+    }
+    #{$amp}__error{
+      display: none;
+    }
+    #{$amp}__agreement{
+      display: none;
+    }
+    #{$amp}__checkBox {
+      display: none;
+    }
+    .lead{
+      text-align: center;
+      margin-bottom: 2em;
+    }
+  }
+  &.-thanks{
+    text-align: center;
+    p{
+      margin-bottom:1.5em;
+      line-height: 2;
+    }
+    @include mq(ss){
+      text-align: left;
+    }
+  }
+  &__foot {
+    margin-top: 7rem;
+    @include mq(sm){
+      margin-top: 5rem;
+    }
+  }
+  .p-country-name {
+    display: none !important;
+  }
+}
+
+.c-form_privacy {
+  margin-top: 7rem;
+  &__box {
+    border: solid 1px #dddddd;
+    padding: 4rem 3rem;
+    overflow-y: scroll;
+    max-height: 22em;
+    margin-top: 1.5em;
+    margin-bottom: 3rem;
+  }
+  &__ttl {
+    font-size: 1.8em;
+    text-align: center;
+    margin-bottom: 1em;
+  }
+  &__lead{
+    margin-bottom: 1em;
+  }
+  &__subttl{
+    font-weight: 500;
+    margin-bottom: 0.5em;
+  }
+  &__list {
+  }
+  &__sublist{
+    margin-top: 1em;
+  }
+
+  @include mq(sm) {
+    margin-top: 5rem;
+    &__ttl{
+      font-size: 1.4em;
+    }
+  }
+}
+
+// .mw_wp_form .horizontal-item+.horizontal-item {
+//   margin-left: 2rem !important;
+// }
+
+// .mw_wp_form .horizontal-item:first-child {
+//   margin-left: 2rem;
+// }
+.mw_wp_form .vertical-item+.vertical-item{
+  margin-top: 10px!important;
+}
+.mw_wp_form .horizontal-item+.horizontal-item {
+  margin-left: 2em!important;
+  @include mq(ss) {
+    //margin-left: 0!important;
+    margin-bottom: 1em;
+  }
+  
+}

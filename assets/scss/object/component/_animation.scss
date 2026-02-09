@@ -1,0 +1,338 @@
+/*--------------------------------------------
+  animation
+--------------------------------------------*/
+@include mq(sm-){
+  .c-animation {
+    &.-opacity {
+      opacity: 0;
+      transition: all 0.6s ease-in-out;
+      transform: translateX(10%);
+
+      &.scrolled {
+        opacity: 1;
+        transform: translateX(0%);
+      }
+    }
+
+    &.-ttl {
+      >span {
+        display: inline-block;
+
+        >span {
+          display: inline-block;
+          opacity: 0;
+          transform: translateX(150%);
+          transition: transform .6s .4s, opacity .6s .4s;
+        }
+        
+      }
+      &.-vertical {
+        >span{
+          >span{
+            transform: translateY(150%);
+          }
+        }
+      }
+
+      &.scrolled {
+        >span {
+          >span {
+            opacity: 1;
+            transform: translate(0%,0%);
+          }
+        }
+      }
+    }
+
+    &.-box {
+      position: relative;
+      overflow: hidden;
+
+      &:before {
+        content: "";
+        width: 160%;
+        height: 100%;
+        position: absolute;
+        bottom: 0;
+        left: -30%;
+        background: $main;
+        z-index: 10;
+        transform: skewX(-25deg);
+        transition: all 0.8s ease-in-out;
+      }
+
+      &.-white {
+        &:before {
+          background: #fff;
+        }
+      }
+
+      &.scrolled {
+        &:before {
+          width: 0;
+        }
+      }
+    }
+
+    &.-img{
+      overflow: hidden;
+      display: inline-block;
+      transform: scaleX(0);
+      transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1) 0s;
+      transform-origin: left center;
+      &:before{
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: $main;
+      }
+      .item{
+        opacity: 0;
+        transition-delay: 0.3s;
+        z-index: 0;
+        position: relative;
+        transform: translateX(15%);
+      }
+      &.scrolled{
+        transform: scaleX(1);
+        &:before{
+          transition: width 0.5s cubic-bezier(0.86, 0, 0.07, 1) 0.5s;
+          width: 0;
+          z-index: 100;
+        }
+        .item{
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    }
+
+    &.-fadeUp {
+      opacity: 0;
+      transition: all 0.6s ease-in-out;
+      transition: all 3s cubic-bezier(.075, .82, .165, 1);
+      transform: translateY(50px);
+
+      &.scrolled {
+        opacity: 1;
+        transform: translateY(0%);
+      }
+    }
+
+    &.-fadeInLeft {
+      opacity: 0;
+      transition: all 0.6s ease-in-out;
+      //transition: 1.5s cubic-bezier(0.96, 0, 0.51, 0.86);
+      transform: translateX(-100px);
+
+      &.scrolled {
+        opacity: 1;
+        transform: translateX(0%);
+      }
+    }
+
+    &.-scroll {
+      opacity: 0;
+      transform: translateY(4rem);
+      transition: all 0.7s linear;
+
+      &.scrolled {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    &.-scale {
+      opacity: 0;
+      transition: all 0.6s ease-in-out;
+      transform: scale(0);
+
+      &.scrolled {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    &.-blur{
+      filter: blur(12px);
+      opacity: 0;
+      transition: 1s ease-in-out;
+      &.scrolled {
+        opacity: 1;
+        filter: blur(0);
+      }
+    }
+
+    &.-delay100,
+    &.-delay100:before,
+    &.-delay100:after {
+      transition-delay: 0.1s !important;
+    }
+
+    &.-delay150,
+    &.-delay150:before,
+    &.-delay150:after {
+      transition-delay: 0.1s !important;
+    }
+
+    &.-delay200,
+    &.-delay200:before,
+    &.-delay200:after {
+      transition-delay: 0.2s !important;
+    }
+
+    &.-delay250,
+    &.-delay250:before,
+    &.-delay250:after {
+      transition-delay: 0.25s !important;
+    }
+
+    &.-delay300,
+    &.-delay300:before,
+    &.-delay300:after {
+      transition-delay: 0.3s !important;
+    }
+
+    &.-delay350,
+    &.-delay350:before,
+    &.-delay350:after {
+      transition-delay: 0.35s !important;
+    }
+
+    &.-delay400,
+    &.-delay400:before,
+    &.-delay400:after {
+      transition-delay: 0.4s !important;
+    }
+
+    &.-delay450,
+    &.-delay450:before,
+    &.-delay450:after {
+      transition-delay: 0.45s !important;
+    }
+
+    &.-delay500,
+    &.-delay500:before,
+    &.-delay500:after {
+      transition-delay: 0.5s !important;
+    }
+
+    &.-delay550,
+    &.-delay550:before,
+    &.-delay550:after {
+      transition-delay: 0.55s !important;
+    }
+
+    &.-delay600,
+    &.-delay600:before,
+    &.-delay600:after {
+      transition-delay: 0.6s !important;
+    }
+
+    &.-delay650,
+    &.-delay650:before,
+    &.-delay650:after {
+      transition-delay: 0.65s !important;
+    }
+
+    &.-delay700,
+    &.-delay700:before,
+    &.-delay700:after {
+      transition-delay: 0.7s !important;
+    }
+
+    &.-delay750,
+    &.-delay750:before,
+    &.-delay750:after {
+      transition-delay: 0.75s !important;
+    }
+
+    &.-delay800,
+    &.-delay800:before,
+    &.-delay800:after {
+      transition-delay: 0.8s !important;
+    }
+
+    &.-delay850,
+    &.-delay850:before,
+    &.-delay850:after {
+      transition-delay: 0.85s !important;
+    }
+
+    &.-delay900,
+    &.-delay900:before,
+    &.-delay900:after {
+      transition-delay: 0.9s !important;
+    }
+
+    &.-delay950,
+    &.-delay950:before,
+    &.-delay950:after {
+      transition-delay: 0.95s !important;
+    }
+
+    &.-delay1000,
+    &.-delay1000:before,
+    &.-delay1000:after {
+      transition-delay: 1s !important;
+    }
+
+    &.-delay1050,
+    &.-delay1050:before,
+    &.-delay1050:after {
+      transition-delay: 1.05s !important;
+    }
+
+    &.-delay1100,
+    &.-delay1100:before,
+    &.-delay1100:after {
+      transition-delay: 1.1s !important;
+    }
+
+    &.-delay1150,
+    &.-delay1150:before,
+    &.-delay1150:after {
+      transition-delay: 1.15s !important;
+    }
+    &.-delay1200,
+    &.-delay1200:before,
+    &.-delay1200:after {
+      transition-delay: 1.15s !important;
+    }
+    &.-delay1250,
+    &.-delay1250:before,
+    &.-delay1250:after {
+      transition-delay: 1.15s !important;
+    }
+    &.-delay1300,
+    &.-delay1300:before,
+    &.-delay1300:after {
+      transition-delay: 1.15s !important;
+    }
+  }
+}
+
+
+
+@keyframes floating-x {
+  0% {
+    transform: translateX(-10%);
+  }
+
+  100% {
+    transform: translateX(10%);
+  }
+}
+
+@keyframes floating-y {
+  0% {
+    transform: translateY(-10%);
+  }
+
+  100% {
+    transform: translateY(10%);
+  }
+}

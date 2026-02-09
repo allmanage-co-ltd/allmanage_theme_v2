@@ -1,0 +1,84 @@
+@charset "utf-8";
+
+/*--------------------------------------------
+  Foundation
+--------------------------------------------*/
+// scss
+@import "foundation/_variable";
+@import "foundation/_mixin";
+
+// reset
+@import "foundation/_reset";
+
+// base
+@import "foundation/_base";
+
+// print
+// @import "foundation/_print";
+
+// plugins
+@import "foundation/plugins/_slideout.scss";
+@import "foundation/plugins/_slick.scss";
+
+
+
+/*--------------------------------------------
+  Layout
+--------------------------------------------*/
+// layout
+//@import "layout/**";
+@import "layout/_breadcrumb";
+@import "layout/_content";
+@import "layout/_footer";
+@import "layout/_gnavi";
+@import "layout/_header";
+@import "layout/_megamenu";
+@import "layout/_sidebar";
+
+
+
+/*--------------------------------------------
+  Object
+--------------------------------------------*/
+// compornet
+//@import "object/component/**";
+@import "object/component/_animation";
+@import "object/component/_button";
+@import "object/component/_card";
+@import "object/component/_etc";
+@import "object/component/_form";
+@import "object/component/_list";
+@import "object/component/_panel";
+@import "object/component/_search";
+@import "object/component/_table";
+@import "object/component/_title";
+@import "object/component/_translate";
+@import "object/component/_cookie";
+@import "object/component/_image_modal";
+
+
+// project
+@import "object/project/page/_home";
+@import "object/project/page/_company";
+@import "object/project/page/_recruit";
+@import "object/project/page/_contact";
+@import "object/project/page/_esg-sdgs";
+@import "object/project/page/_privacypolicy";
+@import "object/project/page/_news";
+@import "object/project/page/_404";
+@import "object/project/_kv";
+
+
+
+// utility
+//@import "object/utility/**";
+@import "object/utility/_align";
+@import "object/utility/_color";
+@import "object/utility/_display";
+@import "object/utility/_margin";
+@import "object/utility/_padding";
+@import "object/utility/_utility";
+
+
+// wordpress
+@import "object/_wp";

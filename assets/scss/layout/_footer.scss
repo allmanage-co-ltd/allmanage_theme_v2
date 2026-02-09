@@ -1,0 +1,84 @@
+/*--------------------------------------------
+  footer info
+--------------------------------------------*/
+
+/*--------------------------------------------
+  footer entry
+--------------------------------------------*/
+
+/*--------------------------------------------
+  footer
+--------------------------------------------*/
+.l-footer {
+  $amp:&;
+  position: relative;
+  padding: 4rem 0;
+  &__inner{
+    display: flex;
+    justify-content: space-between;
+  }
+  &__address{
+    margin-top: 2rem;
+  }
+  &__mark{
+    margin-top: 2rem;
+  }
+  &__navi{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 2rem;
+    a{
+      @include mq(sm-){
+        &:hover{
+          opacity: 0.7;
+        }
+      }
+    }
+  }
+  &__menu{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+  &__menuItem{
+    margin-bottom: 1em;
+    &:not(:first-child){
+      margin-left: 3rem;
+    }
+  }
+  &__copyright{
+  }
+
+  @include mq(xl){
+  }
+
+  @include mq(lg) {
+  }
+  @include mq(md) {
+  }
+
+  @include mq(sm) {
+    &__inner{
+      display: block;
+    }
+    padding: 2rem 0;
+  }
+  @include mq(xs) {
+
+  }
+  @include mq(ss) {
+    &__logo{
+      max-width: 50%;
+    }
+    &__mark{
+      max-width: 35%;
+    }
+    &__copyright{
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+  }
+}

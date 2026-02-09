@@ -1,0 +1,66 @@
+/* パスワードの表示非表示切り替え */
+.password-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 20em;
+}
+
+.password-wrapper.w100 {
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100% !important;
+}
+
+.password-wrapper .password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1em;
+  color: #666;
+  transition: color 0.3s;
+  user-select: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .password-toggle:hover {
+  color: #333;
+}
+
+/*  */
+.c-deletemember {
+  padding: 10px 0 10px 0;
+  border: 1px solid #e6e6e6;
+  width: min(90%, 95rem);
+  margin: 0 auto;
+  background: #fff;
+  margin-top: 4rem;
+}
+
+.c-deletemember__txt {
+  text-align: center;
+  font-size: .9em;
+  width: 90%;
+  margin: 0 auto;
+
+
+}
+
+@media screen and (max-width: 768px) {
+  .c-deletemember__txt {
+    text-align: left;
+    font-size: 1.1rem;
+  }
+}
+
+/*  */
+.member-edit {
+  display: none;
+}

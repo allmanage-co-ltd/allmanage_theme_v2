@@ -1,0 +1,121 @@
+/*--------------------------------------------
+  table responsive
+--------------------------------------------*/
+.c-tbl_responsive {
+  min-height: 0.01%;
+  overflow-x: auto;
+
+  @include mq(sm) {
+    width: 100%;
+    overflow-y: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+
+    scrollbar-width: 0.2em;
+    scrollbar-color: $main $gray_l;
+    &::-webkit-scrollbar {
+      height: 0.2em;
+    }
+    &::-webkit-scrollbar-track {
+      background: $gray_l;
+      border-radius: 1rem;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 1rem;
+      background: $main;
+    }
+
+    & > table {
+      margin-bottom: 0;
+    }
+
+    & > table > thead > tr > th,
+    & > table > tbody > tr > th,
+    & > table > tfoot > tr > th,
+    & > table > thead > tr > td,
+    & > table > tbody > tr > td,
+    & > table > tfoot > tr > td {
+      white-space: nowrap;
+    }
+  }
+}
+
+.c-tbl_pr {
+  width: 90%;
+  margin: 0 auto;
+  tr {
+    border-bottom: 2px solid $main;
+  }
+  th,td {
+    padding: 1.65em 3.125em;
+  }
+  th {
+    width: 20.37%;
+    font-weight: 500;
+    color: $main;
+    text-align: left;
+    vertical-align: top;
+  }
+  td {
+    width: 79.63%;
+  }
+  &.-md {
+    th {
+      width: 25%;
+    }
+    td {
+      width: 75%;
+    }
+  }
+  @include mq(lg) {
+  }
+  @include mq(md) {
+  }
+  @include mq(sm) {
+    width: 100%;
+  }
+  @include mq(xs) {
+    border-bottom: 1px solid #ccc;
+    tr {
+      border-bottom: none;
+    }
+    th,td {
+      width: 100%;
+      display: block;
+      text-align: center;
+      padding: 1em;
+    }
+    th {
+      background: $main;
+      color: #fff;
+    }
+    td {
+      border-right: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+    }
+    &.-md {
+      th {
+        width: 100%;
+      }
+      td {
+        width: 100%;
+      }
+    }
+  }
+  @include mq(ss) {
+
+  }
+}
+
+
+.c-tbl_scroll {
+  @include mq(sm) {
+    overflow-x: auto;
+    >table {
+      th,td {
+        display: table-cell;
+        width: auto;
+        white-space: nowrap;
+      }
+    }
+  }
+}

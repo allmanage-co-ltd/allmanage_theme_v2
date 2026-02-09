@@ -1,0 +1,138 @@
+/*--------------------------------------------
+  text-align
+--------------------------------------------*/
+
+.u-center {
+  text-align: center;
+}
+.u-left {
+  text-align: left;
+}
+.u-right {
+  text-align: right;
+}
+
+
+@include mq(ss) {
+  .u-center_ss {
+    text-align: center;
+  }
+  .u-left_ss {
+    text-align: left;
+  }
+  .u-right_ss {
+    text-align: right;
+  }
+}
+@include mq(ss-xs) {
+  .u-center_xs {
+    text-align: center;
+  }
+  .u-left_xs {
+    text-align: left;
+  }
+  .u-right_xs {
+    text-align: right;
+  }
+}
+@include mq(xs-sm) {
+  .u-center_sm {
+    text-align: center;
+  }
+  .u-left_sm {
+    text-align: left;
+  }
+  .u-right_sm {
+    text-align: right;
+  }
+}
+@include mq(sm-md) {
+  .u-center_md {
+    text-align: center;
+  }
+  .u-left_md {
+    text-align: left;
+  }
+  .u-right_md {
+    text-align: right;
+  }
+}
+@include mq(md-lg) {
+  .u-center_lg {
+    text-align: center;
+  }
+  .u-left_lg {
+    text-align: left;
+  }
+  .u-right_lg {
+    text-align: right;
+  }
+}
+@include mq(lg-xl) {
+  .u-center_xl {
+    text-align: center;
+  }
+  .u-left_xl {
+    text-align: left;
+  }
+  .u-right_xl {
+    text-align: right;
+  }
+}
+@include mq(xl-) {
+  .u-center_xxl {
+    text-align: center;
+  }
+  .u-left_xxl {
+    text-align: left;
+  }
+  .u-right_xxl {
+    text-align: right;
+  }
+}
+
+
+@include mq(xs) {
+  .u-center_sp {
+    text-align: center;
+  }
+  .u-left_sp {
+    text-align: left;
+  }
+  .u-right_sp {
+    text-align: right;
+  }
+}
+@include mq(sm) {
+  .u-center_tb {
+    text-align: center;
+  }
+  .u-left_tb {
+    text-align: left;
+  }
+  .u-right_tb {
+    text-align: right;
+  }
+}
+@include mq(sm-) {
+  .u-center_pc {
+    text-align: center;
+  }
+  .u-left_pc {
+    text-align: left;
+  }
+  .u-right_pc {
+    text-align: right;
+  }
+}
+@include mq(lg-) {
+  .u-center_dt {
+    text-align: center;
+  }
+  .u-left_dt {
+    text-align: left;
+  }
+  .u-right_dt {
+    text-align: right;
+  }
+}

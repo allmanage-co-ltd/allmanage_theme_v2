@@ -1,0 +1,258 @@
+/*--------------------------------------------
+  panel
+--------------------------------------------*/
+.c-panel_contact {
+  $amp: &;
+  padding: 10rem 0;
+  background: url(../../assets/img/bg_contact.jpg) no-repeat center / cover;
+
+  .c-ttl_sup {
+    margin-bottom: 4rem;
+  }
+
+  &__box {
+    background: #fff;
+    border-radius: 2rem;
+    padding: 7.5rem 8.6rem 7rem 12rem;
+    display: flex;
+  }
+
+  &__wrap {
+    display: flex;
+    align-items: center;
+  }
+
+  &__ttl {
+    width: 41.9%;
+    padding-right: 5rem;
+  }
+
+  &__desc {
+    max-width: 406px;
+    font-weight: 400;
+  }
+
+  &__cnt {
+    width: 58.1%;
+  }
+
+  &__num {
+    font-size: 9.4rem;
+    font-size: 4.89vw;
+    position: relative;
+    line-height: 0.85;
+    font-family: $ff_en;
+    font-weight: 700;
+    padding-left: 1.1em;
+
+    &:before {
+      content: '';
+      width: 0.95em;
+      height: 0.95em;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: url(../../assets/img/icon_tel.svg) no-repeat center / contain;
+    }
+  }
+
+  &__time {
+    padding-left: 10.7rem;
+    font-size: 1.8rem;
+    font-weight: 400;
+  }
+
+  &__btn {
+    margin-top: 3rem;
+
+    a {
+      display: block;
+      border-radius: 6rem;
+      font-weight: 700;
+      font-size: 2.4rem;
+      color: #fff;
+      background: $main;
+      border: 1px solid $main;
+      line-height: 1;
+      padding: 1em 0;
+      text-align: center;
+
+      span {
+        display: inline-block;
+        position: relative;
+        padding-right: 3rem;
+
+        &:before {
+          content: '';
+          width: 7px;
+          height: 11px;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: 0.4s;
+          background: url(../../assets/img/icon_arrow.svg) no-repeat center / contain;
+        }
+      }
+
+      @include mq(sm-) {
+        &:hover {
+          background: #fff;
+          color: $main;
+
+          span {
+            &:before {
+              background-image: url(../../assets/img/icon_arrow_or.svg);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
+  @include mq(xl) {}
+
+  @include mq(lg) {}
+
+  @include mq(md) {}
+
+  @include mq(sm) {
+    padding: 4.5em 0;
+
+    .c-ttl_sup {
+      margin-bottom: 3rem;
+    }
+
+    &__wrap {
+      display: block;
+    }
+
+    &__box {
+      padding: 5rem;
+      display: block;
+    }
+
+    &__ttl {
+      width: 100%;
+      padding-right: 0;
+    }
+
+    &__desc {
+      max-width: 100%;
+    }
+
+    &__cnt {
+      width: 100%;
+      margin-top: 3rem;
+    }
+
+    &__tel {
+      text-align: center;
+    }
+
+    &__num {
+      font-size: 5rem;
+    }
+
+    &__time {
+      padding-left: 0;
+      text-align: center;
+      font-size: 1.6rem;
+      margin-top: 0.5em;
+    }
+
+    &__btn {
+      margin-top: 2rem;
+
+      a {
+        font-size: 1.8rem;
+      }
+    }
+  }
+
+  @include mq(xs) {
+    &__num {}
+
+
+  }
+
+  @include mq(ss) {
+    &__box {
+      padding: 3rem;
+    }
+
+    &__num {
+      font-size: 3.4rem;
+    }
+
+    &__time {
+      font-size: 1.6rem;
+      display: block;
+
+      .time {
+        margin-left: 0;
+        margin-top: 8px;
+      }
+    }
+
+    &__btn {
+      a {
+        font-size: 1.6rem;
+      }
+    }
+  }
+}
+
+.c-panel_bnr {
+  $amp: &;
+  background: #eeefef;
+  padding: 4rem 0;
+
+  &__wrap {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__item {
+    width: calc((100% - 8rem) / 4);
+
+    &:not(:nth-child(4n)) {
+      margin-right: 2.666rem;
+    }
+
+    &:nth-child(n+5) {
+      margin-top: 2.5rem;
+    }
+  }
+
+  @include mq(xl) {}
+
+  @include mq(lg) {}
+
+  @include mq(md) {}
+
+  @include mq(sm) {}
+
+  @include mq(xs) {
+    &__wrap {
+      justify-content: space-between;
+    }
+
+    &__item {
+      width: calc((100% - 2rem) / 2);
+
+      &:nth-child(n+3) {
+        margin-top: 2.5rem;
+      }
+
+      &:not(:nth-child(4n)) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  @include mq(ss) {}
+}
