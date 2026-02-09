@@ -1,24 +1,10 @@
 <?php
-$current_term  = get_queried_object();
-$term_slug     = $current_term->slug;
-$is_column_cat = is_tax($tax);
-$is_taxonomy   = $is_column_cat || $is_column_tag;
-$taxonomy_name = '';
-
-if ($is_column_cat) {
-  $taxonomy_name = $tax;
-}
-
 $query = wpquery()
   ->setPostType(['news'])
   ->setPerPage(10)
-  ->setOrderByDate();
-
-if ($is_taxonomy && $current_term) {
-  $query = $query->setTaxQuery($taxonomy_name, [$term_slug]);
-}
-
-$query = $query->build();
+  ->setOrderByDate()
+  // ->debug(); // ->build()せずに組み立てたargsのみデバッグ
+  ->build();
 ?>
 
 <main class="p-news -archive">
