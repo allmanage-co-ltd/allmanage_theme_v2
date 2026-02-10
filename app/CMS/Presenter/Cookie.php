@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Views;
+namespace App\CMS\Presenter;
 
 use App\Helpers\Fmt;
 

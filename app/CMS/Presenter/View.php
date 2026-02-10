@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Views;
+namespace App\CMS\Presenter;
 
 /**---------------------------------------------
  * ビュー描画クラス
@@ -8,7 +8,7 @@ namespace App\CMS\Views;
  * - WordPress の条件分岐を集約して表示ファイルを決定
  * - header / footer / 本体ビューの組み立てを一元管理
  */
-class Presenter
+class View
 {
     public function __construct()
     {

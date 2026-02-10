@@ -57,9 +57,25 @@ function img_dir(): string
  * 使用例:
  *   wpquery()->setPostType(...)->setPerPage(...)->build()
  */
-function wpquery(): \App\CMS\Utils\MyWpQuery
+function wpquery(): \App\CMS\Wrapper\MyWpQuery
 {
-    return \App\CMS\Utils\MyWpQuery::new();
+    return \App\CMS\Wrapper\MyWpQuery::new();
+}
+
+/**
+ * wpdbのラッパー
+ *
+ * WPテーマではあまり使わなそう。。
+ *
+ * 使用例:
+ *   db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
+ *   db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
+ *   db()->stmt('...', [arg])->select();
+ *   db()->stmt('...', [arg])->execute();
+ */
+function db(): \App\CMS\Wrapper\MyDpdb
+{
+    return \App\CMS\Wrapper\MyDpdb::new();
 }
 
 /**
@@ -74,7 +90,7 @@ function wpquery(): \App\CMS\Utils\MyWpQuery
  */
 function datepicker(array $options = []): void
 {
-    (new \App\CMS\Views\Datepicker($options))->boot();
+    (new \App\CMS\Presenter\Datepicker($options))->boot();
 }
 
 /**
@@ -89,7 +105,7 @@ function datepicker(array $options = []): void
  */
 function the_view(): void
 {
-    \App\CMS\Views\Presenter::pages();
+    \App\CMS\Presenter\View::pages();
 }
 
 /**
@@ -100,7 +116,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-    \App\CMS\Views\Presenter::layout($name);
+    \App\CMS\Presenter\View::layout($name);
 }
 
 /**
@@ -114,7 +130,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-    \App\CMS\Views\Presenter::component($name, $data);
+    \App\CMS\Presenter\View::component($name, $data);
 }
 
 /**
@@ -125,7 +141,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-    (new \App\CMS\Views\Breadcrumb)->render();
+    (new \App\CMS\Presenter\Breadcrumb)->render();
 }
 
 /**
@@ -136,7 +152,7 @@ function the_breadcrumb(): void
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\CMS\Views\Cookie($days, $link))->render();
+    (new \App\CMS\Presenter\Cookie($days, $link))->render();
 }
 
 /**
@@ -149,9 +165,8 @@ function the_cookie_modal($days = 365, $link = '/privacy'): void
  */
 function the_pagination(\WP_Query $query, int $range = 5): void
 {
-    (new \App\CMS\Views\Pagination($query, $range))->render();
+    (new \App\CMS\Presenter\Pagination($query, $range))->render();
 }
-
 
 /**
  * 設定値取得
@@ -230,7 +245,7 @@ function http_sess(): \App\Services\HTTP\Session
 }
 
 /**
- *
+ * 必要になったら実装
  */
 function csv_reader()
 {
@@ -238,7 +253,7 @@ function csv_reader()
 }
 
 /**
- *
+ * 必要になったら実装
  */
 function csv_writer()
 {

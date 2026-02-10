@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Databases;
+namespace App\CMS\Wrapper;
 
 use wpdb;
 
@@ -13,7 +13,7 @@ use wpdb;
  * - $wpdb をグローバルで使い回さない
  * - Service / Admin / UI から直接 wpdb を触らせない
  */
-class Database
+class MyDpdb
 {
     private wpdb $wpdb;
     private ?string $sql = null;
@@ -26,8 +26,8 @@ class Database
 
     /**
      * ファクトリ関数
-     * \App\Databases::new()->stmt('....', ['arg'])->debug();
-     * \App\Databases::new()->stmt('....', ['arg'])->get();
+     * \App\CMS\Wrapper\MyDpdb::new()->stmt('....', ['arg'])->debug();
+     * \App\CMS\Wrapper\MyDpdb::new()->stmt('....', ['arg'])->get();
      */
     public static function new(): self
     {

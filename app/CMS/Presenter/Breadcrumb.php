@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Views;
+namespace App\CMS\Presenter;
 
 /**---------------------------------------------
  * パンくずリスト生成クラス

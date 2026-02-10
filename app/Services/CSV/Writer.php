@@ -6,7 +6,7 @@ namespace App\Services\CSV;
  * CSVクラス
  * ---------------------------------------------
  *
- * 作成中
+ * 必要になったら実装
  *
  */
 class Writer

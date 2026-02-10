@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Utils;
+namespace App\CMS\Wrapper;
 
 /**---------------------------------------------
  * WP_Query ビルダークラス

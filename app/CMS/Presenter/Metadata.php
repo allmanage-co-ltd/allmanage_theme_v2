@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Utils;
+namespace App\CMS\Presenter;
 
 use App\Services\Config;
 
@@ -10,7 +10,7 @@ use App\Services\Config;
  * - title / description / OGP / canonical などを一元生成
  * - head 内に出力する情報をまとめて管理
  *
- * 全てのメソッドは\App\Hooks\Seo()->addMetadata()で出力
+ * 全てのメソッドは\App\CMS\Hooks\Seo()->addMetadata()で出力
  */
 class Metadata
 {

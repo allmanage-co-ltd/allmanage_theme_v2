@@ -3,7 +3,7 @@
 namespace App\CMS\Hooks;
 
 use App\Services\Runtime;
-use App\CMS\Utils\Metadata;
+use App\CMS\Presenter\Metadata;
 
 /**---------------------------------------------
  * SEO 関連フッククラス
