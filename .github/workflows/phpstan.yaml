@@ -25,12 +25,23 @@ jobs:
       - name: Cache Composer dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.composer/cache/files
+          path: |
+            ~/.composer/cache
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPStan
-        run: composer analyse
+        run: |
+          vendor/bin/phpstan analyse | tee phpstan.txt
+          echo "## PHPStan Analysis" >> $GITHUB_STEP_SUMMARY
+          cat phpstan.txt >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload PHPStan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpstan-report
+          path: phpstan.txt

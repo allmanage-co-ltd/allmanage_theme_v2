@@ -2,4 +2,6 @@
 
 declare(strict_types=1);
 
-define('ABSPATH', __DIR__ . '/');
+if (!defined('ABSPATH')) {
+    define('ABSPATH', __DIR__ . '/');
+}
