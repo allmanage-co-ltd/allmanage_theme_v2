@@ -13,7 +13,6 @@
  * - echoやincludeなど描画系の関数は命名を 「the_○○」 とする
  * - WP関数のラッパーでも OK
  * - 必ず「使用例」を記載すること
- *
  *---------------------------------------------/
 
 /**
@@ -194,7 +193,7 @@ function url(string $slug): string
  * ロガー
  *
  * 使用例:
- *   slog()->info('message', $data) >> logs/app.log
+ *   slog()->info('message', $data); >> logs/app.log
  */
 function slog()
 {
@@ -213,6 +212,9 @@ function slog()
  *       ],
  *    ]);
  *   $data = json_decode($response['body'], true);
+ *   if ($client->isOk($response)) {
+ *       $data = $client->decodeJson($response);
+ *   }
  */
 function http_client(): \App\Services\Http\Client
 {
@@ -223,8 +225,9 @@ function http_client(): \App\Services\Http\Client
  * $_POST or $_GETの値取得ヘルパー
  *
  * 使用例:
- *   $name = req()->get('name');
- *   $data = req()->only(['email', 'tel']);
+ *   $name = http_input()->get('name');
+ *   $data = http_input()->only(['email', 'tel']);
+ *   $all  = http_input()->all();
  */
 function http_input(): \App\Services\HTTP\Input
 {
@@ -238,6 +241,8 @@ function http_input(): \App\Services\HTTP\Input
  *   http_sess()->set('user_id', 1);
  *   $id = http_sess()->get('user_id');
  *   http_sess()->forget('user_id');
+ *   http_sess()->flash('message', '送信しました');
+ *   $message = http_sess()->pull('message');
  */
 function http_sess(): \App\Services\HTTP\Session
 {
@@ -247,21 +252,30 @@ function http_sess(): \App\Services\HTTP\Session
 /**
  * 必要になったら実装
  */
-function csv_reader()
-{
-    (new \App\Services\CSV\Writer())->execute();
-}
+// function csv_reader()
+// {
+//     (new \App\Services\CSV\Writer())->execute();
+// }
 
 /**
  * 必要になったら実装
  */
-function csv_writer()
-{
-    (new \App\Services\CSV\Writer())->execute();
-}
+// function csv_writer()
+// {
+//     (new \App\Services\CSV\Writer())->execute();
+// }
 
 /**
+ * 【仮実装】HTMLデータからPDFを出力
  *
+ * dataにはviewで必要なデータ配列を渡してください、配列のキーがそのまま変数名になります。
+ *  ・例：['name' => 'hoge'] → $key = $name
+ * view_filenameはviews/pdf/にあるphpファイル名を指定します。
+ * output_nameは出力時のファイル名を指定します。
+ * downloadはダウンロードするかどうかを指定します。falseの場合は画面に出力します。
+ *
+ * 使用例:
+ *   pdf_writer(['key' => 'データが渡せます'], 'sample.php', 'sample', false);
  */
 function pdf_writer(array $data, string $view_filename, string $output_name, bool $download)
 {

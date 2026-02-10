@@ -11,13 +11,11 @@ use RuntimeException;
  * ---------------------------------------------
  *
  * $client = new \App\Services\Http\Client();
- * $response = $client->get('https://api.example.com/users', [
- *     'query' => ['page' => 1],
- *     'headers' => [
- *         'Accept' => 'application/json',
- *     ],
- *  ]);
- * $data = json_decode($response['body'], true);
+ * $res = $client->get('https://api.example.com/users', [
+ *   'query' => ['page' => 1],
+ *   'headers' => ['Accept' => 'application/json'],
+ * ]);
+ * $data = $client->decodeJson($res);
  */
 class Client
 {
@@ -49,6 +47,34 @@ class Client
     }
 
     /**
+     * JSONレスポンスを配列に変換する
+     */
+    public function decodeJson(array $response, bool $assoc = true): array|object
+    {
+        $decoded = json_decode($response['body'] ?? '', $assoc);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new RuntimeException('JSONのデコードに失敗しました: ' . json_last_error_msg());
+        }
+
+        if (!is_array($decoded) && !is_object($decoded)) {
+            throw new RuntimeException('JSONレスポンスの形式が不正です');
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * ステータスコードが2xxのときtrue
+     */
+    public function isOk(array $response): bool
+    {
+        $status = (int) ($response['status'] ?? 0);
+
+        return $status >= 200 && $status < 300;
+    }
+
+    /**
      * リクエスト共通処理
      */
     private function request(string $method, string $url, array $options): array
@@ -67,6 +93,7 @@ class Client
         return [
             'status' => $response->getStatusCode(),
             'body'   => (string) $response->getBody(),
+            'headers' => $response->getHeaders(),
         ];
     }
 }

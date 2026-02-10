@@ -5,12 +5,6 @@ return [
 
     'log'     => '/storage/logs/app.log',
 
-    'pdf'     => [
-        'author'  => 'ALLMANAGE co.,ltd',
-        'creator' => 'ALLMANAGE co.,ltd',
-        'output'  => '/tmp',
-    ],
-
     'runtime' => [
         'local'  => [
             'localhost',

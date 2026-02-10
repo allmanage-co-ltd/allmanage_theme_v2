@@ -5,7 +5,7 @@ namespace App\Services\HTTP;
 /**---------------------------------------------
  * リクエスト管理サービス
  * ---------------------------------------------
- * - $_GET / $_POST / $_REQUEST を直接触らせないためのラッパー
+ * - $_GET / $_POST を直接触らせないためのラッパー
  * - 入力取得・ホワイトリスト抽出を一元管理する
  * - View / Controller / Service から共通APIで扱えるようにする
  */
@@ -23,6 +23,15 @@ class Input
 
     /**
      * 全リクエスト値取得
+     * すべての入力値を返す（POST優先）
+     */
+    public function all(): array
+    {
+        return array_merge($_GET, $_POST);
+    }
+
+    /**
+     * 指定キーだけ取得
      */
     public function only(array $keys): array
     {
