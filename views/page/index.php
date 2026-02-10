@@ -13,7 +13,11 @@ if (is_local()) {
 
     // slog()->info('test', config('assets.css'));
 
-    // d(db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get());
+    // $post = db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get()
+    // d($post);
+
+    sess()->set('allmanage', 'hoge');
+    sess()->debug();
 }
 ?>
 

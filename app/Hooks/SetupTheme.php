@@ -2,6 +2,8 @@
 
 namespace App\Hooks;
 
+use App\Services\Session;
+
 /**---------------------------------------------
  * テーマ初期設定フッククラス
  * ---------------------------------------------
@@ -21,7 +23,7 @@ class SetupTheme extends Hook
      */
     public function boot(): void
     {
-        add_action('init', [$this, 'sessionStart']);
+        add_action('plugins_loaded', [$this, 'sessionStart'], 0);
         add_action('init', [$this, 'removeWpFeatures']);
         add_filter('excerpt_more', [$this, 'customExcerptMore']);
         add_action('init', [$this, 'trashDefaultPosts']);
@@ -34,19 +36,7 @@ class SetupTheme extends Hook
      */
     public function sessionStart(): void
     {
-        // セッション有効期限: 30日
-        ini_set('session.gc_maxlifetime', 60 * 60 * 24 * 30);
-        ini_set('session.cookie_lifetime', 60 * 60 * 24 * 30);
-        // XSS対策
-        ini_set('session.cookie_httponly', '1');
-        // CSRF対策
-        ini_set('session.cookie_samesite', 'Lax');
-        // 未知のセッションIDを拒否
-        ini_set('session.use_strict_mode', '1');
-        // セッション名
-        session_name('APPSESSID');
-        // start
-        session_start();
+        Session::start();
     }
 
     /**

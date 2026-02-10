@@ -1,5 +1,5 @@
 <?php
-$sq    = get_search_query();
+$sq    = req()->get('s'); // get_search_query();
 $query = wpquery()
     ->setPostType(['news'])
     ->setSearchQuery($sq)
@@ -10,6 +10,10 @@ $query = wpquery()
 ;
 // slog()->info('test', [$query->build()]);
 // echo (int) $query->found_posts; // TOTAL
+
+// echo req()->get('s');
+// d(req()->only(['s']));
+// if (req()->has('s')) echo 'hoge!';
 ?>
 
 <main class="p-search -archive">

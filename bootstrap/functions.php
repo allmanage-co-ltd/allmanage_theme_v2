@@ -1,4 +1,5 @@
 <?php
+
 /**---------------------------------------------
  * グローバル関数群
  *----------------------------------------------
@@ -11,6 +12,7 @@
  * - 引数と返り値のシグネチャは呼び出し先と一致させる
  * - echoやincludeなど描画系の関数は命名を 「the_○○」 とする
  * - WP関数のラッパーでも OK
+ * - 必ず「使用例」を記載すること
  *
  *---------------------------------------------/
 
@@ -49,7 +51,9 @@ function img_dir(): string
 
 /**
  * 設定値取得
- * echo config('site.name')
+ *
+ * 使用例:
+ *   echo config('site.name');
  */
 function config(string $key, $default = null)
 {
@@ -58,7 +62,9 @@ function config(string $key, $default = null)
 
 /**
  * permalink 設定からURL取得
- * echo url('news')
+ *
+ * 使用例:
+ *   echo url('news');
  */
 function url(string $slug): string
 {
@@ -67,8 +73,11 @@ function url(string $slug): string
 
 /**
  * WP_Query ビルダー取得
+ *
  * デバッグをするには->build()を呼ぶとargsの中身が見れる
- * wpquery()->setPostType(...)->setPerPage(...)->build()
+ *
+ * 使用例:
+ *   wpquery()->setPostType(...)->setPerPage(...)->build()
  */
 function wpquery(): \App\Services\MyWpQuery
 {
@@ -76,9 +85,39 @@ function wpquery(): \App\Services\MyWpQuery
 }
 
 /**
+ * セッション関連のヘルパー
+ *
+ * 使用例:
+ *   sess()->set('user_id', 1);
+ *   $id = sess()->get('user_id');
+ *   sess()->forget('user_id');
+ */
+function sess(): \App\Services\Session
+{
+    return \App\Services\Session::new();
+}
+
+/**
+ * $_POST or $_GETの値取得ヘルパー
+ *
+ * 使用例:
+ *   $name = req()->get('name');
+ *   $data = req()->only(['email', 'tel']);
+ */
+function req(): \App\Services\Request
+{
+    return \App\Services\Request::new();
+}
+
+/**
  * flatpickrの初期化
+ *
  * js-datepickerクラスが付与されたテキストフィールドに対して
- * デートピッカーが自動で入れ込まれる。有効にしたいページで関数を実行することで有効化。
+ * デートピッカーが自動で入れ込まれる。
+ * 有効にしたいページで関数を実行することで有効化。
+ *
+ * 使用例（お問い合わせ入力ページで）:
+ *   datepicker();
  */
 function datepicker(array $options = []): void
 {
@@ -87,7 +126,9 @@ function datepicker(array $options = []): void
 
 /**
  * ロガー
- * slog()->info('message', $data) >> logs/app.log
+ *
+ * 使用例:
+ *   slog()->info('message', $data) >> logs/app.log
  */
 function slog()
 {
@@ -96,11 +137,14 @@ function slog()
 
 /**
  * wpdbのラッパー
+ *
  * WPテーマではあまり使わなそう。。
- * db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
- * db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
- * db()->stmt('...', [arg])->select();
- * db()->stmt('...', [arg])->execute();
+ *
+ * 使用例:
+ *   db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
+ *   db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
+ *   db()->stmt('...', [arg])->select();
+ *   db()->stmt('...', [arg])->execute();
  */
 function db(): \App\Databases\Database
 {
@@ -109,9 +153,13 @@ function db(): \App\Databases\Database
 
 /**
  * ビューの描画
+ *
  * header → view → footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * Service側で判定し、呼ぶviewを切り替えています。
+ * App\View\Render側で判定し、呼ぶviewを切り替えています。
+ *
+ * 使用例（テンプレートページで）:
+ *   the_view();
  */
 function the_view(): void
 {
@@ -120,7 +168,9 @@ function the_view(): void
 
 /**
  * レイアウトファイル描画
- * the_layout('header')
+ *
+ * 使用例:
+ *   the_layout('header');
  */
 function the_layout(string $name): void
 {
@@ -129,7 +179,12 @@ function the_layout(string $name): void
 
 /**
  * コンポーネント描画
- * the_component('searchform', ['hoge' => $fuga])
+ *
+ * get_template_partのラッパーなので引数を渡せます。
+ * コンポーネント側で  $args['hoge']  で受け取ります。
+ *
+ * 使用例:
+ *   the_component('searchform', ['hoge' => $fuga]);
  */
 function the_component(string $name, array $data = []): void
 {
@@ -138,6 +193,9 @@ function the_component(string $name, array $data = []): void
 
 /**
  * パンくずリスト描画
+ *
+ * 使用例:
+ *   the_breadcrumb();
  */
 function the_breadcrumb(): void
 {
@@ -146,6 +204,9 @@ function the_breadcrumb(): void
 
 /**
  * Cookieのモーダル表示
+ *
+ * 使用例:
+ *   the_cookie_modal(60, url('privacy));
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
@@ -154,7 +215,11 @@ function the_cookie_modal($days = 365, $link = '/privacy'): void
 
 /**
  * ページネーション出力
+ *
  * 吐き出すHTMLはpw_paginateと同じはず。。
+ *
+ * 使用例:
+ *   the_pagination($query, 3);
  */
 function the_pagination(\WP_Query $query, int $range = 5): void
 {
@@ -163,6 +228,9 @@ function the_pagination(\WP_Query $query, int $range = 5): void
 
 /**
  * ローカル環境判定
+ *
+ * 使用例:
+ *   if (is_local()) {...}
  */
 function is_local(): bool
 {
@@ -171,6 +239,9 @@ function is_local(): bool
 
 /**
  * モバイル判定
+ *
+ * 使用例:
+ *   if (is_mobile()) {...}
  */
 function is_mobile(): bool
 {
@@ -179,6 +250,9 @@ function is_mobile(): bool
 
 /**
  * Bot 判定
+ *
+ * 使用例:
+ *   if (is_bot()) {...}
  */
 function is_bot(): bool
 {
