@@ -4,12 +4,12 @@
  *----------------------------------------------
  * - viewで使うようのどこからでも呼べる関数
  * - ここでは「判断・ロジック・状態」を持たない
- * - 実処理は必ず App\Services や適切なクラスに逃がす
- * - 簡易な処理であれば許容（5行くらいまでかな。。）
+ * - 実処理は必ず app ディレクトリの適切なクラスに逃がす（なければ作成）
+ * - 簡易な処理であれば許容しています。（5行くらいまでかな。。）
  *
  * ルール：
- * - 引数と返り値のシグネチャは Service と一致させる
- * - echoやincludeなど描画系の関数は命名を the_○○ とする
+ * - 引数と返り値のシグネチャは呼び出し先と一致させる
+ * - echoやincludeなど描画系の関数は命名を 「the_○○」 とする
  * - WP関数のラッパーでも OK
  *
  *---------------------------------------------/
@@ -80,9 +80,9 @@ function wpquery(): \App\Services\MyWpQuery
  * js-datepickerクラスが付与されたテキストフィールドに対して
  * デートピッカーが自動で入れ込まれる。有効にしたいページで関数を実行することで有効化。
  */
-function datepicker(array $options = [])
+function datepicker(array $options = []): void
 {
-    (new \App\Services\UI\Datepicker($options))->boot();
+    (new \App\Views\Datepicker($options))->boot();
 }
 
 /**
@@ -113,53 +113,52 @@ function db(): \App\Databases\Database
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
  * Service側で判定し、呼ぶviewを切り替えています。
  */
-function the_view()
+function the_view(): void
 {
-    \App\Services\View\Render::pages();
+    \App\Views\Render::pages();
 }
 
 /**
  * レイアウトファイル描画
  * the_layout('header')
  */
-function the_layout(string $name)
+function the_layout(string $name): void
 {
-    \App\Services\View\Render::layout($name);
+    \App\Views\Render::layout($name);
 }
 
 /**
  * コンポーネント描画
  * the_component('searchform', ['hoge' => $fuga])
  */
-function the_component(string $name, array $data = [])
+function the_component(string $name, array $data = []): void
 {
-    \App\Services\View\Render::component($name, $data);
+    \App\Views\Render::component($name, $data);
 }
 
 /**
  * パンくずリスト描画
- * 表示判定・生成ロジックは Breadcrumb Service で行っています。
  */
-function the_breadcrumb()
+function the_breadcrumb(): void
 {
-    (new \App\Services\UI\Breadcrumb)->render();
+    (new \App\Views\Breadcrumb)->render();
 }
 
 /**
  * Cookieのモーダル表示
  */
-function the_cookie_modal($days = 365, $link = '/privacy')
+function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\Services\UI\Cookie($days, $link))->render();
+    (new \App\Views\Cookie($days, $link))->render();
 }
 
 /**
  * ページネーション出力
  * 吐き出すHTMLはpw_paginateと同じはず。。
  */
-function the_pagination(\WP_Query $query, int $range = 5)
+function the_pagination(\WP_Query $query, int $range = 5): void
 {
-    (new \App\Services\UI\Pagination($query, $range))->render();
+    (new \App\Views\Pagination($query, $range))->render();
 }
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\UI;
+namespace App\Views;
 
 /**---------------------------------------------
  * Datepicker用UIヘルパークラス

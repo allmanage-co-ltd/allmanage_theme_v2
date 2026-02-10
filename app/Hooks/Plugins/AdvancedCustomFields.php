@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Plugins;
+namespace App\Hooks\Plugins;
 
 /**---------------------------------------------
  * Advanced Custom Fields 連携クラス

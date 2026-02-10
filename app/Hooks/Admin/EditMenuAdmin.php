@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin;
+namespace App\Hooks\Admin;
 
 /**---------------------------------------------
  * 管理者向け管理画面表示制御クラス

@@ -4,14 +4,14 @@ use App\Hooks\Enqueue;
 use App\Hooks\SetupTheme;
 use App\Hooks\Shortcode;
 use App\Hooks\Seo;
-use App\Admin\EditMenuAdmin;
-use App\Admin\EditMenuClient;
-use App\Admin\RegisterOptionPage;
-use App\Admin\RegisterPostType;
-use App\Admin\RegisterTaxonomy;
-use App\Plugins\AdvancedCustomFields;
-use App\Plugins\MwWpForm;
-use App\Plugins\Welcart;
+use App\Hooks\Admin\EditMenuAdmin;
+use App\Hooks\Admin\EditMenuClient;
+use App\Hooks\Admin\RegisterOptionPage;
+use App\Hooks\Admin\RegisterPostType;
+use App\Hooks\Admin\RegisterTaxonomy;
+use App\Hooks\Plugins\AdvancedCustomFields;
+use App\Hooks\Plugins\MwWpForm;
+use App\Hooks\Plugins\Welcart;
 
 /**---------------------------------------------
  * アプリケーション起動クラス

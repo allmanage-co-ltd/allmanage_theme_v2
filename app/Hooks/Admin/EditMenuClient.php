@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin;
+namespace App\Hooks\Admin;
 
 use App\Services\Config;
 

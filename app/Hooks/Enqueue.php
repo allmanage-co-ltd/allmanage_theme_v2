@@ -58,6 +58,11 @@ class Enqueue extends Hook
      */
     private function enqueueJquery(): void
     {
+
+        if (is_admin()) {
+            return;
+        }
+
         $jquery = Config::get('assets.jquery');
         if (!$jquery) {
             return;

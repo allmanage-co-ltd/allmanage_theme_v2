@@ -24,7 +24,7 @@ class SetupTheme extends Hook
         add_action('init', [$this, 'sessionStart']);
         add_action('init', [$this, 'removeWpFeatures']);
         add_filter('excerpt_more', [$this, 'customExcerptMore']);
-        add_action('init', [$this, 'draftDefaultPost']);
+        add_action('init', [$this, 'trashDefaultPosts']);
         add_filter('excerpt_length', [$this, 'customExcerptLength'], 999);
         add_action('after_setup_theme', [$this, 'themeSupportAdd']);
     }
@@ -100,22 +100,21 @@ class SetupTheme extends Hook
     }
 
     /**
-     * デフォルト投稿の下書き化
+     * デフォルト投稿（ID 1,2,3）をゴミ箱へ移動
      */
-    public function draftDefaultPost()
+    public function trashDefaultPosts(): void
     {
-        $post_id = 1;
+        $post_ids = [1, 2, 3];
 
-        $post = get_post($post_id);
-        if (!$post) {
-            return;
-        }
+        foreach ($post_ids as $post_id) {
+            $post = get_post($post_id);
+            if (!$post) {
+                continue;
+            }
 
-        if ($post->post_status !== 'draft') {
-            wp_update_post([
-                'ID'          => $post_id,
-                'post_status' => 'draft',
-            ]);
+            if ($post->post_status !== 'trash') {
+                wp_trash_post($post_id);
+            }
         }
     }
 

@@ -39,6 +39,23 @@ cd allmanage_theme
 composer install
 ```
 
+### Dockerでの開発環境
+
+お使いのPCにDocker及びDocker Desktopがインストール済みの場合、Local等で開発環境をセットせずに1コマンドでWordpressのセットアップが可能です。
+
+```sh
+# 開発環境の起動
+docker compose up
+
+# 開発環境の中止
+docker compose stop
+
+```
+Wordpress  => [http://localhost:8888](http://localhost:8888)
+
+PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
+
+
 ## Sassについて
 
 基本は vscode プラグインのLive Sass Compailerを使用します。
@@ -55,18 +72,6 @@ composer install
 4. `Website LLMs.txt` AIO 対策のため導入
 
 5. `mw wp form` お問い合わせフォーム作成
-
----
-
-## 起動
-
-テーマ読み込み時に `bootstrap/App` が起動され
-各 Hook / Admin / Plugin クラスの `boot()` が呼ばれることで初期化される
-
-```
-functions.php
- └─ bootstrap/App::boot()
-```
 
 ---
 
@@ -92,63 +97,20 @@ views/
 
 ```
 app/
-├─ Bootstrap/      アプリ起動
-├─ Hooks/          フロント・WPフック
-├─ Admin/          管理画面拡張
-├─ Plugins/        プラグイン連携
-├─ Services/       共通サービス
-└─ Services/View/  ページテンプレートの表示切り替えロジック、コンポーネント描画
-└─ Services/UI/    状態を持つモジュール用ロジック
+├─ Hooks/             WPコアフック
+├─ Hooks/Admin/       管理画面拡張フック
+├─ Hooks/Plugins/     プラグイン連携フック
+├─ Services/          共通サービス、特定の汎用機能、viewから逃がしたいロジック等
+└─ Views/             ページの表示切り替え、コンポーネント描画、状態を持つモジュール用ロジック
 ```
 ---
 
-### Service クラス
+## 起動
+
+テーマ読み込み時に `bootstrap/App` が起動され
+各 Hooks クラスの `boot()` が呼ばれることで初期化される
 
 ```
-App\Services\*
+functions.php
+ └─ bootstrap/App::boot()
 ```
-
-- Viewに書きたくないロジックをここに逃がす
-- functions.phpを通してViewとの懸け橋になる
-
----
-
-### Hook クラス
-
-```
-App\Hooks\*
-```
-
-- add_action
-- add_filter
-- enqueue
-- shortcode
-- seo
-- theme setup
-
----
-
-### Admin クラス
-
-```
-App\Admin\*
-```
-
-- 投稿タイプ登録
-- タクソノミー登録
-- 管理画面UI制御
-- オプションページ
-
----
-
-### Plugin クラス
-
-```
-App\Plugins\*
-```
-
-- class_exists チェック必須
-- プラグイン未導入でもエラーにしない
-- WPに依存した拡張のみを書く
-
----

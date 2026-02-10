@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Plugins;
+namespace App\Hooks\Plugins;
 
 /**---------------------------------------------
  * Welcart 連携クラス

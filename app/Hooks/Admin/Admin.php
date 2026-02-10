@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin;
+namespace App\Hooks\Admin;
 
 /**---------------------------------------------
  * 管理画面用 基底クラス
@@ -18,7 +18,6 @@ namespace App\Admin;
  * - 管理画面 UI の表示／非表示制御
  *
  * 各クラスは boot() 内で WordPress のフックを登録する
- * functions.php に管理画面ロジックを書かないための受け皿
  */
 abstract class Admin
 {
