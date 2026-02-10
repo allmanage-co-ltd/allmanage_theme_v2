@@ -13,45 +13,47 @@ use App\Services\Metadata;
  */
 class Seo extends Hook
 {
-  public function __construct()
-  {
-    //
-  }
+    public function __construct()
+    {
+        //
+    }
 
-  /**
-   * フック登録
-   */
-  public function boot(): void
-  {
-    add_filter('wp_robots', [$this, 'addNoindex']);
-    add_action('wp_head', [$this, 'addMetadata']);
-  }
+    /**
+     * フック登録
+     */
+    public function boot(): void
+    {
+        add_filter('wp_robots', [$this, 'addNoindex']);
+        add_action('wp_head', [$this, 'addMetadata']);
+    }
 
-  /**
-   * 本番以外はnoindex設定
-   */
-  public function addNoindex($robots): array
-  {
-    // 本番または既に明示的にnoindexならスルー
-    if (!Environment::isLocal())
-      return $robots;
-    if (!empty($robots['noindex']))
-      return $robots;
+    /**
+     * 本番以外はnoindex設定
+     */
+    public function addNoindex($robots): array
+    {
+        // 本番または既に明示的にnoindexならスルー
+        if (!Environment::isLocal()) {
+            return $robots;
+        }
+        if (!empty($robots['noindex'])) {
+            return $robots;
+        }
 
-    $robots['noindex']  = true;
-    $robots['nofollow'] = true;
+        $robots['noindex']  = true;
+        $robots['nofollow'] = true;
 
-    return $robots;
-  }
+        return $robots;
+    }
 
-  /**
-   * headを設定
-   */
-  public function addMetadata(): void
-  {
-    echo Metadata::getBase();
-    echo Metadata::getFull();
-    echo Metadata::getGtags();
-    echo Metadata::getJsonld();
-  }
+    /**
+     * headを設定
+     */
+    public function addMetadata(): void
+    {
+        echo Metadata::getBase();
+        echo Metadata::getFull();
+        echo Metadata::getGtags();
+        echo Metadata::getJsonld();
+    }
 }

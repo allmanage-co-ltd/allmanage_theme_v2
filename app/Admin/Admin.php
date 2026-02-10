@@ -22,15 +22,15 @@ namespace App\Admin;
  */
 abstract class Admin
 {
-  public function __construct()
-  {
-    //
-  }
+    public function __construct()
+    {
+        //
+    }
 
-  /**
-   * 初期化処理
-   *
-   * 各 Admin クラスで必ず実装しフック登録を行う
-   */
-  abstract public function boot(): void;
+    /**
+     * 初期化処理
+     *
+     * 各 Admin クラスで必ず実装しフック登録を行う
+     */
+    abstract public function boot(): void;
 }

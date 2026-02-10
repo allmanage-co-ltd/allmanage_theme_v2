@@ -17,42 +17,42 @@ use App\Services\Config;
  */
 class RegisterOptionPage extends Admin
 {
-  public function __construct()
-  {
-    //
-  }
-
-  /**
-   * 初期化処理
-   */
-  public function boot(): void
-  {
-    if (Config::get('csv.show_admin_menu')) {
-      add_action('admin_menu', [$this, 'csvInExpoterRegister']);
+    public function __construct()
+    {
+        //
     }
-  }
 
-  /**
-   * CSV 管理画面メニュー登録
-   */
-  public function csvInExpoterRegister(): void
-  {
-    add_menu_page(
-      'CSV',
-      'CSV',
-      'manage_options',
-      'csv-in-expoter',
-      [$this, 'csvInExpoterView']
-    );
-  }
+    /**
+     * 初期化処理
+     */
+    public function boot(): void
+    {
+        if (Config::get('csv.show_admin_menu')) {
+            add_action('admin_menu', [$this, 'csvInExpoterRegister']);
+        }
+    }
 
-  /**
-   * CSV 管理画面表示
-   *
-   * - 管理画面用 View ファイルを読み込む
-   */
-  public function csvInExpoterView(): void
-  {
-    include theme_dir() . '/views/admin/csv-in-expoter.php';
-  }
+    /**
+     * CSV 管理画面メニュー登録
+     */
+    public function csvInExpoterRegister(): void
+    {
+        add_menu_page(
+            'CSV',
+            'CSV',
+            'manage_options',
+            'csv-in-expoter',
+            [$this, 'csvInExpoterView']
+        );
+    }
+
+    /**
+     * CSV 管理画面表示
+     *
+     * - 管理画面用 View ファイルを読み込む
+     */
+    public function csvInExpoterView(): void
+    {
+        include theme_dir() . '/views/admin/csv-in-expoter.php';
+    }
 }

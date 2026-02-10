@@ -23,7 +23,7 @@ class ComposerStaticInitac9630358e798f6b1fc8e7b32e22de9c
         '3917c79c5052b270641b5a200963dbc2' => __DIR__ . '/..' . '/kint-php/kint/init.php',
         'ec07570ca5a812141189b1fa81503674' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
         '38143a9afc50997d55e4815db8489d1c' => __DIR__ . '/..' . '/rector/rector/bootstrap.php',
-        'cadc9c721433675b17f426e6ddd5daa4' => __DIR__ . '/../..' . '/app/functions.php',
+        'aa226e11f126a1708f35e078ad08ec3c' => __DIR__ . '/../..' . '/bootstrap/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (

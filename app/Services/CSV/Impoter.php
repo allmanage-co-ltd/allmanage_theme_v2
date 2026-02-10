@@ -11,24 +11,24 @@ namespace App\Services\CSV;
  */
 class Impoter extends CSV
 {
-  public function __construct()
-  {
-    //
-  }
+    public function __construct()
+    {
+        //
+    }
 
-  /**
-   *
-   */
-  public function import()
-  {
-    //
-  }
+    /**
+     *
+     */
+    public function import()
+    {
+        //
+    }
 
-  /**
-   *
-   */
-  public function save()
-  {
-    //
-  }
+    /**
+     *
+     */
+    public function save()
+    {
+        //
+    }
 }

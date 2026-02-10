@@ -17,10 +17,10 @@ namespace App\Plugins;
  */
 abstract class Plugin
 {
-  public function __construct()
-  {
-    //
-  }
+    public function __construct()
+    {
+        //
+    }
 
-  abstract public function boot(): void;
+    abstract public function boot(): void;
 }

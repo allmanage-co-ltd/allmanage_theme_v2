@@ -22,5 +22,5 @@ return array(
     '3917c79c5052b270641b5a200963dbc2' => $vendorDir . '/kint-php/kint/init.php',
     'ec07570ca5a812141189b1fa81503674' => $vendorDir . '/phpunit/phpunit/src/Framework/Assert/Functions.php',
     '38143a9afc50997d55e4815db8489d1c' => $vendorDir . '/rector/rector/bootstrap.php',
-    'cadc9c721433675b17f426e6ddd5daa4' => $baseDir . '/app/functions.php',
+    'aa226e11f126a1708f35e078ad08ec3c' => $baseDir . '/bootstrap/functions.php',
 );

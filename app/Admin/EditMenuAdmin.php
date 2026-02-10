@@ -11,36 +11,36 @@ namespace App\Admin;
  */
 class EditMenuAdmin extends Admin
 {
-  public function __construct()
-  {
-    //
-  }
-
-  /**
-   * 初期化処理
-   */
-  public function boot(): void
-  {
-    if (!$this->subjectRoles()) {
-      return;
+    public function __construct()
+    {
+        //
     }
 
-    $this->hiddenAdminBar();
-  }
+    /**
+     * 初期化処理
+     */
+    public function boot(): void
+    {
+        if (!$this->subjectRoles()) {
+            return;
+        }
 
-  /**
-   * 対象ユーザー判定
-   */
-  public function subjectRoles(): bool
-  {
-    return current_user_can('administrator');
-  }
+        $this->hiddenAdminBar();
+    }
 
-  /**
-   * 管理バー非表示処理
-   */
-  public function hiddenAdminBar(): void
-  {
-    show_admin_bar(false);
-  }
+    /**
+     * 対象ユーザー判定
+     */
+    public function subjectRoles(): bool
+    {
+        return current_user_can('administrator');
+    }
+
+    /**
+     * 管理バー非表示処理
+     */
+    public function hiddenAdminBar(): void
+    {
+        show_admin_bar(false);
+    }
 }

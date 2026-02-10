@@ -3,7 +3,7 @@
     "friendsofphp/php-cs-fixer": "^3.0",
     "phpstan/phpstan": "^1.0",
     "szepeviktor/phpstan-wordpress": "^1.0",
-    "php-stubs/wordpress-stubs": "^6.0",
+    "php-stubs/wordpress-stubs": "^6.9",
     "tareq1988/wp-php-cs-fixer": "^1.0",
     "rector/rector": "^1.2",
     "kint-php/kint": "^5.0",
@@ -21,7 +21,7 @@
       "App\\": "app/"
     },
     "files": [
-      "app/functions.php"
+      "bootstrap/functions.php"
     ]
   },
   "require": {

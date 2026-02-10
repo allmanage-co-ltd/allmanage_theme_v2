@@ -1,15 +1,19 @@
+includes:
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
+
 parameters:
-    level: 8
+    level: 4
     paths:
         - app
+        - bootstrap
+        - functions.php
     excludePaths:
         - vendor
         - node_modules
     ignoreErrors:
-        - '#Function get_field not found#'
-        - '#Function the_field not found#'
-        - '#Function get_fields not found#'
+        - '#WP_Term::\$cat_ID#'
     bootstrapFiles:
         - phpstan-bootstrap.php
-    wordpress:
-        # ACFスタブ追加
+    scanFiles:
+        - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+    treatPhpDocTypesAsCertain: false

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Monolog\Logger as MonoLogger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger as MonoLogger;
 
 /**---------------------------------------------
  * ログ出力サービス
@@ -14,30 +14,30 @@ use Monolog\Handler\StreamHandler;
  */
 class Logger extends Service
 {
-  public function __construct()
-  {
-    //
-  }
-
-  // Logger インスタンス保持用
-  private static ?MonoLogger $logger = null;
-
-  /**
-   * Logger 取得
-   */
-  public static function new(): MonoLogger
-  {
-    if (self::$logger !== null) {
-      return self::$logger;
+    public function __construct()
+    {
+        //
     }
 
-    $out = theme_dir() . '/logs/app.log';
+    // Logger インスタンス保持用
+    private static ?MonoLogger $logger = null;
 
-    self::$logger = new MonoLogger('app');
-    self::$logger->pushHandler(
-      new StreamHandler($out, MonoLogger::INFO)
-    );
+    /**
+     * Logger 取得
+     */
+    public static function new(): MonoLogger
+    {
+        if (self::$logger !== null) {
+            return self::$logger;
+        }
 
-    return self::$logger;
-  }
+        $out = theme_dir() . '/logs/app.log';
+
+        self::$logger = new MonoLogger('app');
+        self::$logger->pushHandler(
+            new StreamHandler($out, MonoLogger::INFO)
+        );
+
+        return self::$logger;
+    }
 }

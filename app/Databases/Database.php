@@ -15,74 +15,74 @@ use wpdb;
  */
 class Database
 {
-  private wpdb $wpdb;
-  private ?string $sql = null;
-  private array $params = [];
+    private wpdb $wpdb;
+    private ?string $sql = null;
+    private array $params = [];
 
-  public function __construct(wpdb $wpdb)
-  {
-    $this->wpdb = $wpdb;
-  }
+    public function __construct(wpdb $wpdb)
+    {
+        $this->wpdb = $wpdb;
+    }
 
-  /**
-   * ファクトリ関数
-   * \App\Databases::new()->stmt('....', ['arg'])->debug();
-   * \App\Databases::new()->stmt('....', ['arg'])->get();
-   */
-  public static function new(): self
-  {
-    global $wpdb;
-    return new self($wpdb);
-  }
+    /**
+     * ファクトリ関数
+     * \App\Databases::new()->stmt('....', ['arg'])->debug();
+     * \App\Databases::new()->stmt('....', ['arg'])->get();
+     */
+    public static function new(): self
+    {
+        global $wpdb;
+        return new self($wpdb);
+    }
 
-  /**
-   * SQL をセット
-   */
-  public function stmt(string $sql, array $params = []): self
-  {
-    $this->sql    = $sql;
-    $this->params = $params;
-    return $this;
-  }
+    /**
+     * SQL をセット
+     */
+    public function stmt(string $sql, array $params = []): self
+    {
+        $this->sql    = $sql;
+        $this->params = $params;
+        return $this;
+    }
 
-  /**
-   * SQL を表示（実行しない）
-   */
-  public function debug(): self
-  {
-    $query = $this->wpdb->prepare($this->sql, $this->params);
+    /**
+     * SQL を表示（実行しない）
+     */
+    public function debug(): self
+    {
+        $query = $this->wpdb->prepare($this->sql, $this->params);
 
-    echo '<pre style="background:#111;color:#0f0;padding:12px;">';
-    echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8');
-    echo '</pre>';
+        echo '<pre style="background:#111;color:#0f0;padding:12px;">';
+        echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8');
+        echo '</pre>';
 
-    return $this;
-  }
+        return $this;
+    }
 
-  /**
-   * SELECT 単件
-   */
-  public function get(): ?array
-  {
-    $query = $this->wpdb->prepare($this->sql, $this->params);
-    return $this->wpdb->get_row($query, ARRAY_A);
-  }
+    /**
+     * SELECT 単件
+     */
+    public function get(): ?array
+    {
+        $query = $this->wpdb->prepare($this->sql, $this->params);
+        return $this->wpdb->get_row($query, ARRAY_A);
+    }
 
-  /**
-   * SELECT 複数件
-   */
-  public function select(): array
-  {
-    $query = $this->wpdb->prepare($this->sql, $this->params);
-    return $this->wpdb->get_results($query, ARRAY_A) ?? [];
-  }
+    /**
+     * SELECT 複数件
+     */
+    public function select(): array
+    {
+        $query = $this->wpdb->prepare($this->sql, $this->params);
+        return $this->wpdb->get_results($query, ARRAY_A) ?? [];
+    }
 
-  /**
-   * INSERT / UPDATE / DELETE
-   */
-  public function execute(): int
-  {
-    $query = $this->wpdb->prepare($this->sql, $this->params);
-    return $this->wpdb->query($query);
-  }
+    /**
+     * INSERT / UPDATE / DELETE
+     */
+    public function execute(): int
+    {
+        $query = $this->wpdb->prepare($this->sql, $this->params);
+        return $this->wpdb->query($query);
+    }
 }

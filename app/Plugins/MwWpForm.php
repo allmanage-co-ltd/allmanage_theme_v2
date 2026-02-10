@@ -11,43 +11,44 @@ namespace App\Plugins;
  */
 class MwWpForm extends Plugin
 {
-  public function __construct()
-  {
-    if (!class_exists('MW_WP_Form'))
-      return;
-  }
+    public function __construct()
+    {
+        if (!class_exists('MW_WP_Form')) {
+            return;
+        }
+    }
 
-  // 対象フォームID定数
-  private const MWFORM_ID_CONTACT = 9999;
+    // 対象フォームID定数
+    // private const MWFORM_ID_CONTACT = 9999;
 
-  /**
-   * 初期化処理
-   */
-  public function boot(): void
-  {
-    // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'validation'], 10, 3);
-    // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'entryAutobackMyMail'], 10, 3);
-    add_filter('mwform_default_content', [$this, 'defaultContent']);
-    add_filter('mwform_default_settings', [$this, 'defaultSettings'], 10, 2);
-    add_filter('mwform_custom_mail_tag', [$this, 'tag'], 10, 3);
-    add_action('wp_footer', [$this, 'footerScript'], 9999);
-    add_action('wp_print_footer_scripts', [$this, 'appendFormClass'], 9999);
-    add_filter('user_can_richedit', [$this, 'disableVisualEditor']);
-    add_action('load-post.php', [$this, 'disableVisualEditor']);
-    add_action('load-post-new.php', [$this, 'disableVisualEditor']);
-  }
+    /**
+     * 初期化処理
+     */
+    public function boot(): void
+    {
+        // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'validation'], 10, 3);
+        // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'entryAutobackMyMail'], 10, 3);
+        add_filter('mwform_default_content', [$this, 'defaultContent']);
+        add_filter('mwform_default_settings', [$this, 'defaultSettings'], 10, 2);
+        add_filter('mwform_custom_mail_tag', [$this, 'tag'], 10, 3);
+        add_action('wp_footer', [$this, 'footerScript'], 9999);
+        add_action('wp_print_footer_scripts', [$this, 'appendFormClass'], 9999);
+        add_filter('user_can_richedit', [$this, 'disableVisualEditor']);
+        add_action('load-post.php', [$this, 'disableVisualEditor']);
+        add_action('load-post-new.php', [$this, 'disableVisualEditor']);
+    }
 
-  /**
-   * フッター用スクリプト出力
-   *
-   * - ページ単位でフォーム表示を制御
-   * - 規約文言の差し替え
-   * - 確認・完了画面で不要要素を非表示
-   */
-  public function footerScript(): void
-  {
-    if (is_page('contact')) {
-      echo <<<HTML
+    /**
+     * フッター用スクリプト出力
+     *
+     * - ページ単位でフォーム表示を制御
+     * - 規約文言の差し替え
+     * - 確認・完了画面で不要要素を非表示
+     */
+    public function footerScript(): void
+    {
+        if (is_page('contact')) {
+            echo <<<HTML
         <script>
         $(function() {
             $('.c-form__agreement .mwform-checkbox-field-text').html(
@@ -56,10 +57,10 @@ class MwWpForm extends Plugin
           });
         </script>
       HTML;
-    }
+        }
 
-    if (is_page(['confirm', 'thanks'])) {
-      echo <<<HTML
+        if (is_page(['confirm', 'thanks'])) {
+            echo <<<HTML
         <script type="text/javascript">
          $(function() {
           if ($('.mw_wp_form_confirm, .mw_wp_form_complete').length) {
@@ -70,127 +71,128 @@ class MwWpForm extends Plugin
         });
         </script>
       HTML;
-    }
-  }
-
-  /**
-   * バリデーション制御
-   *
-   * - 条件付き必須チェック
-   * - 選択肢制限
-   */
-  public function validation($Validation, $data, $Data)
-  {
-    if ($Data->get("hoge") == 'fuga') {
-      $Validation->set_rule('hoge', 'noEmpty', array(
-        'message' => 'fugaは必須項目です。'
-      ));
+        }
     }
 
-    $Validation->set_rule($Data->get("select"), 'in', array(
-      'options' => array('select1', 'select2'),
-      'message' => 'selectを選択してください'
-    ));
+    /**
+     * バリデーション制御
+     *
+     * - 条件付き必須チェック
+     * - 選択肢制限
+     */
+    public function validation($Validation, $data, $Data)
+    {
+        if ($Data->get('hoge') == 'fuga') {
+            $Validation->set_rule('hoge', 'noEmpty', [
+                'message' => 'fugaは必須項目です。',
+            ]);
+        }
 
-    return $Validation;
-  }
+        $Validation->set_rule($Data->get('select'), 'in', [
+            'options' => ['select1', 'select2'],
+            'message' => 'selectを選択してください',
+        ]);
 
-  /**
-   * 管理者メール制御
-   *
-   * - フォーム内容に応じて送信先や件名を切り替える
-   */
-  public function entryAutobackMyMail($Mail_raw, $values, $Data)
-  {
-    switch ($Data->get('hoge')) {
-      case 'fuga':
-        $Mail_raw->to = "";
-        $Mail_raw->bcc = "";
-        $Mail_raw->subject = "";
-      default:
-        $Mail_raw->to = "";
-        $Mail_raw->bcc = "";
-        $Mail_raw->subject = "";
-    }
-    return $Mail_raw;
-  }
-
-  /**
-   * カスタムメールタグ定義
-   */
-  public function tag(mixed $value, string $key, int $id): mixed
-  {
-    $tz = date_default_timezone_get();
-    date_default_timezone_set('Asia/Tokyo');
-    $time = date('Y年n月j日 H:i:s');
-    date_default_timezone_set($tz);
-
-    return match ($key) {
-      '利用環境'   => $_SERVER['HTTP_USER_AGENT'] ?? '',
-      'IPアドレス' => $_SERVER['REMOTE_ADDR'] ?? '',
-      'ホスト名'   => gethostbyaddr($_SERVER['REMOTE_ADDR'] ?? ''),
-      '送信日時'   => $time,
-      default  => $value,
-    };
-  }
-
-  /**
-   * MW WP Form 投稿タイプの
-   * ビジュアルエディタを無効化
-   */
-  public function disableVisualEditor($can)
-  {
-    $screen = get_current_screen();
-
-    if ($screen && $screen->post_type === 'mw-wp-form') {
-      return false;
+        return $Validation;
     }
 
-    return $can;
-  }
+    /**
+     * 管理者メール制御
+     *
+     * - フォーム内容に応じて送信先や件名を切り替える
+     */
+    public function entryAutobackMyMail($Mail_raw, $values, $Data)
+    {
+        switch ($Data->get('hoge')) {
+            case 'fuga':
+                $Mail_raw->to = '';
+                $Mail_raw->bcc = '';
+                $Mail_raw->subject = '';
+                // no break
+            default:
+                $Mail_raw->to = '';
+                $Mail_raw->bcc = '';
+                $Mail_raw->subject = '';
+        }
+        return $Mail_raw;
+    }
 
-  /**
-   * フォーム要素にクラスを追加
-   */
-  public function appendFormClass(): void
-  {
-    echo <<<HTML
+    /**
+     * カスタムメールタグ定義
+     */
+    public function tag(mixed $value, string $key, int $id): mixed
+    {
+        $tz = date_default_timezone_get();
+        date_default_timezone_set('Asia/Tokyo');
+        $time = date('Y年n月j日 H:i:s');
+        date_default_timezone_set($tz);
+
+        return match ($key) {
+            '利用環境'   => $_SERVER['HTTP_USER_AGENT'] ?? '',
+            'IPアドレス' => $_SERVER['REMOTE_ADDR'] ?? '',
+            'ホスト名'   => gethostbyaddr($_SERVER['REMOTE_ADDR'] ?? ''),
+            '送信日時'   => $time,
+            default  => $value,
+        };
+    }
+
+    /**
+     * MW WP Form 投稿タイプの
+     * ビジュアルエディタを無効化
+     */
+    public function disableVisualEditor($can)
+    {
+        $screen = get_current_screen();
+
+        if ($screen && $screen->post_type === 'mw-wp-form') {
+            return false;
+        }
+
+        return $can;
+    }
+
+    /**
+     * フォーム要素にクラスを追加
+     */
+    public function appendFormClass(): void
+    {
+        echo <<<HTML
     <script>
       if ($('.mw_wp_form'.length)){
         $('.mw_wp_form form').addClass('h-adr')
       }
     </script>
     HTML;
-  }
+    }
 
-  /**
-   * フォーム初期設定
-   *
-   * - 自動返信メール
-   * - 管理者メール
-   * - バリデーションルール
-   * - 遷移URL
-   * - 完了メッセージ
-   */
-  public function defaultSettings(mixed $value, string $key): mixed
-  {
-    $profile = [
-      'name'  => get_bloginfo('name'),
-      'email' => get_bloginfo('admin_email'),
-    ];
+    /**
+     * フォーム初期設定
+     *
+     * - 自動返信メール
+     * - 管理者メール
+     * - バリデーションルール
+     * - 遷移URL
+     * - 完了メッセージ
+     */
+    public function defaultSettings(mixed $value, string $key): mixed
+    {
+        $profile = [
+            'name'  => get_bloginfo('name'),
+            'email' => get_bloginfo('admin_email'),
+        ];
 
-    $input = $this->buildInputText();
+        $input = $this->buildInputText();
 
-    return match ($key) {
+        return match ($key) {
 
-      // 自動返信
-      'mail_subject'          => 'お問い合わせありがとうございます',
-      'mail_sender',
-      'mail_reply_to',
-      'mail_from'             => $profile['email'],
-      'automatic_reply_email' => 'your_mail',
+            // 自動返信
+            'mail_subject'          => 'お問い合わせありがとうございます',
+            'mail_sender',
+            'mail_reply_to',
+            'mail_from'             => $profile['email'],
+            'automatic_reply_email' => 'your_mail',
 
-      'mail_content'          => <<<EOT
+            'mail_content'          => <<<EOT
 {your_name}様
 
 この度は、お問い合わせいただきありがとうございます。
@@ -202,14 +204,14 @@ class MwWpForm extends Plugin
 =================================
 EOT,
 
-      // 管理者
-      'mail_to'               => $profile['email'],
-      'admin_mail_subject'    => 'お問い合わせがありました',
-      'admin_mail_sender'     => '{your_name}',
-      'admin_mail_reply_to'   => '{your_mail}',
-      'admin_mail_from'       => '{your_mail}',
+            // 管理者
+            'mail_to'               => $profile['email'],
+            'admin_mail_subject'    => 'お問い合わせがありました',
+            'admin_mail_sender'     => '{your_name}',
+            'admin_mail_reply_to'   => '{your_mail}',
+            'admin_mail_from'       => '{your_mail}',
 
-      'admin_mail_content'    => <<<EOT
+            'admin_mail_content'    => <<<EOT
 {your_name}様よりお問い合わせがありました。
 
 {$input}
@@ -220,37 +222,37 @@ EOT,
 送信日時 : {送信日時}
 EOT,
 
-      // バリデーション
-      'validation'            => [
-        ['target'            => 'your_name', 'noempty'            => true],
-        ['target'            => 'your_name_kana', 'noempty'            => true, 'katakana'            => true],
-        ['target'            => 'your_mail', 'noempty'            => true, 'mail'            => true],
-        ['target'            => 'your_tel', 'noempty'            => true, 'tel'            => true],
-        ['target'            => 'your_postal', 'noempty'            => true, 'zip'            => true],
-        ['target'            => 'your_inquiry', 'noempty'            => true],
-        ['target'            => 'recaptcha-v3'],
-      ],
+            // バリデーション
+            'validation'            => [
+                ['target'            => 'your_name', 'noempty'            => true],
+                ['target'            => 'your_name_kana', 'noempty'            => true, 'katakana'            => true],
+                ['target'            => 'your_mail', 'noempty'            => true, 'mail'            => true],
+                ['target'            => 'your_tel', 'noempty'            => true, 'tel'            => true],
+                ['target'            => 'your_postal', 'noempty'            => true, 'zip'            => true],
+                ['target'            => 'your_inquiry', 'noempty'            => true],
+                ['target'            => 'recaptcha-v3'],
+            ],
 
-      // その他
-      'usedb'                 => true,
-      'input_url'             => '/contact/',
-      'confirmation_url'      => '/contact/confirm/',
-      'complete_url'          => '/contact/thanks/',
-      'complete_message'      => <<<EOF
+            // その他
+            'usedb'                 => true,
+            'input_url'             => '/contact/',
+            'confirmation_url'      => '/contact/confirm/',
+            'complete_url'          => '/contact/thanks/',
+            'complete_message'      => <<<EOF
 <p>この度は、お問い合わせいただき、ありがとうございます。<br>ご入力いただきましたメールアドレス宛に自動返信メールをお送りしております。<br>ご送信いただいた内容を確認後、折り返しご連絡させていただきます。</p>
 <div class="c-form__button"><a href="../../" class="c-form__btn">トップページ</a></div>
 EOF,
 
-      default                 => $value,
-    };
-  }
+            default                 => $value,
+        };
+    }
 
-  /**
-   *
-   */
-  public function buildInputText(): string
-  {
-    return <<<EOT
+    /**
+     *
+     */
+    public function buildInputText(): string
+    {
+        return <<<EOT
 
 ─送信内容の確認─────────────────
 
@@ -268,18 +270,18 @@ EOF,
 ──────────────────────────
 
 EOT;
-  }
+    }
 
-  /**
-   * フォーム初期コンテンツ
-   *
-   * - MW WP Form のショートコードを用いた
-   *   HTMLフォーム構造を定義
-   */
-  public function defaultContent(string $content): string
-  {
-    ob_start();
-    echo <<<HTML
+    /**
+     * フォーム初期コンテンツ
+     *
+     * - MW WP Form のショートコードを用いた
+     *   HTMLフォーム構造を定義
+     */
+    public function defaultContent(string $content): string
+    {
+        ob_start();
+        echo <<<HTML
 <p class="p-country-name" style="display:none!important">Japan</p>
 <div class="c-form__head">
 
@@ -466,6 +468,6 @@ EOT;
     </div>
 </div>
 HTML;
-    return ob_get_clean();
-  }
+        return ob_get_clean();
+    }
 }
