@@ -22,6 +22,9 @@ jobs:
           php-version: '8.2'
           tools: composer:v2
 
+      - name: Ensure composer cache dir
+        run: mkdir -p ~/.composer/cache
+
       - name: Cache Composer dependencies
         uses: actions/cache@v3
         with:
