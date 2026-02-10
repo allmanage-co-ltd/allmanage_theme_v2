@@ -19,14 +19,10 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\CT;
-use PhpCsFixer\Tokenizer\FCT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\TokensAnalyzer;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class ReturnAssignmentFixer extends AbstractFixer
 {
     private TokensAnalyzer $tokensAnalyzer;
@@ -35,7 +31,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Local, dynamic and directly referenced variables should not be assigned and directly returned by a function or method.',
-            [new CodeSample("<?php\nfunction a() {\n    \$a = 1;\n    return \$a;\n}\n")],
+            [new CodeSample("<?php\nfunction a() {\n    \$a = 1;\n    return \$a;\n}\n")]
         );
     }
 
@@ -52,7 +48,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAllTokenKindsFound([\T_FUNCTION, \T_RETURN, \T_VARIABLE]);
+        return $tokens->isAllTokenKindsFound([T_FUNCTION, T_RETURN, T_VARIABLE]);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
@@ -61,7 +57,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
         $this->tokensAnalyzer = new TokensAnalyzer($tokens);
 
         for ($index = 1; $index < $tokenCount; ++$index) {
-            if (!$tokens[$index]->isGivenKind(\T_FUNCTION)) {
+            if (!$tokens[$index]->isGivenKind(T_FUNCTION)) {
                 continue;
             }
 
@@ -85,7 +81,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                     $tokens,
                     $index,
                     $functionOpenIndex,
-                    $functionCloseIndex,
+                    $functionCloseIndex
                 );
 
                 $functionCloseIndex += $tokensAdded;
@@ -106,6 +102,16 @@ final class ReturnAssignmentFixer extends AbstractFixer
      */
     private function fixFunction(Tokens $tokens, int $functionIndex, int $functionOpenIndex, int $functionCloseIndex): int
     {
+        static $riskyKinds = [
+            CT::T_DYNAMIC_VAR_BRACE_OPEN, // "$h = ${$g};" case
+            T_EVAL,                       // "$c = eval('return $this;');" case
+            T_GLOBAL,
+            T_INCLUDE,                    // loading additional symbols we cannot analyze here
+            T_INCLUDE_ONCE,               // "
+            T_REQUIRE,                    // "
+            T_REQUIRE_ONCE,               // "
+        ];
+
         $inserted = 0;
         $candidates = [];
         $isRisky = false;
@@ -130,7 +136,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
         // - check for return statements that might be fixed (based on if fixing will be risky, which is only know after analyzing the whole function)
 
         for ($index = $functionOpenIndex + 1; $index < $functionCloseIndex; ++$index) {
-            if ($tokens[$index]->isGivenKind(\T_FUNCTION)) {
+            if ($tokens[$index]->isGivenKind(T_FUNCTION)) {
                 $nestedFunctionOpenIndex = $tokens->getNextTokenOfKind($index, ['{', ';']);
                 if ($tokens[$nestedFunctionOpenIndex]->equals(';')) { // abstract function
                     $index = $nestedFunctionOpenIndex - 1;
@@ -144,7 +150,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                     $tokens,
                     $index,
                     $nestedFunctionOpenIndex,
-                    $nestedFunctionCloseIndex,
+                    $nestedFunctionCloseIndex
                 );
 
                 $index = $nestedFunctionCloseIndex + $tokensAdded;
@@ -162,7 +168,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                 continue;
             }
 
-            if ($tokens[$index]->isGivenKind(\T_RETURN)) {
+            if ($tokens[$index]->isGivenKind(T_RETURN)) {
                 $candidates[] = $index;
 
                 continue;
@@ -171,24 +177,16 @@ final class ReturnAssignmentFixer extends AbstractFixer
             // test if there is anything in the function body that might
             // change global state or indirect changes (like through references, eval, etc.)
 
-            if ($tokens[$index]->isGivenKind([
-                CT::T_DYNAMIC_VAR_BRACE_OPEN, // "$h = ${$g};" case
-                \T_EVAL,                       // "$c = eval('return $this;');" case
-                \T_GLOBAL,
-                \T_INCLUDE,                    // loading additional symbols we cannot analyse here
-                \T_INCLUDE_ONCE,               // "
-                \T_REQUIRE,                    // "
-                \T_REQUIRE_ONCE,               // "
-            ])) {
+            if ($tokens[$index]->isGivenKind($riskyKinds)) {
                 $isRisky = true;
 
                 continue;
             }
 
-            if ($tokens[$index]->isGivenKind(\T_STATIC)) {
+            if ($tokens[$index]->isGivenKind(T_STATIC)) {
                 $nextIndex = $tokens->getNextMeaningfulToken($index);
 
-                if (!$tokens[$nextIndex]->isGivenKind(\T_FUNCTION)) {
+                if (!$tokens[$nextIndex]->isGivenKind(T_FUNCTION)) {
                     $isRisky = true; // "static $a" case
 
                     continue;
@@ -197,7 +195,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
 
             if ($tokens[$index]->equals('$')) {
                 $nextIndex = $tokens->getNextMeaningfulToken($index);
-                if ($tokens[$nextIndex]->isGivenKind(\T_VARIABLE)) {
+                if ($tokens[$nextIndex]->isGivenKind(T_VARIABLE)) {
                     $isRisky = true; // "$$a" case
 
                     continue;
@@ -221,12 +219,12 @@ final class ReturnAssignmentFixer extends AbstractFixer
 
             // Check if returning only a variable (i.e. not the result of an expression, function call etc.)
             $returnVarIndex = $tokens->getNextMeaningfulToken($index);
-            if (!$tokens[$returnVarIndex]->isGivenKind(\T_VARIABLE)) {
+            if (!$tokens[$returnVarIndex]->isGivenKind(T_VARIABLE)) {
                 continue; // example: "return 1;"
             }
 
             $endReturnVarIndex = $tokens->getNextMeaningfulToken($returnVarIndex);
-            if (!$tokens[$endReturnVarIndex]->equalsAny([';', [\T_CLOSE_TAG]])) {
+            if (!$tokens[$endReturnVarIndex]->equalsAny([';', [T_CLOSE_TAG]])) {
                 continue; // example: "return $a + 1;"
             }
 
@@ -238,18 +236,18 @@ final class ReturnAssignmentFixer extends AbstractFixer
 
             // Note: here we are @ "; return $a;" (or "; return $a ? >")
             while (true) {
-                $prevMeaningful = $tokens->getPrevMeaningfulToken($assignVarEndIndex);
+                $prevMeaningFul = $tokens->getPrevMeaningfulToken($assignVarEndIndex);
 
-                if (!$tokens[$prevMeaningful]->equals(')')) {
+                if (!$tokens[$prevMeaningFul]->equals(')')) {
                     break;
                 }
 
-                $assignVarEndIndex = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $prevMeaningful);
+                $assignVarEndIndex = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $prevMeaningFul);
             }
 
             $assignVarOperatorIndex = $tokens->getPrevTokenOfKind(
                 $assignVarEndIndex,
-                ['=', ';', '{', '}', [\T_OPEN_TAG], [\T_OPEN_TAG_WITH_ECHO]],
+                ['=', ';', '{', '}', [T_OPEN_TAG], [T_OPEN_TAG_WITH_ECHO]]
             );
 
             if ($tokens[$assignVarOperatorIndex]->equals('}')) {
@@ -289,7 +287,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                 $assignVarIndex,
                 $assignVarOperatorIndex,
                 $index,
-                $endReturnVarIndex,
+                $endReturnVarIndex
             );
         }
 
@@ -328,7 +326,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
                 ? ' '
                 : substr($content, $fistLinebreakPos);
 
-            $tokens[$returnIndex - 1] = new Token([\T_WHITESPACE, $content]);
+            $tokens[$returnIndex - 1] = new Token([T_WHITESPACE, $content]);
         }
 
         // remove the variable and the assignment
@@ -337,7 +335,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
         }
 
         // insert new return statement
-        $tokens->insertAt($assignVarIndex, new Token([\T_RETURN, 'return']));
+        $tokens->insertAt($assignVarIndex, new Token([T_RETURN, 'return']));
         ++$inserted;
 
         // use the original indent of the var assignment for the new return statement
@@ -346,13 +344,13 @@ final class ReturnAssignmentFixer extends AbstractFixer
             && $tokens[$assignVarIndex - 1]->isWhitespace()
             && $originalIndent !== $tokens[$assignVarIndex - 1]->getContent()
         ) {
-            $tokens[$assignVarIndex - 1] = new Token([\T_WHITESPACE, $originalIndent]);
+            $tokens[$assignVarIndex - 1] = new Token([T_WHITESPACE, $originalIndent]);
         }
 
         // remove trailing space after the new return statement which might be added during the cleanup process
         $nextIndex = $tokens->getNonEmptySibling($assignVarIndex, 1);
         if (!$tokens[$nextIndex]->isWhitespace()) {
-            $tokens->insertAt($nextIndex, new Token([\T_WHITESPACE, ' ']));
+            $tokens->insertAt($nextIndex, new Token([T_WHITESPACE, ' ']));
             ++$inserted;
         }
 
@@ -400,18 +398,18 @@ final class ReturnAssignmentFixer extends AbstractFixer
     {
         do {
             $index = $tokens->getPrevMeaningfulToken($index);
-        } while ($tokens[$index]->equalsAny([',', [\T_STRING], [\T_IMPLEMENTS], [\T_EXTENDS], [\T_NS_SEPARATOR]]));
+        } while ($tokens[$index]->equalsAny([',', [T_STRING], [T_IMPLEMENTS], [T_EXTENDS], [T_NS_SEPARATOR]]));
 
         if ($tokens[$index]->equals(')')) { // skip constructor braces and content within
             $index = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $index);
             $index = $tokens->getPrevMeaningfulToken($index);
         }
 
-        if (!$tokens[$index]->isGivenKind(\T_CLASS) || !$this->tokensAnalyzer->isAnonymousClass($index)) {
+        if (!$tokens[$index]->isGivenKind(T_CLASS) || !$this->tokensAnalyzer->isAnonymousClass($index)) {
             return null;
         }
 
-        return $tokens->getPrevTokenOfKind($index, [[\T_NEW]]);
+        return $tokens->getPrevTokenOfKind($index, [[T_NEW]]);
     }
 
     /**
@@ -440,13 +438,13 @@ final class ReturnAssignmentFixer extends AbstractFixer
             $index = $tokens->getPrevMeaningfulToken($index);
         }
 
-        if (!$tokens[$index]->isGivenKind(\T_FUNCTION)) {
+        if (!$tokens[$index]->isGivenKind(T_FUNCTION)) {
             return null;
         }
 
         $staticCandidate = $tokens->getPrevMeaningfulToken($index);
 
-        return $tokens[$staticCandidate]->isGivenKind(\T_STATIC) ? $staticCandidate : $index;
+        return $tokens[$staticCandidate]->isGivenKind(T_STATIC) ? $staticCandidate : $index;
     }
 
     /**
@@ -456,7 +454,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
      */
     private function isOpenBraceOfMatch(Tokens $tokens, int $index): ?int
     {
-        if (!$tokens->isTokenKindFound(FCT::T_MATCH)) {
+        if (!\defined('T_MATCH') || !$tokens->isTokenKindFound(T_MATCH)) { // @TODO: drop condition when PHP 8.0+ is required
             return null;
         }
 
@@ -469,13 +467,13 @@ final class ReturnAssignmentFixer extends AbstractFixer
         $index = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PARENTHESIS_BRACE, $index);
         $index = $tokens->getPrevMeaningfulToken($index);
 
-        return $tokens[$index]->isGivenKind(\T_MATCH) ? $index : null;
+        return $tokens[$index]->isGivenKind(T_MATCH) ? $index : null;
     }
 
     private function isUsedInCatchOrFinally(Tokens $tokens, int $returnVarIndex, int $functionOpenIndex, int $functionCloseIndex): bool
     {
         // Find try
-        $tryIndex = $tokens->getPrevTokenOfKind($returnVarIndex, [[\T_TRY]]);
+        $tryIndex = $tokens->getPrevTokenOfKind($returnVarIndex, [[T_TRY]]);
         if (null === $tryIndex || $tryIndex <= $functionOpenIndex) {
             return false;
         }
@@ -489,7 +487,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
         }
 
         // Find catches
-        while ($tokens[$nextIndex]->isGivenKind(\T_CATCH)) {
+        while ($tokens[$nextIndex]->isGivenKind(T_CATCH)) {
             $catchOpenIndex = $tokens->getNextTokenOfKind($nextIndex, ['{']);
             $catchCloseIndex = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_CURLY_BRACE, $catchOpenIndex);
 
@@ -508,7 +506,7 @@ final class ReturnAssignmentFixer extends AbstractFixer
             }
         }
 
-        if (!$tokens[$nextIndex]->isGivenKind(\T_FINALLY)) {
+        if (!$tokens[$nextIndex]->isGivenKind(T_FINALLY)) {
             return false;
         }
 

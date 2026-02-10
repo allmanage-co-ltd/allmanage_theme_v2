@@ -25,8 +25,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * Fixer for rules defined in PSR2 ¶5.2.
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
 {
@@ -36,18 +34,16 @@ final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
             'A case should be followed by a colon and not a semicolon.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                            switch ($a) {
-                                case 1;
-                                    break;
-                                default;
-                                    break;
-                            }
-
-                        PHP,
+                    '<?php
+    switch ($a) {
+        case 1;
+            break;
+        default;
+            break;
+    }
+'
                 ),
-            ],
+            ]
         );
     }
 
@@ -63,13 +59,13 @@ final class SwitchCaseSemicolonToColonFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_SWITCH);
+        return $tokens->isTokenKindFound(T_SWITCH);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         /** @var SwitchAnalysis $analysis */
-        foreach (ControlCaseStructuresAnalyzer::findControlStructures($tokens, [\T_SWITCH]) as $analysis) {
+        foreach (ControlCaseStructuresAnalyzer::findControlStructures($tokens, [T_SWITCH]) as $analysis) {
             $default = $analysis->getDefaultAnalysis();
 
             if (null !== $default) {

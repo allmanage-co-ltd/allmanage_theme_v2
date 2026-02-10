@@ -26,8 +26,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Graham Campbell <hello@gjcampbell.co.uk>
  *
  * @deprecated Use `blank_lines_before_namespace` with config: ['min_line_breaks' => 0, 'max_line_breaks' => 1]
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NoBlankLinesBeforeNamespaceFixer extends AbstractProxyFixer implements WhitespacesAwareFixerInterface, DeprecatedFixerInterface
 {
@@ -38,7 +36,7 @@ final class NoBlankLinesBeforeNamespaceFixer extends AbstractProxyFixer implemen
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_NAMESPACE);
+        return $tokens->isTokenKindFound(T_NAMESPACE);
     }
 
     public function getDefinition(): FixerDefinitionInterface
@@ -47,9 +45,9 @@ final class NoBlankLinesBeforeNamespaceFixer extends AbstractProxyFixer implemen
             'There should be no blank lines before a namespace declaration.',
             [
                 new CodeSample(
-                    "<?php\n\n\n\nnamespace Example;\n",
+                    "<?php\n\n\n\nnamespace Example;\n"
                 ),
-            ],
+            ]
         );
     }
 

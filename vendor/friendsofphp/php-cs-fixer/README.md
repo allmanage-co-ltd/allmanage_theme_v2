@@ -6,32 +6,33 @@
 
 # PHP Coding Standards Fixer
 
-The PHP Coding Standards Fixer (PHP CS Fixer) fixes your code to follow the standards.
+The PHP Coding Standards Fixer (PHP CS Fixer) tool fixes your code to follow standards;
+whether you want to follow PHP coding standards as defined in the PSR-1, PSR-2, etc.,
+or other community driven ones like the Symfony one.
+You can **also** define your (team's) style through configuration.
+
+It can modernize your code (like converting the ``pow`` function to the ``**`` operator on PHP 5.6)
+and (micro) optimize it.
 
 If you are already using a linter to identify coding standards problems in your
 code, you know that fixing them by hand is tedious, especially on large
-projects. This tool not only detects them, but also fixes them for you.
-
-PHP CS Fixer has built-in rule sets, whether you want to follow PHP coding standards as defined by [PHP-FIG's PER Coding Style](https://www.php-fig.org/per/coding-style/) - [`@PER-CS`](./doc/ruleSets/PER-CS.rst),
-a wide community like the [Symfony](https://symfony.com/doc/current/contributing/code/standards.html) - [`@Symfony`](./doc/ruleSets/Symfony.rst),
-or our opinionated one - [@PhpCsFixer](./doc/ruleSets/PhpCsFixer.rst).
-You can also define your (team's) style through the [configuration file](./doc/config.rst).
-
-PHP CS Fixer can not only unify the style of your code, but also help to modernise your codebase towards
-newer PHP (e.g. [`@autoPHPMigration`](./doc/ruleSets/AutoPHPMigration.rst) and [`@autoPHPMigration:risky`](./doc/ruleSets/AutoPHPMigrationRisky.rst)) and newer PHPUnit (e.g. [`@autoPHPUnitMigration:risky`](./doc/ruleSets/AutoPHPUnitMigrationRisky.rst)).
-
-There are also [`@auto`](./doc/ruleSets/Auto.rst) and [`@auto:risky`](./doc/ruleSets/AutoRisky.rst) that aim to provide good base rules.
+projects. This tool does not only detect them, but also fixes them for you.
 
 ## Supported PHP Versions
 
-* PHP 7.4 - PHP 8.5
+* PHP 7.4
+* PHP 8.0
+* PHP 8.1
+* PHP 8.2
+* PHP 8.3
 
-> [!NOTE]
+> **Note**
 > Each new PHP version requires a huge effort to support the new syntax.
 > That's why the latest PHP version might not be supported yet. If you need it,
-> please consider supporting the project in any convenient way, for example,
-> with code contributions or reviewing existing PRs. To run PHP CS Fixer on yet
-> unsupported versions "at your own risk" - use `--allow-unsupported-php-version=yes` option.
+> please, consider supporting the project in any convenient way, for example
+> with code contribution or reviewing existing PRs. To run PHP CS Fixer on yet
+> unsupported versions "at your own risk" - leverage the
+> [PHP_CS_FIXER_IGNORE_ENV](./doc/usage.rst#environment-options).
 
 ## Documentation
 
@@ -39,7 +40,7 @@ There are also [`@auto`](./doc/ruleSets/Auto.rst) and [`@auto:risky`](./doc/rule
 
 The recommended way to install PHP CS Fixer is to use [Composer](https://getcomposer.org/download/):
 
-```sh
+```console
 composer require --dev friendsofphp/php-cs-fixer
 ## or when facing conflicts in dependencies:
 composer require --dev php-cs-fixer/shim
@@ -50,35 +51,25 @@ For more details and other installation methods (also with Docker or behind CI),
 
 ### Usage
 
-Assuming you installed PHP CS Fixer as instructed above, you can
-initialise base config for your project by using following command:
+Assuming you installed PHP CS Fixer as instructed above, you can run the
+following command to fix the PHP files in the `src` directory:
 
-```sh
-./vendor/bin/php-cs-fixer init
-```
-
-To automatically fix your project, or only check against the need of changes, run:
-
-```sh
-./vendor/bin/php-cs-fixer fix
-./vendor/bin/php-cs-fixer check
+```console
+./vendor/bin/php-cs-fixer fix src
 ```
 
 See [usage](./doc/usage.rst), list of [built-in rules](./doc/rules/index.rst), list of [rule sets](./doc/ruleSets/index.rst)
 and [configuration file](./doc/config.rst) documentation for more details.
 
-If you need to apply code styles that are not built-in into the tool, you can
+If you need to apply code styles that are not supported by the tool, you can
 [create custom rules](./doc/custom_rules.rst).
 
 ## Editor Integration
 
-Native support exists for:
-
-* [PhpStorm](https://www.jetbrains.com/help/phpstorm/using-php-cs-fixer.html)
-
-Community plugins exist for:
+Dedicated plugins exist for:
 
 * [NetBeans](https://plugins.netbeans.apache.org/catalogue/?id=36)
+* [PhpStorm](https://www.jetbrains.com/help/phpstorm/using-php-cs-fixer.html)
 * [Sublime Text](https://github.com/benmatselby/sublime-phpcs)
 * [Vim](https://github.com/stephpy/vim-php-cs-fixer)
 * [VS Code](https://github.com/junstyle/vscode-php-cs-fixer)
@@ -86,12 +77,12 @@ Community plugins exist for:
 ## Community
 
 The PHP CS Fixer is maintained on GitHub at <https://github.com/PHP-CS-Fixer/PHP-CS-Fixer>.
-Contributions, bug reports and ideas about new features are welcome there.
+Bug reports and ideas about new features are welcome there.
 
 You can reach us in the [GitHub Discussions](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/discussions/) regarding the
-project, configuration, possible improvements, ideas and questions.
+project, configuration, possible improvements, ideas and questions. Please visit us there!
 
 ## Contribute
 
 The tool comes with quite a few built-in fixers, but everyone is more than
-welcome to [contribute](./CONTRIBUTING.md) more of them.
+welcome to [contribute](CONTRIBUTING.md) more of them.

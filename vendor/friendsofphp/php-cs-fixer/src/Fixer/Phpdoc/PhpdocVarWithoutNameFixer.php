@@ -22,44 +22,33 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Preg;
-use PhpCsFixer\Tokenizer\FCT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Graham Campbell <hello@gjcampbell.co.uk>
  * @author Dave van der Brugge <dmvdbrugge@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PhpdocVarWithoutNameFixer extends AbstractFixer
 {
-    private const PROPERTY_MODIFIER_KINDS = [\T_PRIVATE, \T_PROTECTED, \T_PUBLIC, \T_VAR, FCT::T_READONLY, FCT::T_PRIVATE_SET, FCT::T_PROTECTED_SET, FCT::T_PUBLIC_SET];
-
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             '`@var` and `@type` annotations of classy properties should not contain the name.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        final class Foo
-                        {
-                            /**
-                             * @var int $bar
-                             */
-                            public $bar;
+            [new CodeSample('<?php
+final class Foo
+{
+    /**
+     * @var int $bar
+     */
+    public $bar;
 
-                            /**
-                             * @type $baz float
-                             */
-                            public $baz;
-                        }
-
-                        PHP,
-                ),
-            ],
+    /**
+     * @type $baz float
+     */
+    public $baz;
+}
+')]
         );
     }
 
@@ -76,13 +65,13 @@ final class PhpdocVarWithoutNameFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_DOC_COMMENT) && $tokens->isAnyTokenKindsFound([\T_CLASS, \T_TRAIT]);
+        return $tokens->isTokenKindFound(T_DOC_COMMENT) && $tokens->isAnyTokenKindsFound([T_CLASS, T_TRAIT]);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {
-            if (!$token->isGivenKind(\T_DOC_COMMENT)) {
+            if (!$token->isGivenKind(T_DOC_COMMENT)) {
                 continue;
             }
 
@@ -93,12 +82,18 @@ final class PhpdocVarWithoutNameFixer extends AbstractFixer
             }
 
             // For people writing "static public $foo" instead of "public static $foo"
-            if ($tokens[$nextIndex]->isGivenKind(\T_STATIC)) {
+            if ($tokens[$nextIndex]->isGivenKind(T_STATIC)) {
                 $nextIndex = $tokens->getNextMeaningfulToken($nextIndex);
             }
 
             // We want only doc blocks that are for properties and thus have specified access modifiers next
-            if (!$tokens[$nextIndex]->isGivenKind(self::PROPERTY_MODIFIER_KINDS)) {
+            $propertyModifierKinds = [T_PRIVATE, T_PROTECTED, T_PUBLIC, T_VAR];
+
+            if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+                $propertyModifierKinds[] = T_READONLY;
+            }
+
+            if (!$tokens[$nextIndex]->isGivenKind($propertyModifierKinds)) {
                 continue;
             }
 
@@ -113,7 +108,7 @@ final class PhpdocVarWithoutNameFixer extends AbstractFixer
                 }
             }
 
-            $tokens[$index] = new Token([\T_DOC_COMMENT, $doc->getContent()]);
+            $tokens[$index] = new Token([T_DOC_COMMENT, $doc->getContent()]);
         }
     }
 

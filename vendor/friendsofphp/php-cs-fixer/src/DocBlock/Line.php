@@ -20,10 +20,8 @@ use PhpCsFixer\Preg;
  * This represents a line of a docblock.
  *
  * @author Graham Campbell <hello@gjcampbell.co.uk>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-final class Line implements \Stringable
+final class Line
 {
     /**
      * The content of this line.

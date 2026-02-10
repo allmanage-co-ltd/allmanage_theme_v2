@@ -24,8 +24,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Roland Franssen <franssen.roland@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PhpUnitFqcnAnnotationFixer extends AbstractPhpUnitFixer
 {
@@ -33,26 +31,22 @@ final class PhpUnitFqcnAnnotationFixer extends AbstractPhpUnitFixer
     {
         return new FixerDefinition(
             'PHPUnit annotations should be a FQCNs including a root namespace.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        final class MyTest extends \PHPUnit_Framework_TestCase
-                        {
-                            /**
-                             * @expectedException InvalidArgumentException
-                             * @covers Project\NameSpace\Something
-                             * @coversDefaultClass Project\Default
-                             * @uses Project\Test\Util
-                             */
-                            public function testSomeTest()
-                            {
-                            }
-                        }
-
-                        PHP,
-                ),
-            ],
+            [new CodeSample(
+                '<?php
+final class MyTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * @expectedException InvalidArgumentException
+     * @covers Project\NameSpace\Something
+     * @coversDefaultClass Project\Default
+     * @uses Project\Test\Util
+     */
+    public function testSomeTest()
+    {
+    }
+}
+'
+            )]
         );
     }
 
@@ -68,7 +62,7 @@ final class PhpUnitFqcnAnnotationFixer extends AbstractPhpUnitFixer
 
     protected function applyPhpUnitClassFix(Tokens $tokens, int $startIndex, int $endIndex): void
     {
-        $prevDocCommentIndex = $tokens->getPrevTokenOfKind($startIndex, [[\T_DOC_COMMENT]]);
+        $prevDocCommentIndex = $tokens->getPrevTokenOfKind($startIndex, [[T_DOC_COMMENT]]);
 
         if (null !== $prevDocCommentIndex) {
             $startIndex = $prevDocCommentIndex;
@@ -80,11 +74,11 @@ final class PhpUnitFqcnAnnotationFixer extends AbstractPhpUnitFixer
     private function fixPhpUnitClass(Tokens $tokens, int $startIndex, int $endIndex): void
     {
         for ($index = $startIndex; $index < $endIndex; ++$index) {
-            if ($tokens[$index]->isGivenKind(\T_DOC_COMMENT)) {
-                $tokens[$index] = new Token([\T_DOC_COMMENT, Preg::replace(
+            if ($tokens[$index]->isGivenKind(T_DOC_COMMENT)) {
+                $tokens[$index] = new Token([T_DOC_COMMENT, Preg::replace(
                     '~^(\s*\*\s*@(?:expectedException|covers|coversDefaultClass|uses)\h+)(?!(?:self|static)::)(\w.*)$~m',
                     '$1\\\$2',
-                    $tokens[$index]->getContent(),
+                    $tokens[$index]->getContent()
                 )]);
             }
         }

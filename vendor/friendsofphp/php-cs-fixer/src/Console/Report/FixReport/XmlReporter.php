@@ -23,8 +23,6 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
  * @readonly
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class XmlReporter implements ReporterInterface
 {
@@ -77,12 +75,7 @@ final class XmlReporter implements ReporterInterface
 
         $dom->formatOutput = true;
 
-        $result = $dom->saveXML();
-        if (false === $result) {
-            throw new \RuntimeException('Failed to generate XML output');
-        }
-
-        return $reportSummary->isDecoratedOutput() ? OutputFormatter::escape($result) : $result;
+        return $reportSummary->isDecoratedOutput() ? OutputFormatter::escape($dom->saveXML()) : $dom->saveXML();
     }
 
     /**

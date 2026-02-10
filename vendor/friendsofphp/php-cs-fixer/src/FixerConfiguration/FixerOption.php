@@ -16,8 +16,6 @@ namespace PhpCsFixer\FixerConfiguration;
 
 /**
  * @readonly
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FixerOption implements FixerOptionInterface
 {
@@ -38,16 +36,16 @@ final class FixerOption implements FixerOptionInterface
     private ?array $allowedTypes;
 
     /**
-     * @var null|non-empty-list<null|(callable(mixed): bool)|scalar>
+     * @var null|list<null|(callable(mixed): bool)|scalar>
      */
     private ?array $allowedValues;
 
     private ?\Closure $normalizer;
 
     /**
-     * @param mixed                                                    $default
-     * @param null|list<string>                                        $allowedTypes
-     * @param null|non-empty-list<null|(callable(mixed): bool)|scalar> $allowedValues
+     * @param mixed                                          $default
+     * @param null|list<string>                              $allowedTypes
+     * @param null|list<null|(callable(mixed): bool)|scalar> $allowedValues
      */
     public function __construct(
         string $name,
@@ -63,10 +61,11 @@ final class FixerOption implements FixerOptionInterface
         }
 
         if (null !== $allowedValues) {
-            $allowedValues = array_map(
-                fn ($allowedValue) => $allowedValue instanceof \Closure ? $this->unbind($allowedValue) : $allowedValue,
-                $allowedValues,
-            );
+            foreach ($allowedValues as &$allowedValue) {
+                if ($allowedValue instanceof \Closure) {
+                    $allowedValue = $this->unbind($allowedValue);
+                }
+            }
         }
 
         $this->name = $name;

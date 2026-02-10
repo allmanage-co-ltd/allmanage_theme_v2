@@ -25,8 +25,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class ArrayTypehintTransformer extends AbstractTransformer
 {
@@ -37,7 +35,7 @@ final class ArrayTypehintTransformer extends AbstractTransformer
 
     public function process(Tokens $tokens, Token $token, int $index): void
     {
-        if (!$token->isGivenKind(\T_ARRAY)) {
+        if (!$token->isGivenKind(T_ARRAY)) {
             return;
         }
 

@@ -1,17 +1,17 @@
 <?php
 
-use App\Hooks\Enqueue;
-use App\Hooks\SetupTheme;
-use App\Hooks\Shortcode;
-use App\Hooks\Seo;
-use App\Hooks\Admin\EditMenuAdmin;
-use App\Hooks\Admin\EditMenuClient;
-use App\Hooks\Admin\RegisterOptionPage;
-use App\Hooks\Admin\RegisterPostType;
-use App\Hooks\Admin\RegisterTaxonomy;
-use App\Hooks\Plugins\AdvancedCustomFields;
-use App\Hooks\Plugins\MwWpForm;
-use App\Hooks\Plugins\Welcart;
+use App\CMS\Hooks\Enqueue;
+use App\CMS\Hooks\SetupTheme;
+use App\CMS\Hooks\Shortcode;
+use App\CMS\Hooks\Seo;
+use App\CMS\Admin\EditMenuAdmin;
+use App\CMS\Admin\EditMenuClient;
+use App\CMS\Admin\RegisterOptionPage;
+use App\CMS\Admin\RegisterPostType;
+use App\CMS\Admin\RegisterTaxonomy;
+use App\CMS\Plugins\AdvancedCustomFields;
+use App\CMS\Plugins\MwWpForm;
+use App\CMS\Plugins\Welcart;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
@@ -24,11 +24,6 @@ use App\Hooks\Plugins\Welcart;
  */
 class App
 {
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * 各フッククラスを初期化
      */

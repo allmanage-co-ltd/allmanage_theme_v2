@@ -23,8 +23,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Haralan Dobrev <hkdobrev@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class LogicalOperatorsFixer extends AbstractFixer
 {
@@ -34,23 +32,21 @@ final class LogicalOperatorsFixer extends AbstractFixer
             'Use `&&` and `||` logical operators instead of `and` and `or`.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
+                    '<?php
 
-                        if ($a == "foo" and ($b == "bar" or $c == "baz")) {
-                        }
-
-                        PHP,
+if ($a == "foo" and ($b == "bar" or $c == "baz")) {
+}
+'
                 ),
             ],
             null,
-            'Risky, because you must double-check if using and/or with lower precedence was intentional.',
+            'Risky, because you must double-check if using and/or with lower precedence was intentional.'
         );
     }
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([\T_LOGICAL_AND, \T_LOGICAL_OR]);
+        return $tokens->isAnyTokenKindsFound([T_LOGICAL_AND, T_LOGICAL_OR]);
     }
 
     public function isRisky(): bool
@@ -61,10 +57,10 @@ final class LogicalOperatorsFixer extends AbstractFixer
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {
-            if ($token->isGivenKind(\T_LOGICAL_AND)) {
-                $tokens[$index] = new Token([\T_BOOLEAN_AND, '&&']);
-            } elseif ($token->isGivenKind(\T_LOGICAL_OR)) {
-                $tokens[$index] = new Token([\T_BOOLEAN_OR, '||']);
+            if ($token->isGivenKind(T_LOGICAL_AND)) {
+                $tokens[$index] = new Token([T_BOOLEAN_AND, '&&']);
+            } elseif ($token->isGivenKind(T_LOGICAL_OR)) {
+                $tokens[$index] = new Token([T_BOOLEAN_OR, '||']);
             }
         }
     }

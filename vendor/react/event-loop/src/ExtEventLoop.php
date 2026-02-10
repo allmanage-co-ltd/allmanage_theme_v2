@@ -64,7 +64,7 @@ final class ExtEventLoop implements LoopInterface
     {
         // explicitly clear all references to Event objects to prevent SEGFAULTs on Windows
         foreach ($this->timerEvents as $timer) {
-            $this->timerEvents->offsetUnset($timer);
+            $this->timerEvents->detach($timer);
         }
 
         $this->readEvents = array();
@@ -157,9 +157,9 @@ final class ExtEventLoop implements LoopInterface
 
     public function cancelTimer(TimerInterface $timer)
     {
-        if ($this->timerEvents->offsetExists($timer)) {
+        if ($this->timerEvents->contains($timer)) {
             $this->timerEvents[$timer]->free();
-            $this->timerEvents->offsetUnset($timer);
+            $this->timerEvents->detach($timer);
         }
     }
 
@@ -243,7 +243,7 @@ final class ExtEventLoop implements LoopInterface
         $this->timerCallback = function ($_, $__, $timer) use ($timers) {
             \call_user_func($timer->getCallback(), $timer);
 
-            if (!$timer->isPeriodic() && $timers->offsetExists($timer)) {
+            if (!$timer->isPeriodic() && $timers->contains($timer)) {
                 $this->cancelTimer($timer);
             }
         };

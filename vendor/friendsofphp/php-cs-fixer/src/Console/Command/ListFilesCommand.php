@@ -29,17 +29,11 @@ use Symfony\Component\Filesystem\Path;
  * @author Markus Staab <markus.staab@redaxo.org>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-#[AsCommand(name: 'list-files', description: 'List all files being fixed by the given config.')]
+#[AsCommand(name: 'list-files')]
 final class ListFilesCommand extends Command
 {
-    /** @TODO PHP 8.0 - remove the property */
     protected static $defaultName = 'list-files';
-
-    /** @TODO PHP 8.0 - remove the property */
-    protected static $defaultDescription = 'List all files being fixed by the given config.';
 
     private ConfigInterface $defaultConfig;
 
@@ -55,19 +49,20 @@ final class ListFilesCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDefinition(
-            [
-                new InputOption('config', '', InputOption::VALUE_REQUIRED, 'The path to a .php-cs-fixer.php file.'),
-            ],
-        );
+        $this
+            ->setDefinition(
+                [
+                    new InputOption('config', '', InputOption::VALUE_REQUIRED, 'The path to a .php-cs-fixer.php file.'),
+                ]
+            )
+            ->setDescription('List all files being fixed by the given config.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $passedConfig = $input->getOption('config');
-
         $cwd = getcwd();
-        \assert(false !== $cwd);
 
         $resolver = new ConfigurationResolver(
             $this->defaultConfig,
@@ -75,11 +70,12 @@ final class ListFilesCommand extends Command
                 'config' => $passedConfig,
             ],
             $cwd,
-            $this->toolInfo,
+            $this->toolInfo
         );
 
         $finder = $resolver->getFinder();
 
+        /** @var \SplFileInfo $file */
         foreach ($finder as $file) {
             if ($file->isFile()) {
                 $relativePath = './'.Path::makeRelative($file->getRealPath(), $cwd);

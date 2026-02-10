@@ -23,8 +23,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NotOperatorWithSpaceFixer extends AbstractFixer
 {
@@ -32,18 +30,14 @@ final class NotOperatorWithSpaceFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Logical NOT operators (`!`) should have leading and trailing whitespaces.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
+            [new CodeSample(
+                '<?php
 
-                        if (!$bar) {
-                            echo "Help!";
-                        }
-
-                        PHP,
-                ),
-            ],
+if (!$bar) {
+    echo "Help!";
+}
+'
+            )]
         );
     }
 
@@ -69,11 +63,11 @@ final class NotOperatorWithSpaceFixer extends AbstractFixer
 
             if ($token->equals('!')) {
                 if (!$tokens[$index + 1]->isWhitespace()) {
-                    $tokens->insertAt($index + 1, new Token([\T_WHITESPACE, ' ']));
+                    $tokens->insertAt($index + 1, new Token([T_WHITESPACE, ' ']));
                 }
 
                 if (!$tokens[$index - 1]->isWhitespace()) {
-                    $tokens->insertAt($index, new Token([\T_WHITESPACE, ' ']));
+                    $tokens->insertAt($index, new Token([T_WHITESPACE, ' ']));
                 }
             }
         }

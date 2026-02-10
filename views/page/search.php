@@ -1,5 +1,5 @@
 <?php
-$sq    = req()->get('s'); // get_search_query();
+$sq    = http_input()->get('s'); // get_search_query();
 $query = wpquery()
     ->setPostType(['news'])
     ->setSearchQuery($sq)
@@ -11,9 +11,9 @@ $query = wpquery()
 // slog()->info('test', [$query->build()]);
 // echo (int) $query->found_posts; // TOTAL
 
-// echo req()->get('s');
-// d(req()->only(['s']));
-// if (req()->has('s')) echo 'hoge!';
+// echo http_input()->get('s');
+// d(http_input()->only(['s']));
+// if (http_input()->has('s')) echo 'hoge!';
 ?>
 
 <main class="p-search -archive">
@@ -37,28 +37,28 @@ $query = wpquery()
         <div class="c-inner">
 
             <?php if ($query->have_posts()): ?>
-            <ul class="c-card_news">
-                <?php while ($query->have_posts()): ?>
-                <?php $query->the_post(); ?>
-                <?php $news_cat = get_the_terms(get_the_ID(), 'news_cat'); ?>
-                <li class="c-card_news__item">
-                    <a href="<?php the_permalink(); ?>" class="c-card_news__link">
-                        <div class="c-card_news__info">
-                            <time datetime="<?php the_time('Y-m-d H:i:s'); ?>" class="c-card_news__date">
-                                <?php the_time('Y/m/d'); ?>
-                            </time>
-                            <?php if ($news_cat): ?>
-                            <div class="c-card_news__term"><?php echo $news_cat[0]->name; ?></div>
-                            <?php else: ?>
-                            <div class="c-card_news__term">お知らせ</div>
-                            <?php endif; ?>
-                        </div>
-                        <div class="c-card_news__ttl"><?php the_title(); ?></div>
-                    </a>
-                </li>
-                <?php endwhile; ?>
-            </ul>
-            <?php the_pagination($query); ?>
+                    <ul class="c-card_news">
+                        <?php while ($query->have_posts()): ?>
+                                <?php $query->the_post(); ?>
+                                <?php $news_cat = get_the_terms(get_the_ID(), 'news_cat'); ?>
+                                <li class="c-card_news__item">
+                                    <a href="<?php the_permalink(); ?>" class="c-card_news__link">
+                                        <div class="c-card_news__info">
+                                            <time datetime="<?php the_time('Y-m-d H:i:s'); ?>" class="c-card_news__date">
+                                                <?php the_time('Y/m/d'); ?>
+                                            </time>
+                                            <?php if ($news_cat): ?>
+                                                    <div class="c-card_news__term"><?php echo $news_cat[0]->name; ?></div>
+                                            <?php else: ?>
+                                                    <div class="c-card_news__term">お知らせ</div>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="c-card_news__ttl"><?php the_title(); ?></div>
+                                    </a>
+                                </li>
+                        <?php endwhile; ?>
+                    </ul>
+                    <?php the_pagination($query); ?>
             <?php endif; ?>
             <?php wp_reset_postdata(); ?>
 

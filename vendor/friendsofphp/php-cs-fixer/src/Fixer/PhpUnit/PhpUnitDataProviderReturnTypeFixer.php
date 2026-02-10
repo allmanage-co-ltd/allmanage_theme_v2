@@ -26,8 +26,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Kuba Werłos <werlos@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PhpUnitDataProviderReturnTypeFixer extends AbstractPhpUnitFixer
 {
@@ -37,30 +35,26 @@ final class PhpUnitDataProviderReturnTypeFixer extends AbstractPhpUnitFixer
             'The return type of PHPUnit data provider must be `iterable`.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        class FooTest extends TestCase {
-                            /**
-                             * @dataProvider provideSomethingCases
-                             */
-                            public function testSomething($expected, $actual) {}
-                            public function provideSomethingCases(): array {}
-                        }
-
-                        PHP,
+                    '<?php
+class FooTest extends TestCase {
+    /**
+     * @dataProvider provideSomethingCases
+     */
+    public function testSomething($expected, $actual) {}
+    public function provideSomethingCases(): array {}
+}
+',
                 ),
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        class FooTest extends TestCase {
-                            /**
-                             * @dataProvider provideSomethingCases
-                             */
-                            public function testSomething($expected, $actual) {}
-                            public function provideSomethingCases() {}
-                        }
-
-                        PHP,
+                    '<?php
+class FooTest extends TestCase {
+    /**
+     * @dataProvider provideSomethingCases
+     */
+    public function testSomething($expected, $actual) {}
+    public function provideSomethingCases() {}
+}
+',
                 ),
             ],
             'Data provider must return `iterable`, either an array of arrays or an object that implements the `Traversable` interface.',
@@ -71,7 +65,7 @@ final class PhpUnitDataProviderReturnTypeFixer extends AbstractPhpUnitFixer
     /**
      * {@inheritdoc}
      *
-     * Must run before ReturnToYieldFromFixer, ReturnTypeDeclarationFixer.
+     * Must run before PhpUnitAttributesFixer, ReturnToYieldFromFixer, ReturnTypeDeclarationFixer.
      * Must run after CleanNamespaceFixer.
      */
     public function getPriority(): int
@@ -100,8 +94,8 @@ final class PhpUnitDataProviderReturnTypeFixer extends AbstractPhpUnitFixer
                     $argumentsEnd + 1,
                     [
                         new Token([CT::T_TYPE_COLON, ':']),
-                        new Token([\T_WHITESPACE, ' ']),
-                        new Token([\T_STRING, 'iterable']),
+                        new Token([T_WHITESPACE, ' ']),
+                        new Token([T_STRING, 'iterable']),
                     ],
                 );
 
@@ -120,7 +114,7 @@ final class PhpUnitDataProviderReturnTypeFixer extends AbstractPhpUnitFixer
                 continue;
             }
 
-            $tokens->overrideRange($typeStartIndex, $typeEndIndex, [new Token([\T_STRING, 'iterable'])]);
+            $tokens->overrideRange($typeStartIndex, $typeEndIndex, [new Token([T_STRING, 'iterable'])]);
         }
     }
 }

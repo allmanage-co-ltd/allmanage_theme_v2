@@ -14,14 +14,12 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\RuleSet\Sets;
 
-use PhpCsFixer\RuleSet\AbstractRuleSetDefinition;
+use PhpCsFixer\RuleSet\AbstractRuleSetDescription;
 
 /**
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-final class PSR12Set extends AbstractRuleSetDefinition
+final class PSR12Set extends AbstractRuleSetDescription
 {
     public function getRules(): array
     {
@@ -34,7 +32,6 @@ final class PSR12Set extends AbstractRuleSetDefinition
             'blank_line_between_import_groups' => true,
             'blank_lines_before_namespace' => true,
             'braces_position' => [
-                'allow_single_line_anonymous_functions' => false,
                 'allow_single_line_empty_anonymous_classes' => true,
             ],
             'class_definition' => [
@@ -45,10 +42,7 @@ final class PSR12Set extends AbstractRuleSetDefinition
             'declare_equal_normalize' => true,
             'lowercase_cast' => true,
             'lowercase_static_reference' => true,
-            'modifier_keywords' => true,
-            'new_with_parentheses' => [
-                'anonymous_class' => true,
-            ],
+            'new_with_parentheses' => true,
             'no_blank_lines_after_class_opening' => true,
             'no_extra_blank_lines' => [
                 'tokens' => [
@@ -118,6 +112,7 @@ final class PSR12Set extends AbstractRuleSetDefinition
             'unary_operator_spaces' => [
                 'only_dec_inc' => true,
             ],
+            'visibility_required' => true,
         ];
     }
 

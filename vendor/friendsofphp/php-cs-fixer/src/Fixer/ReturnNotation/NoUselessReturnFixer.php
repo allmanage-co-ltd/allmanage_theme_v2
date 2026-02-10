@@ -20,14 +20,11 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class NoUselessReturnFixer extends AbstractFixer
 {
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAllTokenKindsFound([\T_FUNCTION, \T_RETURN]);
+        return $tokens->isAllTokenKindsFound([T_FUNCTION, T_RETURN]);
     }
 
     public function getDefinition(): FixerDefinitionInterface
@@ -36,18 +33,16 @@ final class NoUselessReturnFixer extends AbstractFixer
             'There should not be an empty `return` statement at the end of a function.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        function example($b) {
-                            if ($b) {
-                                return;
-                            }
-                            return;
-                        }
-
-                        PHP,
+                    '<?php
+function example($b) {
+    if ($b) {
+        return;
+    }
+    return;
+}
+'
                 ),
-            ],
+            ]
         );
     }
 
@@ -65,7 +60,7 @@ final class NoUselessReturnFixer extends AbstractFixer
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {
-            if (!$token->isGivenKind(\T_FUNCTION)) {
+            if (!$token->isGivenKind(T_FUNCTION)) {
                 continue;
             }
 
@@ -83,7 +78,7 @@ final class NoUselessReturnFixer extends AbstractFixer
     private function fixFunction(Tokens $tokens, int $start, int $end): void
     {
         for ($index = $end; $index > $start; --$index) {
-            if (!$tokens[$index]->isGivenKind(\T_RETURN)) {
+            if (!$tokens[$index]->isGivenKind(T_RETURN)) {
                 continue;
             }
 
@@ -97,7 +92,7 @@ final class NoUselessReturnFixer extends AbstractFixer
             }
 
             $previous = $tokens->getPrevMeaningfulToken($index);
-            if ($tokens[$previous]->equalsAny([[\T_ELSE], ')'])) {
+            if ($tokens[$previous]->equalsAny([[T_ELSE], ')'])) {
                 continue;
             }
 

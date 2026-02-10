@@ -15,7 +15,6 @@ use function class_exists;
 use function json_decode;
 use function method_exists;
 use function str_starts_with;
-use Error;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\AfterClass;
 use PHPUnit\Framework\Attributes\BackupGlobals;
@@ -69,10 +68,9 @@ use PHPUnit\Framework\Attributes\Ticket;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesFunction;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
-use PHPUnit\Metadata\InvalidAttributeException;
 use PHPUnit\Metadata\Metadata;
 use PHPUnit\Metadata\MetadataCollection;
-use PHPUnit\Metadata\Version\Requirement;
+use PHPUnit\Metadata\Version\ConstraintRequirement;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -90,10 +88,9 @@ final class AttributeParser implements Parser
     {
         assert(class_exists($className));
 
-        $reflector = new ReflectionClass($className);
-        $result    = [];
+        $result = [];
 
-        foreach ($reflector->getAttributes() as $attribute) {
+        foreach ((new ReflectionClass($className))->getAttributes() as $attribute) {
             if (!str_starts_with($attribute->getName(), 'PHPUnit\\Framework\\Attributes\\')) {
                 continue;
             }
@@ -102,17 +99,7 @@ final class AttributeParser implements Parser
                 continue;
             }
 
-            try {
-                $attributeInstance = $attribute->newInstance();
-            } catch (Error $e) {
-                throw new InvalidAttributeException(
-                    $attribute->getName(),
-                    'class ' . $className,
-                    $reflector->getFileName(),
-                    $reflector->getStartLine(),
-                    $e->getMessage(),
-                );
-            }
+            $attributeInstance = $attribute->newInstance();
 
             switch ($attribute->getName()) {
                 case BackupGlobals::class:
@@ -257,7 +244,7 @@ final class AttributeParser implements Parser
                     assert($attributeInstance instanceof RequiresPhp);
 
                     $result[] = Metadata::requiresPhpOnClass(
-                        Requirement::from(
+                        ConstraintRequirement::from(
                             $attributeInstance->versionRequirement(),
                         ),
                     );
@@ -271,7 +258,7 @@ final class AttributeParser implements Parser
                     $versionRequirement = $attributeInstance->versionRequirement();
 
                     if ($versionRequirement !== null) {
-                        $versionConstraint = Requirement::from($versionRequirement);
+                        $versionConstraint = ConstraintRequirement::from($versionRequirement);
                     }
 
                     $result[] = Metadata::requiresPhpExtensionOnClass(
@@ -285,7 +272,7 @@ final class AttributeParser implements Parser
                     assert($attributeInstance instanceof RequiresPhpunit);
 
                     $result[] = Metadata::requiresPhpunitOnClass(
-                        Requirement::from(
+                        ConstraintRequirement::from(
                             $attributeInstance->versionRequirement(),
                         ),
                     );
@@ -359,10 +346,9 @@ final class AttributeParser implements Parser
         assert(class_exists($className));
         assert(method_exists($className, $methodName));
 
-        $reflector = new ReflectionMethod($className, $methodName);
-        $result    = [];
+        $result = [];
 
-        foreach ($reflector->getAttributes() as $attribute) {
+        foreach ((new ReflectionMethod($className, $methodName))->getAttributes() as $attribute) {
             if (!str_starts_with($attribute->getName(), 'PHPUnit\\Framework\\Attributes\\')) {
                 continue;
             }
@@ -371,17 +357,7 @@ final class AttributeParser implements Parser
                 continue;
             }
 
-            try {
-                $attributeInstance = $attribute->newInstance();
-            } catch (Error $e) {
-                throw new InvalidAttributeException(
-                    $attribute->getName(),
-                    'method ' . $className . '::' . $methodName . '()',
-                    $reflector->getFileName(),
-                    $reflector->getStartLine(),
-                    $e->getMessage(),
-                );
-            }
+            $attributeInstance = $attribute->newInstance();
 
             switch ($attribute->getName()) {
                 case After::class:
@@ -590,7 +566,7 @@ final class AttributeParser implements Parser
                     assert($attributeInstance instanceof RequiresPhp);
 
                     $result[] = Metadata::requiresPhpOnMethod(
-                        Requirement::from(
+                        ConstraintRequirement::from(
                             $attributeInstance->versionRequirement(),
                         ),
                     );
@@ -604,7 +580,7 @@ final class AttributeParser implements Parser
                     $versionRequirement = $attributeInstance->versionRequirement();
 
                     if ($versionRequirement !== null) {
-                        $versionConstraint = Requirement::from($versionRequirement);
+                        $versionConstraint = ConstraintRequirement::from($versionRequirement);
                     }
 
                     $result[] = Metadata::requiresPhpExtensionOnMethod(
@@ -618,7 +594,7 @@ final class AttributeParser implements Parser
                     assert($attributeInstance instanceof RequiresPhpunit);
 
                     $result[] = Metadata::requiresPhpunitOnMethod(
-                        Requirement::from(
+                        ConstraintRequirement::from(
                             $attributeInstance->versionRequirement(),
                         ),
                     );

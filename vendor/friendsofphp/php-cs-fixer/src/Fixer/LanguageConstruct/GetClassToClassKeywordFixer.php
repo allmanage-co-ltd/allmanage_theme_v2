@@ -26,8 +26,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author John Paul E. Balandan, CPA <paulbalandan@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class GetClassToClassKeywordFixer extends AbstractFixer
 {
@@ -38,15 +36,15 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
             [
                 new VersionSpecificCodeSample(
                     "<?php\nget_class(\$a);\n",
-                    new VersionSpecification(8_00_00),
+                    new VersionSpecification(8_00_00)
                 ),
                 new VersionSpecificCodeSample(
                     "<?php\n\n\$date = new \\DateTimeImmutable();\n\$class = get_class(\$date);\n",
-                    new VersionSpecification(8_00_00),
+                    new VersionSpecification(8_00_00)
                 ),
             ],
             null,
-            'Risky if the `get_class` function is overridden.',
+            'Risky if the `get_class` function is overridden.'
         );
     }
 
@@ -63,7 +61,7 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return \PHP_VERSION_ID >= 8_00_00 && $tokens->isAllTokenKindsFound([\T_STRING, \T_VARIABLE]);
+        return \PHP_VERSION_ID >= 8_00_00 && $tokens->isAllTokenKindsFound([T_STRING, T_VARIABLE]);
     }
 
     public function isRisky(): bool
@@ -78,7 +76,7 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
         $tokenSlices = [];
 
         for ($index = $tokens->count() - 1; $index > 0; --$index) {
-            if (!$tokens[$index]->equals([\T_STRING, 'get_class'], false)) {
+            if (!$tokens[$index]->equals([T_STRING, 'get_class'], false)) {
                 continue;
             }
 
@@ -97,11 +95,11 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
             $variableTokensIndices = [];
 
             for ($i = $braceOpenIndex + 1; $i < $braceCloseIndex; ++$i) {
-                if (!$tokens[$i]->equalsAny([[\T_WHITESPACE], [\T_COMMENT], [\T_DOC_COMMENT], '(', ')'])) {
+                if (!$tokens[$i]->equalsAny([[T_WHITESPACE], [T_COMMENT], [T_DOC_COMMENT], '(', ')'])) {
                     ++$meaningfulTokensCount;
                 }
 
-                if (!$tokens[$i]->isGivenKind(\T_VARIABLE)) {
+                if (!$tokens[$i]->isGivenKind(T_VARIABLE)) {
                     continue;
                 }
 
@@ -128,13 +126,13 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
     }
 
     /**
-     * @return non-empty-list<Token>
+     * @return list<Token>
      */
     private function getReplacementTokenSlices(Tokens $tokens, int $variableIndex): array
     {
         return [
-            new Token([\T_VARIABLE, $tokens[$variableIndex]->getContent()]),
-            new Token([\T_DOUBLE_COLON, '::']),
+            new Token([T_VARIABLE, $tokens[$variableIndex]->getContent()]),
+            new Token([T_DOUBLE_COLON, '::']),
             new Token([CT::T_CLASS_CONSTANT, 'class']),
         ];
     }
@@ -142,7 +140,7 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
     private function clearGetClassCall(Tokens $tokens, int $index, int $braceOpenIndex, int $braceCloseIndex): void
     {
         for ($i = $braceOpenIndex; $i <= $braceCloseIndex; ++$i) {
-            if ($tokens[$i]->isGivenKind([\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT])) {
+            if ($tokens[$i]->isGivenKind([T_WHITESPACE, T_COMMENT, T_DOC_COMMENT])) {
                 continue;
             }
 
@@ -151,7 +149,7 @@ final class GetClassToClassKeywordFixer extends AbstractFixer
 
         $prevIndex = $tokens->getPrevMeaningfulToken($index);
 
-        if ($tokens[$prevIndex]->isGivenKind(\T_NS_SEPARATOR)) {
+        if ($tokens[$prevIndex]->isGivenKind(T_NS_SEPARATOR)) {
             $tokens->clearAt($prevIndex);
         }
 

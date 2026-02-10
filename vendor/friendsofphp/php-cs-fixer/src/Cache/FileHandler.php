@@ -21,8 +21,6 @@ use Symfony\Component\Filesystem\Exception\IOException;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FileHandler implements FileHandlerInterface
 {
@@ -63,7 +61,7 @@ final class FileHandler implements FileHandlerInterface
         $fileObject = $this->fileInfo->openFile('r+');
 
         if (method_exists($cache, 'backfillHashes') && $this->fileMTime < $this->getFileCurrentMTime()) {
-            $resultOfFlock = $fileObject->flock(\LOCK_EX);
+            $resultOfFlock = $fileObject->flock(LOCK_EX);
             if (false === $resultOfFlock) {
                 // Lock failed, OK - we continue without the lock.
                 // noop
@@ -145,7 +143,7 @@ final class FileHandler implements FileHandlerInterface
                 \sprintf('Cannot write cache file "%s" as the location exists as directory.', $this->fileInfo->getRealPath()),
                 0,
                 null,
-                $this->fileInfo->getPathname(),
+                $this->fileInfo->getPathname()
             );
         }
 
@@ -154,7 +152,7 @@ final class FileHandler implements FileHandlerInterface
                 \sprintf('Cannot write to file "%s" as it is not writable.', $this->fileInfo->getRealPath()),
                 0,
                 null,
-                $this->fileInfo->getPathname(),
+                $this->fileInfo->getPathname()
             );
         }
 
@@ -176,7 +174,7 @@ final class FileHandler implements FileHandlerInterface
                 \sprintf('Directory of cache file "%s" does not exists and couldn\'t be created.', $file),
                 0,
                 null,
-                $file,
+                $file
             );
         }
 

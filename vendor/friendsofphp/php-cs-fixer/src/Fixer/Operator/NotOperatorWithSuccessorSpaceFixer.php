@@ -22,8 +22,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Javier Spagnoletti <phansys@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NotOperatorWithSuccessorSpaceFixer extends AbstractFixer
 {
@@ -31,18 +29,14 @@ final class NotOperatorWithSuccessorSpaceFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Logical NOT operators (`!`) should have one trailing whitespace.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
+            [new CodeSample(
+                '<?php
 
-                        if (!$bar) {
-                            echo "Help!";
-                        }
-
-                        PHP,
-                ),
-            ],
+if (!$bar) {
+    echo "Help!";
+}
+'
+            )]
         );
     }
 

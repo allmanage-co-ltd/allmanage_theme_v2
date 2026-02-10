@@ -14,15 +14,12 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\Cache;
 
-use PhpCsFixer\Config\NullRuleCustomisationPolicy;
 use PhpCsFixer\Utils;
 
 /**
  * @author Andreas Möller <am@localheinz.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class Cache implements CacheInterface
 {
@@ -50,7 +47,11 @@ final class Cache implements CacheInterface
 
     public function get(string $file): ?string
     {
-        return $this->hashes[$file] ?? null;
+        if (!$this->has($file)) {
+            return null;
+        }
+
+        return $this->hashes[$file];
     }
 
     public function set(string $file, string $hash): void
@@ -65,25 +66,23 @@ final class Cache implements CacheInterface
 
     public function toJson(): string
     {
-        try {
-            return json_encode(
-                [
-                    'php' => $this->getSignature()->getPhpVersion(),
-                    'version' => $this->getSignature()->getFixerVersion(),
-                    'indent' => $this->getSignature()->getIndent(),
-                    'lineEnding' => $this->getSignature()->getLineEnding(),
-                    'rules' => $this->getSignature()->getRules(),
-                    'ruleCustomisationPolicyVersion' => $this->getSignature()->getRuleCustomisationPolicyVersion(),
-                    'hashes' => $this->hashes,
-                ],
-                \JSON_THROW_ON_ERROR,
-            );
-        } catch (\JsonException $e) {
+        $json = json_encode([
+            'php' => $this->getSignature()->getPhpVersion(),
+            'version' => $this->getSignature()->getFixerVersion(),
+            'indent' => $this->getSignature()->getIndent(),
+            'lineEnding' => $this->getSignature()->getLineEnding(),
+            'rules' => $this->getSignature()->getRules(),
+            'hashes' => $this->hashes,
+        ]);
+
+        if (JSON_ERROR_NONE !== json_last_error() || false === $json) {
             throw new \UnexpectedValueException(\sprintf(
                 'Cannot encode cache signature to JSON, error: "%s". If you have non-UTF8 chars in your signature, like in license for `header_comment`, consider enabling `ext-mbstring` or install `symfony/polyfill-mbstring`.',
-                $e->getMessage(),
+                json_last_error_msg()
             ));
         }
+
+        return $json;
     }
 
     /**
@@ -91,13 +90,13 @@ final class Cache implements CacheInterface
      */
     public static function fromJson(string $json): self
     {
-        try {
-            $data = json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
+        $data = json_decode($json, true);
+
+        if (null === $data && JSON_ERROR_NONE !== json_last_error()) {
             throw new \InvalidArgumentException(\sprintf(
                 'Value needs to be a valid JSON string, got "%s", error: "%s".',
                 $json,
-                $e->getMessage(),
+                json_last_error_msg()
             ));
         }
 
@@ -107,7 +106,6 @@ final class Cache implements CacheInterface
             'indent',
             'lineEnding',
             'rules',
-            // 'ruleCustomisationPolicyVersion', // @TODO v4: require me
             'hashes',
         ];
 
@@ -116,7 +114,7 @@ final class Cache implements CacheInterface
         if (\count($missingKeys) > 0) {
             throw new \InvalidArgumentException(\sprintf(
                 'JSON data is missing keys %s',
-                Utils::naturalLanguageJoin(array_keys($missingKeys)),
+                Utils::naturalLanguageJoin(array_keys($missingKeys))
             ));
         }
 
@@ -125,14 +123,13 @@ final class Cache implements CacheInterface
             $data['version'],
             $data['indent'],
             $data['lineEnding'],
-            $data['rules'],
-            $data['ruleCustomisationPolicyVersion'] ?? NullRuleCustomisationPolicy::VERSION_FOR_CACHE,
+            $data['rules']
         );
 
         $cache = new self($signature);
 
         // before v3.11.1 the hashes were crc32 encoded and saved as integers
-        // @TODO v4: remove the to string cast/array_map
+        // @TODO: remove the to string cast/array_map in v4.0
         $cache->hashes = array_map(static fn ($v): string => \is_int($v) ? (string) $v : $v, $data['hashes']);
 
         return $cache;

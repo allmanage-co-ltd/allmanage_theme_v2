@@ -1,24 +1,29 @@
 <?php
-if (is_local()) {
-    //グローバルに呼び出せる汎用関数のサンプルです。
+// if (is_local()) {
 
-    // echo home();
-    // echo img_dir();
-    // echo theme_uri();
-    // echo theme_dir();
-    // echo img_dir();
-    // echo url('company');
+//グローバルに呼び出せる汎用関数のサンプルです。
 
-    // d(config('admin.client_menu.hidden'));
+// echo home();
+// echo img_dir();
+// echo theme_uri();
+// echo theme_dir();
+// echo img_dir();
+// echo url('company');
 
-    // slog()->info('test', config('assets.css'));
+// d(config('cms.client_menu.hidden'));
 
-    // $post = db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get()
-    // d($post);
+// slog()->info('test', config('assets.css'));
 
-    sess()->set('allmanage', 'hoge');
-    sess()->debug();
-}
+// $post = db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get()
+// d($post);
+
+// http_sess()->set('allmanage', 'hoge');
+// http_sess()->debug();
+// }
+
+// pdf_writer(['key' => 'データが渡せます'], 'sample.php', 'sample', false);
+
+
 ?>
 
 <main class="p-home">

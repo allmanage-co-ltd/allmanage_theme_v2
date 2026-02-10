@@ -25,8 +25,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class RegularCallableCallFixer extends AbstractFixer
 {
@@ -36,28 +34,24 @@ final class RegularCallableCallFixer extends AbstractFixer
             'Callables must be called without using `call_user_func*` when possible.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                            call_user_func("var_dump", 1, 2);
+                    '<?php
+    call_user_func("var_dump", 1, 2);
 
-                            call_user_func("Bar\Baz::d", 1, 2);
+    call_user_func("Bar\Baz::d", 1, 2);
 
-                            call_user_func_array($callback, [1, 2]);
-
-                        PHP,
+    call_user_func_array($callback, [1, 2]);
+'
                 ),
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        call_user_func(function ($a, $b) { var_dump($a, $b); }, 1, 2);
+                    '<?php
+call_user_func(function ($a, $b) { var_dump($a, $b); }, 1, 2);
 
-                        call_user_func(static function ($a, $b) { var_dump($a, $b); }, 1, 2);
-
-                        PHP,
+call_user_func(static function ($a, $b) { var_dump($a, $b); }, 1, 2);
+'
                 ),
             ],
             null,
-            'Risky when the `call_user_func` or `call_user_func_array` function is overridden or when are used in constructions that should be avoided, like `call_user_func_array(\'foo\', [\'bar\' => \'baz\'])` or `call_user_func($foo, $foo = \'bar\')`.',
+            'Risky when the `call_user_func` or `call_user_func_array` function is overridden or when are used in constructions that should be avoided, like `call_user_func_array(\'foo\', [\'bar\' => \'baz\'])` or `call_user_func($foo, $foo = \'bar\')`.'
         );
     }
 
@@ -74,7 +68,7 @@ final class RegularCallableCallFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_STRING);
+        return $tokens->isTokenKindFound(T_STRING);
     }
 
     public function isRisky(): bool
@@ -88,7 +82,7 @@ final class RegularCallableCallFixer extends AbstractFixer
         $argumentsAnalyzer = new ArgumentsAnalyzer();
 
         for ($index = $tokens->count() - 1; $index > 0; --$index) {
-            if (!$tokens[$index]->equalsAny([[\T_STRING, 'call_user_func'], [\T_STRING, 'call_user_func_array']], false)) {
+            if (!$tokens[$index]->equalsAny([[T_STRING, 'call_user_func'], [T_STRING, 'call_user_func_array']], false)) {
                 continue;
             }
 
@@ -114,12 +108,13 @@ final class RegularCallableCallFixer extends AbstractFixer
     private function processCall(Tokens $tokens, int $index, array $arguments): void
     {
         $firstArgIndex = $tokens->getNextMeaningfulToken(
-            $tokens->getNextMeaningfulToken($index),
+            $tokens->getNextMeaningfulToken($index)
         );
 
+        /** @var Token $firstArgToken */
         $firstArgToken = $tokens[$firstArgIndex];
 
-        if ($firstArgToken->isGivenKind(\T_CONSTANT_ENCAPSED_STRING)) {
+        if ($firstArgToken->isGivenKind(T_CONSTANT_ENCAPSED_STRING)) {
             $afterFirstArgIndex = $tokens->getNextMeaningfulToken($firstArgIndex);
 
             if (!$tokens[$afterFirstArgIndex]->equalsAny([',', ')'])) {
@@ -140,22 +135,22 @@ final class RegularCallableCallFixer extends AbstractFixer
 
             $this->replaceCallUserFuncWithCallback($tokens, $index, $newCallTokens, $firstArgIndex, $firstArgIndex);
         } elseif (
-            $firstArgToken->isGivenKind(\T_FUNCTION)
+            $firstArgToken->isGivenKind(T_FUNCTION)
             || (
-                $firstArgToken->isGivenKind(\T_STATIC)
-                && $tokens[$tokens->getNextMeaningfulToken($firstArgIndex)]->isGivenKind(\T_FUNCTION)
+                $firstArgToken->isGivenKind(T_STATIC)
+                && $tokens[$tokens->getNextMeaningfulToken($firstArgIndex)]->isGivenKind(T_FUNCTION)
             )
         ) {
             $firstArgEndIndex = $tokens->findBlockEnd(
                 Tokens::BLOCK_TYPE_CURLY_BRACE,
-                $tokens->getNextTokenOfKind($firstArgIndex, ['{']),
+                $tokens->getNextTokenOfKind($firstArgIndex, ['{'])
             );
 
             $newCallTokens = $this->getTokensSubcollection($tokens, $firstArgIndex, $firstArgEndIndex);
             $newCallTokens->insertAt($newCallTokens->count(), new Token(')'));
             $newCallTokens->insertAt(0, new Token('('));
             $this->replaceCallUserFuncWithCallback($tokens, $index, $newCallTokens, $firstArgIndex, $firstArgEndIndex);
-        } elseif ($firstArgToken->isGivenKind(\T_VARIABLE)) {
+        } elseif ($firstArgToken->isGivenKind(T_VARIABLE)) {
             $firstArgEndIndex = reset($arguments);
 
             // check if the same variable is used multiple times and if so do not fix
@@ -178,7 +173,7 @@ final class RegularCallableCallFixer extends AbstractFixer
             $complex = false;
 
             for ($newCallIndex = \count($newCallTokens) - 1; $newCallIndex >= 0; --$newCallIndex) {
-                if ($newCallTokens[$newCallIndex]->isGivenKind([\T_WHITESPACE, \T_COMMENT, \T_DOC_COMMENT, \T_VARIABLE])) {
+                if ($newCallTokens[$newCallIndex]->isGivenKind([T_WHITESPACE, T_COMMENT, T_DOC_COMMENT, T_VARIABLE])) {
                     continue;
                 }
 
@@ -211,11 +206,11 @@ final class RegularCallableCallFixer extends AbstractFixer
         $afterFirstArgToken = $tokens[$afterFirstArgIndex];
 
         if ($afterFirstArgToken->equals(',')) {
-            $useEllipsis = $tokens[$callIndex]->equals([\T_STRING, 'call_user_func_array'], false);
+            $useEllipsis = $tokens[$callIndex]->equals([T_STRING, 'call_user_func_array'], false);
 
             if ($useEllipsis) {
                 $secondArgIndex = $tokens->getNextMeaningfulToken($afterFirstArgIndex);
-                $tokens->insertAt($secondArgIndex, new Token([\T_ELLIPSIS, '...']));
+                $tokens->insertAt($secondArgIndex, new Token([T_ELLIPSIS, '...']));
             }
 
             $tokens->clearAt($afterFirstArgIndex);
@@ -225,7 +220,7 @@ final class RegularCallableCallFixer extends AbstractFixer
         $tokens->overrideRange($callIndex, $callIndex, $newCallTokens);
         $prevIndex = $tokens->getPrevMeaningfulToken($callIndex);
 
-        if ($tokens[$prevIndex]->isGivenKind(\T_NS_SEPARATOR)) {
+        if ($tokens[$prevIndex]->isGivenKind(T_NS_SEPARATOR)) {
             $tokens->clearTokenAndMergeSurroundingWhitespace($prevIndex);
         }
     }
@@ -236,6 +231,7 @@ final class RegularCallableCallFixer extends AbstractFixer
         $subCollection = new Tokens($size);
 
         for ($i = 0; $i < $size; ++$i) {
+            /** @var Token $toClone */
             $toClone = $tokens[$i + $indexStart];
             $subCollection[$i] = clone $toClone;
         }

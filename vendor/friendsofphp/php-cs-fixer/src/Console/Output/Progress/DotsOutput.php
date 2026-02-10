@@ -22,8 +22,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Output writer to show the progress of a FixCommand using dots and meaningful letters.
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class DotsOutput implements ProgressOutputInterface
 {
@@ -36,7 +34,6 @@ final class DotsOutput implements ProgressOutputInterface
         FileProcessed::STATUS_NO_CHANGES => ['symbol' => '.', 'format' => '%s', 'description' => 'no changes'],
         FileProcessed::STATUS_FIXED => ['symbol' => 'F', 'format' => '<fg=green>%s</fg=green>', 'description' => 'fixed'],
         FileProcessed::STATUS_SKIPPED => ['symbol' => 'S', 'format' => '<fg=cyan>%s</fg=cyan>', 'description' => 'skipped (cached or empty file)'],
-        FileProcessed::STATUS_NON_MONOLITHIC => ['symbol' => 'M', 'format' => '<bg=magenta>%s</bg=magenta>', 'description' => 'skipped (non-monolithic)'],
         FileProcessed::STATUS_INVALID => ['symbol' => 'I', 'format' => '<bg=red>%s</bg=red>', 'description' => 'invalid file syntax (file ignored)'],
         FileProcessed::STATUS_EXCEPTION => ['symbol' => 'E', 'format' => '<bg=red>%s</bg=red>', 'description' => 'error'],
         FileProcessed::STATUS_LINT => ['symbol' => 'E', 'format' => '<bg=red>%s</bg=red>', 'description' => 'error'],
@@ -63,7 +60,7 @@ final class DotsOutput implements ProgressOutputInterface
      * This class is not intended to be serialized,
      * and cannot be deserialized (see __wakeup method).
      */
-    public function __serialize(): array
+    public function __sleep(): array
     {
         throw new \BadMethodCallException('Cannot serialize '.self::class);
     }
@@ -72,11 +69,9 @@ final class DotsOutput implements ProgressOutputInterface
      * Disable the deserialization of the class to prevent attacker executing
      * code by leveraging the __destruct method.
      *
-     * @param array<string, mixed> $data
-     *
      * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
      */
-    public function __unserialize(array $data): void
+    public function __wakeup(): void
     {
         throw new \BadMethodCallException('Cannot unserialize '.self::class);
     }
@@ -97,7 +92,7 @@ final class DotsOutput implements ProgressOutputInterface
                 $isLast && 0 !== $symbolsOnCurrentLine ? str_repeat(' ', $this->symbolsPerLine - $symbolsOnCurrentLine) : '',
                 $this->processedFiles,
                 $this->context->getFilesCount(),
-                round($this->processedFiles / $this->context->getFilesCount() * 100),
+                round($this->processedFiles / $this->context->getFilesCount() * 100)
             ));
 
             if (!$isLast) {

@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\Cache;
 
-use PhpCsFixer\Hasher;
+use PhpCsFixer\Tokenizer\CodeHasher;
 
 /**
  * Class supports caching information about state of fixing files.
@@ -31,8 +31,6 @@ use PhpCsFixer\Hasher;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FileCacheManager implements CacheManagerInterface
 {
@@ -77,7 +75,7 @@ final class FileCacheManager implements CacheManagerInterface
      * This class is not intended to be serialized,
      * and cannot be deserialized (see __wakeup method).
      */
-    public function __serialize(): array
+    public function __sleep(): array
     {
         throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
     }
@@ -86,11 +84,9 @@ final class FileCacheManager implements CacheManagerInterface
      * Disable the deserialization of the class to prevent attacker executing
      * code by leveraging the __destruct method.
      *
-     * @param array<string, mixed> $data
-     *
      * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
      */
-    public function __unserialize(array $data): void
+    public function __wakeup(): void
     {
         throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
     }
@@ -142,6 +138,6 @@ final class FileCacheManager implements CacheManagerInterface
 
     private function calcHash(string $content): string
     {
-        return Hasher::calculate($content);
+        return CodeHasher::calculateCodeHash($content);
     }
 }

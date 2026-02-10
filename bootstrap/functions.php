@@ -50,6 +50,110 @@ function img_dir(): string
 }
 
 /**
+ * WP_Query ビルダー取得
+ *
+ * デバッグをするには->build()を呼ぶとargsの中身が見れる
+ *
+ * 使用例:
+ *   wpquery()->setPostType(...)->setPerPage(...)->build()
+ */
+function wpquery(): \App\CMS\Utils\MyWpQuery
+{
+    return \App\CMS\Utils\MyWpQuery::new();
+}
+
+/**
+ * flatpickrの初期化
+ *
+ * js-datepickerクラスが付与されたテキストフィールドに対して
+ * デートピッカーが自動で入れ込まれる。
+ * 有効にしたいページで関数を実行することで有効化。
+ *
+ * 使用例（お問い合わせ入力ページで）:
+ *   datepicker();
+ */
+function datepicker(array $options = []): void
+{
+    (new \App\CMS\Views\Datepicker($options))->boot();
+}
+
+/**
+ * ビューの描画
+ *
+ * header → view → footer を一括で処理
+ * ページ、アーカイブ、タクソノミー、シングル、サーチを
+ * App\View\Render側で判定し、呼ぶviewを切り替えています。
+ *
+ * 使用例（テンプレートページで）:
+ *   the_view();
+ */
+function the_view(): void
+{
+    \App\CMS\Views\Presenter::pages();
+}
+
+/**
+ * レイアウトファイル描画
+ *
+ * 使用例:
+ *   the_layout('header');
+ */
+function the_layout(string $name): void
+{
+    \App\CMS\Views\Presenter::layout($name);
+}
+
+/**
+ * コンポーネント描画
+ *
+ * get_template_partのラッパーなので引数を渡せます。
+ * コンポーネント側で  $args['hoge']  で受け取ります。
+ *
+ * 使用例:
+ *   the_component('searchform', ['hoge' => $fuga]);
+ */
+function the_component(string $name, array $data = []): void
+{
+    \App\CMS\Views\Presenter::component($name, $data);
+}
+
+/**
+ * パンくずリスト描画
+ *
+ * 使用例:
+ *   the_breadcrumb();
+ */
+function the_breadcrumb(): void
+{
+    (new \App\CMS\Views\Breadcrumb)->render();
+}
+
+/**
+ * Cookieのモーダル表示
+ *
+ * 使用例:
+ *   the_cookie_modal(60, url('privacy));
+ */
+function the_cookie_modal($days = 365, $link = '/privacy'): void
+{
+    (new \App\CMS\Views\Cookie($days, $link))->render();
+}
+
+/**
+ * ページネーション出力
+ *
+ * 吐き出すHTMLはpw_paginateと同じはず。。
+ *
+ * 使用例:
+ *   the_pagination($query, 3);
+ */
+function the_pagination(\WP_Query $query, int $range = 5): void
+{
+    (new \App\CMS\Views\Pagination($query, $range))->render();
+}
+
+
+/**
  * 設定値取得
  *
  * 使用例:
@@ -68,60 +172,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Services\Config::get("permalink.{$slug}", home());
-}
-
-/**
- * WP_Query ビルダー取得
- *
- * デバッグをするには->build()を呼ぶとargsの中身が見れる
- *
- * 使用例:
- *   wpquery()->setPostType(...)->setPerPage(...)->build()
- */
-function wpquery(): \App\Services\MyWpQuery
-{
-    return \App\Services\MyWpQuery::new();
-}
-
-/**
- * セッション関連のヘルパー
- *
- * 使用例:
- *   sess()->set('user_id', 1);
- *   $id = sess()->get('user_id');
- *   sess()->forget('user_id');
- */
-function sess(): \App\Services\Session
-{
-    return \App\Services\Session::new();
-}
-
-/**
- * $_POST or $_GETの値取得ヘルパー
- *
- * 使用例:
- *   $name = req()->get('name');
- *   $data = req()->only(['email', 'tel']);
- */
-function req(): \App\Services\Request
-{
-    return \App\Services\Request::new();
-}
-
-/**
- * flatpickrの初期化
- *
- * js-datepickerクラスが付与されたテキストフィールドに対して
- * デートピッカーが自動で入れ込まれる。
- * 有効にしたいページで関数を実行することで有効化。
- *
- * 使用例（お問い合わせ入力ページで）:
- *   datepicker();
- */
-function datepicker(array $options = []): void
-{
-    (new \App\Views\Datepicker($options))->boot();
+    return \App\Services\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -136,94 +187,70 @@ function slog()
 }
 
 /**
- * wpdbのラッパー
- *
- * WPテーマではあまり使わなそう。。
+ * GuzzleのラッパーHTTPクライアント
  *
  * 使用例:
- *   db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
- *   db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
- *   db()->stmt('...', [arg])->select();
- *   db()->stmt('...', [arg])->execute();
+ *   $client = http_client();
+ *   $response = $client->get('https://api.example.com/users', [
+ *       'query' => ['page' => 1],
+ *       'headers' => [
+ *           'Accept' => 'application/json',
+ *       ],
+ *    ]);
+ *   $data = json_decode($response['body'], true);
  */
-function db(): \App\Databases\Database
+function http_client(): \App\Services\Http\Client
 {
-    return \App\Databases\Database::new();
+    return new \App\Services\Http\Client();
 }
 
 /**
- * ビューの描画
+ * $_POST or $_GETの値取得ヘルパー
  *
- * header → view → footer を一括で処理
- * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\View\Render側で判定し、呼ぶviewを切り替えています。
- *
- * 使用例（テンプレートページで）:
- *   the_view();
+ * 使用例:
+ *   $name = req()->get('name');
+ *   $data = req()->only(['email', 'tel']);
  */
-function the_view(): void
+function http_input(): \App\Services\HTTP\Input
 {
-    \App\Views\Render::pages();
+    return new \App\Services\HTTP\Input();
 }
 
 /**
- * レイアウトファイル描画
+ * セッション関連のヘルパー
  *
  * 使用例:
- *   the_layout('header');
+ *   http_sess()->set('user_id', 1);
+ *   $id = http_sess()->get('user_id');
+ *   http_sess()->forget('user_id');
  */
-function the_layout(string $name): void
+function http_sess(): \App\Services\HTTP\Session
 {
-    \App\Views\Render::layout($name);
+    return new \App\Services\HTTP\Session();
 }
 
 /**
- * コンポーネント描画
  *
- * get_template_partのラッパーなので引数を渡せます。
- * コンポーネント側で  $args['hoge']  で受け取ります。
- *
- * 使用例:
- *   the_component('searchform', ['hoge' => $fuga]);
  */
-function the_component(string $name, array $data = []): void
+function csv_reader()
 {
-    \App\Views\Render::component($name, $data);
+    (new \App\Services\CSV\Writer())->execute();
 }
 
 /**
- * パンくずリスト描画
  *
- * 使用例:
- *   the_breadcrumb();
  */
-function the_breadcrumb(): void
+function csv_writer()
 {
-    (new \App\Views\Breadcrumb)->render();
+    (new \App\Services\CSV\Writer())->execute();
 }
 
 /**
- * Cookieのモーダル表示
  *
- * 使用例:
- *   the_cookie_modal(60, url('privacy));
  */
-function the_cookie_modal($days = 365, $link = '/privacy'): void
+function pdf_writer(array $data, string $view_filename, string $output_name, bool $download)
 {
-    (new \App\Views\Cookie($days, $link))->render();
-}
-
-/**
- * ページネーション出力
- *
- * 吐き出すHTMLはpw_paginateと同じはず。。
- *
- * 使用例:
- *   the_pagination($query, 3);
- */
-function the_pagination(\WP_Query $query, int $range = 5): void
-{
-    (new \App\Views\Pagination($query, $range))->render();
+    (new \App\Services\PDF\Writer($data, $view_filename, $output_name, $download))->execute();
 }
 
 /**
@@ -234,7 +261,7 @@ function the_pagination(\WP_Query $query, int $range = 5): void
  */
 function is_local(): bool
 {
-    return \App\Services\Environment::isLocal();
+    return \App\Services\Runtime::isLocal();
 }
 
 /**
@@ -245,7 +272,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Services\Environment::isMobile();
+    return \App\Services\Runtime::isMobile();
 }
 
 /**
@@ -256,5 +283,5 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Services\Environment::isBot();
+    return \App\Services\Runtime::isBot();
 }

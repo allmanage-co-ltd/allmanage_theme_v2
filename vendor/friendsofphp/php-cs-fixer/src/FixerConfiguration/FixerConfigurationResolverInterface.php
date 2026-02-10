@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\FixerConfiguration;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 interface FixerConfigurationResolverInterface
 {
     /**

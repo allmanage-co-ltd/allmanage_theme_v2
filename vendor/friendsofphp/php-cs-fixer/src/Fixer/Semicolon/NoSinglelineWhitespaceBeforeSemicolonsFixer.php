@@ -22,8 +22,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Graham Campbell <hello@gjcampbell.co.uk>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NoSinglelineWhitespaceBeforeSemicolonsFixer extends AbstractFixer
 {
@@ -31,7 +29,7 @@ final class NoSinglelineWhitespaceBeforeSemicolonsFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Single-line whitespace before closing semicolon are prohibited.',
-            [new CodeSample("<?php \$this->foo() ;\n")],
+            [new CodeSample("<?php \$this->foo() ;\n")]
         );
     }
 
