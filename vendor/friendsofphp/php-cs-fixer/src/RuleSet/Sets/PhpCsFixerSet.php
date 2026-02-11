@@ -14,14 +14,12 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\RuleSet\Sets;
 
-use PhpCsFixer\RuleSet\AbstractRuleSetDefinition;
+use PhpCsFixer\RuleSet\AbstractRuleSetDescription;
 
 /**
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-final class PhpCsFixerSet extends AbstractRuleSetDefinition
+final class PhpCsFixerSet extends AbstractRuleSetDescription
 {
     public function getRules(): array
     {
@@ -60,7 +58,6 @@ final class PhpCsFixerSet extends AbstractRuleSetDefinition
             ],
             'heredoc_to_nowdoc' => true,
             'method_argument_space' => [
-                'after_heredoc' => true,
                 'on_multiline' => 'ensure_fully_multiline',
             ],
             'method_chaining_indentation' => true,
@@ -87,23 +84,36 @@ final class PhpCsFixerSet extends AbstractRuleSetDefinition
             ],
             'no_superfluous_elseif' => true,
             'no_superfluous_phpdoc_tags' => [
-                'allow_hidden_params' => true,
-                'allow_mixed' => true, // @TODO revalidate to keep `true` or unify into `false`
+                'allow_mixed' => true,
                 'remove_inheritdoc' => true,
             ],
-            'operator_linebreak' => true,
-            'ordered_class_elements' => true,
-            'ordered_types' => [
-                'null_adjustment' => 'always_last',
+            'no_unneeded_control_parentheses' => [
+                'statements' => [
+                    'break',
+                    'clone',
+                    'continue',
+                    'echo_print',
+                    'negative_instanceof',
+                    'others',
+                    'return',
+                    'switch_case',
+                    'yield',
+                    'yield_from',
+                ],
             ],
-            'php_unit_data_provider_method_order' => true,
+            'no_useless_else' => true,
+            'no_useless_return' => true,
+            'no_whitespace_before_comma_in_array' => ['after_heredoc' => true],
+            'ordered_class_elements' => true,
+            'ordered_types' => true,
             'php_unit_internal_class' => true,
             'php_unit_test_class_requires_covers' => true,
             'phpdoc_add_missing_param_annotation' => true,
             'phpdoc_no_empty_return' => true,
             'phpdoc_order_by_value' => true,
-            'phpdoc_types_no_duplicates' => true,
             'phpdoc_types_order' => true,
+            'phpdoc_var_annotation_correct_order' => true,
+            'protected_to_private' => true,
             'return_assignment' => true,
             'self_static_accessor' => true,
             'single_line_comment_style' => true,
@@ -117,6 +127,6 @@ final class PhpCsFixerSet extends AbstractRuleSetDefinition
 
     public function getDescription(): string
     {
-        return 'Rules recommended by ``PHP CS Fixer`` team, highly opinionated. Extends ``@PER-CS`` and ``@Symfony``.';
+        return 'Rule set as used by the PHP-CS-Fixer development team, highly opinionated.';
     }
 }

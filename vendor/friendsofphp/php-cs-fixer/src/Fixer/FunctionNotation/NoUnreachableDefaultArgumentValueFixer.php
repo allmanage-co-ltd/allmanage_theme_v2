@@ -25,8 +25,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Mark Scherer
  * @author Lucas Manzke <lmanzke@outlook.com>
  * @author Gregor Harlan <gharlan@web.de>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
 {
@@ -36,15 +34,13 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
             'In function arguments there must not be arguments with default values before non-default ones.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        function example($foo = "two words", $bar) {}
-
-                        PHP,
+                    '<?php
+function example($foo = "two words", $bar) {}
+'
                 ),
             ],
             null,
-            'Modifies the signature of functions; therefore risky when using systems (such as some Symfony components) that rely on those (for example through reflection).',
+            'Modifies the signature of functions; therefore risky when using systems (such as some Symfony components) that rely on those (for example through reflection).'
         );
     }
 
@@ -60,7 +56,7 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([\T_FUNCTION, \T_FN]);
+        return $tokens->isAnyTokenKindsFound([T_FUNCTION, T_FN]);
     }
 
     public function isRisky(): bool
@@ -70,7 +66,7 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
-        $functionKinds = [\T_FUNCTION, \T_FN];
+        $functionKinds = [T_FUNCTION, T_FN];
 
         for ($i = 0, $l = $tokens->count(); $i < $l; ++$i) {
             if (!$tokens[$i]->isGivenKind($functionKinds)) {
@@ -95,14 +91,8 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
         for ($i = $lastArgumentIndex; $i > $startIndex; --$i) {
             $token = $tokens[$i];
 
-            if ($token->isGivenKind(\T_VARIABLE)) {
+            if ($token->isGivenKind(T_VARIABLE)) {
                 $lastArgumentIndex = $i;
-
-                continue;
-            }
-
-            if ($token->isGivenKind(CT::T_PROPERTY_HOOK_BRACE_CLOSE)) {
-                $i = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PROPERTY_HOOK, $i);
 
                 continue;
             }
@@ -126,18 +116,17 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
                 continue;
             }
 
-            if ($token->isGivenKind(CT::T_PROPERTY_HOOK_BRACE_CLOSE)) {
-                $i = $tokens->findBlockStart(Tokens::BLOCK_TYPE_PROPERTY_HOOK, $i);
-
-                continue;
-            }
-
-            if ($token->isGivenKind(\T_VARIABLE) && !$tokens[$tokens->getPrevMeaningfulToken($i)]->isGivenKind(\T_ELLIPSIS)) {
+            if ($token->isGivenKind(T_VARIABLE) && !$this->isEllipsis($tokens, $i)) {
                 return $i;
             }
         }
 
         return null;
+    }
+
+    private function isEllipsis(Tokens $tokens, int $variableIndex): bool
+    {
+        return $tokens[$tokens->getPrevMeaningfulToken($variableIndex)]->isGivenKind(T_ELLIPSIS);
     }
 
     private function getDefaultValueEndIndex(Tokens $tokens, int $index): int
@@ -169,14 +158,14 @@ final class NoUnreachableDefaultArgumentValueFixer extends AbstractFixer
     {
         $nextToken = $tokens[$tokens->getNextMeaningfulToken($index)];
 
-        if (!$nextToken->equals([\T_STRING, 'null'], false)) {
+        if (!$nextToken->equals([T_STRING, 'null'], false)) {
             return false;
         }
 
         $variableIndex = $tokens->getPrevMeaningfulToken($index);
 
-        $searchTokens = [',', '(', [\T_STRING], [CT::T_ARRAY_TYPEHINT], [\T_CALLABLE]];
-        $typehintKinds = [\T_STRING, CT::T_ARRAY_TYPEHINT, \T_CALLABLE];
+        $searchTokens = [',', '(', [T_STRING], [CT::T_ARRAY_TYPEHINT], [T_CALLABLE]];
+        $typehintKinds = [T_STRING, CT::T_ARRAY_TYPEHINT, T_CALLABLE];
 
         $prevIndex = $tokens->getPrevTokenOfKind($variableIndex, $searchTokens);
 

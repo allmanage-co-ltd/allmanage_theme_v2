@@ -24,24 +24,13 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 abstract class AbstractFixer implements FixerInterface
 {
     protected WhitespacesFixerConfig $whitespacesConfig;
 
-    /**
-     * @readonly
-     */
-    private string $name;
-
     public function __construct()
     {
-        $nameParts = explode('\\', static::class);
-        $name = substr(end($nameParts), 0, -\strlen('Fixer'));
-        $this->name = Utils::camelCaseToUnderscore($name);
-
         if ($this instanceof ConfigurableFixerInterface) {
             try {
                 $this->configure([]);
@@ -73,7 +62,10 @@ abstract class AbstractFixer implements FixerInterface
 
     public function getName(): string
     {
-        return $this->name;
+        $nameParts = explode('\\', static::class);
+        $name = substr(end($nameParts), 0, -\strlen('Fixer'));
+
+        return Utils::camelCaseToUnderscore($name);
     }
 
     public function getPriority(): int

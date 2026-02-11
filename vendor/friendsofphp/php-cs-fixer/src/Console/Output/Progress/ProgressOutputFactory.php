@@ -20,8 +20,6 @@ use PhpCsFixer\Console\Output\OutputContext;
  * @readonly
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class ProgressOutputFactory
 {
@@ -47,8 +45,8 @@ final class ProgressOutputFactory
             throw new \InvalidArgumentException(
                 \sprintf(
                     'Something went wrong, "%s" output type is not supported',
-                    $outputType,
-                ),
+                    $outputType
+                )
             );
         }
 

@@ -21,16 +21,13 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class CombineConsecutiveIssetsFixer extends AbstractFixer
 {
     public function getDefinition(): FixerDefinitionInterface
     {
         return new FixerDefinition(
             'Using `isset($var) &&` multiple times should be done in one call.',
-            [new CodeSample("<?php\n\$a = isset(\$a) && isset(\$b);\n")],
+            [new CodeSample("<?php\n\$a = isset(\$a) && isset(\$b);\n")]
         );
     }
 
@@ -46,7 +43,7 @@ final class CombineConsecutiveIssetsFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAllTokenKindsFound([\T_ISSET, \T_BOOLEAN_AND]);
+        return $tokens->isAllTokenKindsFound([T_ISSET, T_BOOLEAN_AND]);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
@@ -54,20 +51,20 @@ final class CombineConsecutiveIssetsFixer extends AbstractFixer
         $tokenCount = $tokens->count();
 
         for ($index = 1; $index < $tokenCount; ++$index) {
-            if (!$tokens[$index]->isGivenKind(\T_ISSET)
-                || !$tokens[$tokens->getPrevMeaningfulToken($index)]->equalsAny(['(', '{', ';', '=', [\T_OPEN_TAG], [\T_BOOLEAN_AND], [\T_BOOLEAN_OR]])) {
+            if (!$tokens[$index]->isGivenKind(T_ISSET)
+                || !$tokens[$tokens->getPrevMeaningfulToken($index)]->equalsAny(['(', '{', ';', '=', [T_OPEN_TAG], [T_BOOLEAN_AND], [T_BOOLEAN_OR]])) {
                 continue;
             }
 
             $issetInfo = $this->getIssetInfo($tokens, $index);
             $issetCloseBraceIndex = end($issetInfo); // ')' token
-            $insertLocation = (int) prev($issetInfo) + 1; // one index after the previous meaningful of ')'
+            $insertLocation = prev($issetInfo) + 1; // one index after the previous meaningful of ')'
 
             $booleanAndTokenIndex = $tokens->getNextMeaningfulToken($issetCloseBraceIndex);
 
-            while ($tokens[$booleanAndTokenIndex]->isGivenKind(\T_BOOLEAN_AND)) {
+            while ($tokens[$booleanAndTokenIndex]->isGivenKind(T_BOOLEAN_AND)) {
                 $issetIndex = $tokens->getNextMeaningfulToken($booleanAndTokenIndex);
-                if (!$tokens[$issetIndex]->isGivenKind(\T_ISSET)) {
+                if (!$tokens[$issetIndex]->isGivenKind(T_ISSET)) {
                     $index = $issetIndex;
 
                     break;
@@ -79,7 +76,7 @@ final class CombineConsecutiveIssetsFixer extends AbstractFixer
                 $nextMeaningfulTokenIndex = $tokens->getNextMeaningfulToken(end($nextIssetInfo));
                 $nextMeaningfulToken = $tokens[$nextMeaningfulTokenIndex];
 
-                if (!$nextMeaningfulToken->equalsAny([')', '}', ';', [\T_CLOSE_TAG], [\T_BOOLEAN_AND], [\T_BOOLEAN_OR]])) {
+                if (!$nextMeaningfulToken->equalsAny([')', '}', ';', [T_CLOSE_TAG], [T_BOOLEAN_AND], [T_BOOLEAN_OR]])) {
                     $index = $nextMeaningfulTokenIndex;
 
                     break;
@@ -92,7 +89,7 @@ final class CombineConsecutiveIssetsFixer extends AbstractFixer
                 $this->clearTokens($tokens, array_merge($nextIssetInfo, [$issetIndex, $booleanAndTokenIndex]));
 
                 // insert the tokens to create the new statement
-                array_unshift($clones, new Token(','), new Token([\T_WHITESPACE, ' ']));
+                array_unshift($clones, new Token(','), new Token([T_WHITESPACE, ' ']));
                 $tokens->insertAt($insertLocation, $clones);
 
                 // correct some counts and offset based on # of tokens inserted
@@ -119,7 +116,7 @@ final class CombineConsecutiveIssetsFixer extends AbstractFixer
     /**
      * @param int $index of T_ISSET
      *
-     * @return non-empty-list<int> indices of meaningful tokens belonging to the isset statement
+     * @return list<int> indices of meaningful tokens belonging to the isset statement
      */
     private function getIssetInfo(Tokens $tokens, int $index): array
     {

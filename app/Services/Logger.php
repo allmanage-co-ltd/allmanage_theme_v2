@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\Path;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonoLogger;
 
@@ -31,7 +32,7 @@ class Logger extends Service
             return self::$logger;
         }
 
-        $out = theme_dir() . '/logs/app.log';
+        $out = Path::root() . Config::get('app.log');
 
         self::$logger = new MonoLogger('app');
         self::$logger->pushHandler(

@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace PhpCsFixer\Tokenizer;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Collection of Transformer classes.
@@ -22,8 +23,6 @@ use Symfony\Component\Finder\Finder;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class Transformers
 {
@@ -99,15 +98,12 @@ final class Transformers
      */
     private function findBuiltInTransformers(): iterable
     {
+        /** @var SplFileInfo $file */
         foreach (Finder::create()->files()->in(__DIR__.'/Transformer') as $file) {
             $relativeNamespace = $file->getRelativePath();
             $class = __NAMESPACE__.'\Transformer\\'.('' !== $relativeNamespace ? $relativeNamespace.'\\' : '').$file->getBasename('.php');
 
-            $instance = new $class();
-
-            \assert($instance instanceof TransformerInterface);
-
-            yield $instance;
+            yield new $class();
         }
     }
 }

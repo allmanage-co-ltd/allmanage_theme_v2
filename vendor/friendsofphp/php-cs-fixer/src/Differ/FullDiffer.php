@@ -23,8 +23,6 @@ use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
  * @readonly
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FullDiffer implements DifferInterface
 {

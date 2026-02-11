@@ -21,9 +21,6 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class NoShortBoolCastFixer extends AbstractFixer
 {
     /**
@@ -40,7 +37,7 @@ final class NoShortBoolCastFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'Short cast `bool` using double exclamation mark should not be used.',
-            [new CodeSample("<?php\n\$a = !!\$b;\n")],
+            [new CodeSample("<?php\n\$a = !!\$b;\n")]
         );
     }
 
@@ -86,6 +83,6 @@ final class NoShortBoolCastFixer extends AbstractFixer
             }
         }
 
-        $tokens->insertAt($start, new Token([\T_BOOL_CAST, '(bool)']));
+        $tokens->insertAt($start, new Token([T_BOOL_CAST, '(bool)']));
     }
 }

@@ -204,15 +204,16 @@ class LineFormatter extends NormalizerFormatter
     {
         $str = $this->formatException($e);
 
-        $previous = $e->getPrevious();
-        while ($previous instanceof \Throwable) {
-            $depth++;
-            if ($depth > $this->maxNormalizeDepth) {
-                $str .= "\n[previous exception] Over " . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
-                break;
-            }
-            $str .= "\n[previous exception] " . $this->formatException($previous);
-            $previous = $previous->getPrevious();
+        if (($previous = $e->getPrevious()) instanceof \Throwable) {
+            do {
+                $depth++;
+                if ($depth > $this->maxNormalizeDepth) {
+                    $str .= "\n[previous exception] Over " . $this->maxNormalizeDepth . ' levels deep, aborting normalization';
+                    break;
+                }
+
+                $str .= "\n[previous exception] " . $this->formatException($previous);
+            } while ($previous = $previous->getPrevious());
         }
 
         return $str;
@@ -278,7 +279,7 @@ class LineFormatter extends NormalizerFormatter
             $file = preg_replace('{^'.preg_quote($this->basePath).'}', '', $file);
         }
 
-        $str .= '): ' . $e->getMessage() . ' at ' . strtr((string) $file, DIRECTORY_SEPARATOR, '/') . ':' . $e->getLine() . ')';
+        $str .= '): ' . $e->getMessage() . ' at ' . $file . ':' . $e->getLine() . ')';
 
         if ($this->includeStacktraces) {
             $str .= $this->stacktracesParser($e);
@@ -303,11 +304,7 @@ class LineFormatter extends NormalizerFormatter
             $trace = str_replace("\n", "\n{$this->indentStacktraces}", $trace);
         }
 
-        if (trim($trace) === '') {
-            return '';
-        }
-
-        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . strtr($trace, DIRECTORY_SEPARATOR, '/') . "\n";
+        return "\n{$this->indentStacktraces}[stacktrace]\n{$this->indentStacktraces}" . $trace . "\n";
     }
 
     private function stacktracesParserCustom(string $trace): string

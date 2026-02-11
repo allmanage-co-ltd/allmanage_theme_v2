@@ -24,8 +24,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * or `} catch (ExceptionType1 & ExceptionType2 $e) {`.
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class TypeIntersectionTransformer extends AbstractTypeTransformer
 {
@@ -42,7 +40,7 @@ final class TypeIntersectionTransformer extends AbstractTypeTransformer
 
     public function process(Tokens $tokens, Token $token, int $index): void
     {
-        $this->doProcess($tokens, $index, [\T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG, '&']);
+        $this->doProcess($tokens, $index, [T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG, '&']);
     }
 
     public function getCustomTokens(): array

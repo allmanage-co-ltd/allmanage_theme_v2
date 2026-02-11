@@ -14,9 +14,6 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\FixerConfiguration;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class FixerOptionBuilder
 {
     private string $name;
@@ -36,7 +33,7 @@ final class FixerOptionBuilder
     private ?array $allowedTypes = null;
 
     /**
-     * @var null|non-empty-list<null|(callable(mixed): bool)|scalar>
+     * @var null|list<null|(callable(mixed): bool)|scalar>
      */
     private ?array $allowedValues = null;
 
@@ -77,7 +74,7 @@ final class FixerOptionBuilder
     }
 
     /**
-     * @param non-empty-list<null|(callable(mixed): bool)|scalar> $allowedValues
+     * @param list<null|(callable(mixed): bool)|scalar> $allowedValues
      *
      * @return $this
      */
@@ -117,7 +114,7 @@ final class FixerOptionBuilder
             $this->default,
             $this->allowedTypes,
             $this->allowedValues,
-            $this->normalizer,
+            $this->normalizer
         );
 
         if (null !== $this->deprecationMessage) {

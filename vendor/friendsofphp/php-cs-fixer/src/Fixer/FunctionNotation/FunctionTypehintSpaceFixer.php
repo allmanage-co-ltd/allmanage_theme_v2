@@ -26,8 +26,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  *
  * @deprecated
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FunctionTypehintSpaceFixer extends AbstractProxyFixer implements DeprecatedFixerInterface
 {
@@ -38,13 +36,13 @@ final class FunctionTypehintSpaceFixer extends AbstractProxyFixer implements Dep
             [
                 new CodeSample("<?php\nfunction sample(array\$a)\n{}\n"),
                 new CodeSample("<?php\nfunction sample(array  \$a)\n{}\n"),
-            ],
+            ]
         );
     }
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([\T_FUNCTION, \T_FN]);
+        return $tokens->isAnyTokenKindsFound([T_FUNCTION, T_FN]);
     }
 
     public function getSuccessorsNames(): array

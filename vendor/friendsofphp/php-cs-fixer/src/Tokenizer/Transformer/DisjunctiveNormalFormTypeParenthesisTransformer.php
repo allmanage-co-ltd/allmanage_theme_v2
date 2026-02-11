@@ -25,8 +25,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @see https://wiki.php.net/rfc/dnf_types
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class DisjunctiveNormalFormTypeParenthesisTransformer extends AbstractTransformer
 {

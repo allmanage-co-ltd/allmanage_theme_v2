@@ -26,8 +26,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * @author Sebastiaan Stok <s.stok@rollerscapes.net>
  * @author Dariusz Rumiński <dariusz.ruminski@gmail.com>
  * @author Kuba Werłos <werlos@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class IncludeFixer extends AbstractFixer
 {
@@ -37,22 +35,20 @@ final class IncludeFixer extends AbstractFixer
             'Include/Require and file path should be divided with a single space. File path should not be placed within parentheses.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        require ("sample1.php");
-                        require_once  "sample2.php";
-                        include       "sample3.php";
-                        include_once("sample4.php");
-
-                        PHP,
+                    '<?php
+require ("sample1.php");
+require_once  "sample2.php";
+include       "sample3.php";
+include_once("sample4.php");
+'
                 ),
-            ],
+            ]
         );
     }
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([\T_REQUIRE, \T_REQUIRE_ONCE, \T_INCLUDE, \T_INCLUDE_ONCE]);
+        return $tokens->isAnyTokenKindsFound([T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE]);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
@@ -68,7 +64,7 @@ final class IncludeFixer extends AbstractFixer
         $blocksAnalyzer = new BlocksAnalyzer();
 
         foreach ($includies as $includy) {
-            if (!$tokens[$includy['end']]->isGivenKind(\T_CLOSE_TAG)) {
+            if (!$tokens[$includy['end']]->isGivenKind(T_CLOSE_TAG)) {
                 $afterEndIndex = $tokens->getNextNonWhitespace($includy['end']);
 
                 if (null === $afterEndIndex || !$tokens[$afterEndIndex]->isComment()) {
@@ -83,7 +79,7 @@ final class IncludeFixer extends AbstractFixer
                 $nextIndex = $tokens->getNextMeaningfulToken($braces['close']);
 
                 // Include is also legal as function parameter or condition statement but requires being wrapped then.
-                if (!$tokens[$nextIndex]->equalsAny([';', [\T_CLOSE_TAG]]) && !$blocksAnalyzer->isBlock($tokens, $prevIndex, $nextIndex)) {
+                if (!$tokens[$nextIndex]->equalsAny([';', [T_CLOSE_TAG]]) && !$blocksAnalyzer->isBlock($tokens, $prevIndex, $nextIndex)) {
                     continue;
                 }
 
@@ -96,9 +92,9 @@ final class IncludeFixer extends AbstractFixer
             $nextIndex = $tokens->getNonEmptySibling($includy['begin'], 1);
 
             if ($tokens[$nextIndex]->isWhitespace()) {
-                $tokens[$nextIndex] = new Token([\T_WHITESPACE, ' ']);
-            } elseif (null !== $braces || $tokens[$nextIndex]->isGivenKind([\T_VARIABLE, \T_CONSTANT_ENCAPSED_STRING, \T_COMMENT])) {
-                $tokens->insertAt($includy['begin'] + 1, new Token([\T_WHITESPACE, ' ']));
+                $tokens[$nextIndex] = new Token([T_WHITESPACE, ' ']);
+            } elseif (null !== $braces || $tokens[$nextIndex]->isGivenKind([T_VARIABLE, T_CONSTANT_ENCAPSED_STRING, T_COMMENT])) {
+                $tokens->insertAt($includy['begin'] + 1, new Token([T_WHITESPACE, ' ']));
             }
         }
     }
@@ -108,14 +104,16 @@ final class IncludeFixer extends AbstractFixer
      */
     private function findIncludies(Tokens $tokens): array
     {
+        static $includyTokenKinds = [T_REQUIRE, T_REQUIRE_ONCE, T_INCLUDE, T_INCLUDE_ONCE];
+
         $includies = [];
 
-        foreach ($tokens->findGivenKind([\T_REQUIRE, \T_REQUIRE_ONCE, \T_INCLUDE, \T_INCLUDE_ONCE]) as $includyTokens) {
+        foreach ($tokens->findGivenKind($includyTokenKinds) as $includyTokens) {
             foreach ($includyTokens as $index => $token) {
                 $includy = [
                     'begin' => $index,
                     'braces' => null,
-                    'end' => $tokens->getNextTokenOfKind($index, [';', [\T_CLOSE_TAG]]),
+                    'end' => $tokens->getNextTokenOfKind($index, [';', [T_CLOSE_TAG]]),
                 ];
 
                 $braceOpenIndex = $tokens->getNextMeaningfulToken($index);

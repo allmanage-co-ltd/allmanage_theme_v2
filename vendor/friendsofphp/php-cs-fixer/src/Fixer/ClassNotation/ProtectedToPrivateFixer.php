@@ -19,19 +19,15 @@ use PhpCsFixer\FixerDefinition\CodeSample;
 use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\CT;
-use PhpCsFixer\Tokenizer\FCT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 use PhpCsFixer\Tokenizer\TokensAnalyzer;
 
 /**
  * @author Filippo Tessarotto <zoeslam@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class ProtectedToPrivateFixer extends AbstractFixer
 {
-    private const MODIFIER_KINDS = [\T_PUBLIC, \T_PROTECTED, \T_PRIVATE, \T_FINAL, \T_ABSTRACT, \T_NS_SEPARATOR, \T_STRING, CT::T_NULLABLE_TYPE, CT::T_ARRAY_TYPEHINT, \T_STATIC, CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION, FCT::T_READONLY, FCT::T_PRIVATE_SET, FCT::T_PROTECTED_SET];
     private TokensAnalyzer $tokensAnalyzer;
 
     public function getDefinition(): FixerDefinitionInterface
@@ -40,27 +36,25 @@ final class ProtectedToPrivateFixer extends AbstractFixer
             'Converts `protected` variables and methods to `private` where possible.',
             [
                 new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        final class Sample
-                        {
-                            protected $a;
+                    '<?php
+final class Sample
+{
+    protected $a;
 
-                            protected function test()
-                            {
-                            }
-                        }
-
-                        PHP,
+    protected function test()
+    {
+    }
+}
+'
                 ),
-            ],
+            ]
         );
     }
 
     /**
      * {@inheritdoc}
      *
-     * Must run before OrderedClassElementsFixer, StaticPrivateMethodFixer.
+     * Must run before OrderedClassElementsFixer.
      * Must run after FinalClassFixer, FinalInternalClassFixer.
      */
     public function getPriority(): int
@@ -70,19 +64,24 @@ final class ProtectedToPrivateFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isAnyTokenKindsFound([\T_PROTECTED, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PROTECTED, FCT::T_PROTECTED_SET])
-            && (
-                $tokens->isAllTokenKindsFound([\T_CLASS, \T_FINAL])
-                || $tokens->isTokenKindFound(FCT::T_ENUM)
-            );
+        if (\defined('T_ENUM') && $tokens->isAllTokenKindsFound([T_ENUM, T_PROTECTED])) { // @TODO: drop condition when PHP 8.1+ is required
+            return true;
+        }
+
+        return $tokens->isAllTokenKindsFound([T_CLASS, T_FINAL, T_PROTECTED]);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         $this->tokensAnalyzer = new TokensAnalyzer($tokens);
+        $modifierKinds = [T_PUBLIC, T_PROTECTED, T_PRIVATE, T_FINAL, T_ABSTRACT, T_NS_SEPARATOR, T_STRING, CT::T_NULLABLE_TYPE, CT::T_ARRAY_TYPEHINT, T_STATIC, CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION];
+
+        if (\defined('T_READONLY')) { // @TODO: drop condition when PHP 8.1+ is required
+            $modifierKinds[] = T_READONLY;
+        }
 
         $classesCandidate = [];
-        $classElementTypes = ['method' => true, 'property' => true, 'promoted_property' => true, 'const' => true];
+        $classElementTypes = ['method' => true, 'property' => true, 'const' => true];
 
         foreach ($this->tokensAnalyzer->getClassyElements() as $index => $element) {
             $classIndex = $element['classIndex'];
@@ -97,39 +96,30 @@ final class ProtectedToPrivateFixer extends AbstractFixer
                 continue;
             }
 
-            $previousIndex = $index;
-            $protectedIndex = null;
-            $protectedPromotedIndex = null;
-            $protectedSetIndex = null;
+            $previous = $index;
+            $isProtected = false;
             $isFinal = false;
 
             do {
-                $previousIndex = $tokens->getPrevMeaningfulToken($previousIndex);
+                $previous = $tokens->getPrevMeaningfulToken($previous);
 
-                if ($tokens[$previousIndex]->isGivenKind(\T_PROTECTED)) {
-                    $protectedIndex = $previousIndex;
-                } elseif ($tokens[$previousIndex]->isGivenKind(CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PROTECTED)) {
-                    $protectedPromotedIndex = $previousIndex;
-                } elseif ($tokens[$previousIndex]->isGivenKind(FCT::T_PROTECTED_SET)) {
-                    $protectedSetIndex = $previousIndex;
-                } elseif ($tokens[$previousIndex]->isGivenKind(\T_FINAL)) {
-                    $isFinal = true;
+                if ($tokens[$previous]->isGivenKind(T_PROTECTED)) {
+                    $isProtected = $previous;
+                } elseif ($tokens[$previous]->isGivenKind(T_FINAL)) {
+                    $isFinal = $previous;
                 }
-            } while ($tokens[$previousIndex]->isGivenKind(self::MODIFIER_KINDS));
+            } while ($tokens[$previous]->isGivenKind($modifierKinds));
+
+            if (false === $isProtected) {
+                continue;
+            }
 
             if ($isFinal && 'const' === $element['type']) {
                 continue; // Final constants cannot be private
             }
 
-            if (null !== $protectedIndex) {
-                $tokens[$protectedIndex] = new Token([\T_PRIVATE, 'private']);
-            }
-            if (null !== $protectedPromotedIndex) {
-                $tokens[$protectedPromotedIndex] = new Token([CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PRIVATE, 'private']);
-            }
-            if (null !== $protectedSetIndex) {
-                $tokens[$protectedSetIndex] = new Token([\T_PRIVATE_SET, 'private(set)']);
-            }
+            $element['protected_index'] = $isProtected;
+            $tokens[$element['protected_index']] = new Token([T_PRIVATE, 'private']);
         }
     }
 
@@ -144,11 +134,11 @@ final class ProtectedToPrivateFixer extends AbstractFixer
      */
     private function isClassCandidate(Tokens $tokens, int $classIndex): bool
     {
-        if ($tokens[$classIndex]->isGivenKind(FCT::T_ENUM)) {
+        if (\defined('T_ENUM') && $tokens[$classIndex]->isGivenKind(T_ENUM)) { // @TODO: drop condition when PHP 8.1+ is required
             return true;
         }
 
-        if (!$tokens[$classIndex]->isGivenKind(\T_CLASS) || $this->tokensAnalyzer->isAnonymousClass($classIndex)) {
+        if (!$tokens[$classIndex]->isGivenKind(T_CLASS) || $this->tokensAnalyzer->isAnonymousClass($classIndex)) {
             return false;
         }
 
@@ -161,7 +151,7 @@ final class ProtectedToPrivateFixer extends AbstractFixer
         $classNameIndex = $tokens->getNextMeaningfulToken($classIndex); // move to class name as anonymous class is never "final"
         $classExtendsIndex = $tokens->getNextMeaningfulToken($classNameIndex); // move to possible "extends"
 
-        if ($tokens[$classExtendsIndex]->isGivenKind(\T_EXTENDS)) {
+        if ($tokens[$classExtendsIndex]->isGivenKind(T_EXTENDS)) {
             return false;
         }
 

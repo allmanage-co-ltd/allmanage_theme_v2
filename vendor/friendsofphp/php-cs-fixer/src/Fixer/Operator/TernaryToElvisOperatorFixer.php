@@ -20,14 +20,8 @@ use PhpCsFixer\FixerDefinition\FixerDefinition;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\Analyzer\RangeAnalyzer;
 use PhpCsFixer\Tokenizer\CT;
-use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
-/**
- * @phpstan-import-type _PhpTokenPrototypePartial from Token
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
- */
 final class TernaryToElvisOperatorFixer extends AbstractFixer
 {
     /**
@@ -35,12 +29,12 @@ final class TernaryToElvisOperatorFixer extends AbstractFixer
      *
      * Ordered by most common types first.
      *
-     * @var non-empty-list<_PhpTokenPrototypePartial>
+     * @var list<array{int}|string>
      */
     private const VALID_BEFORE_ENDTYPES = [
         '=',
-        [\T_OPEN_TAG],
-        [\T_OPEN_TAG_WITH_ECHO],
+        [T_OPEN_TAG],
+        [T_OPEN_TAG_WITH_ECHO],
         '(',
         ',',
         ';',
@@ -48,18 +42,18 @@ final class TernaryToElvisOperatorFixer extends AbstractFixer
         '{',
         '}',
         [CT::T_ARRAY_INDEX_CURLY_BRACE_OPEN],
-        [\T_AND_EQUAL],    // &=
-        [\T_CONCAT_EQUAL], // .=
-        [\T_DIV_EQUAL],    // /=
-        [\T_MINUS_EQUAL],  // -=
-        [\T_MOD_EQUAL],    // %=
-        [\T_MUL_EQUAL],    // *=
-        [\T_OR_EQUAL],     // |=
-        [\T_PLUS_EQUAL],   // +=
-        [\T_POW_EQUAL],    // **=
-        [\T_SL_EQUAL],     // <<=
-        [\T_SR_EQUAL],     // >>=
-        [\T_XOR_EQUAL],    // ^=
+        [T_AND_EQUAL],    // &=
+        [T_CONCAT_EQUAL], // .=
+        [T_DIV_EQUAL],    // /=
+        [T_MINUS_EQUAL],  // -=
+        [T_MOD_EQUAL],    // %=
+        [T_MUL_EQUAL],    // *=
+        [T_OR_EQUAL],     // |=
+        [T_PLUS_EQUAL],   // +=
+        [T_POW_EQUAL],    // **=
+        [T_SL_EQUAL],     // <<=
+        [T_SR_EQUAL],     // >>=
+        [T_XOR_EQUAL],    // ^=
     ];
 
     public function getDefinition(): FixerDefinitionInterface
@@ -68,14 +62,14 @@ final class TernaryToElvisOperatorFixer extends AbstractFixer
             'Use the Elvis operator `?:` where possible.',
             [
                 new CodeSample(
-                    "<?php\n\$foo = \$foo ? \$foo : 1;\n",
+                    "<?php\n\$foo = \$foo ? \$foo : 1;\n"
                 ),
                 new CodeSample(
-                    "<?php \$foo = \$bar[a()] ? \$bar[a()] : 1; # \"risky\" sample, \"a()\" only gets called once after fixing\n",
+                    "<?php \$foo = \$bar[a()] ? \$bar[a()] : 1; # \"risky\" sample, \"a()\" only gets called once after fixing\n"
                 ),
             ],
             null,
-            'Risky when relying on functions called on both sides of the `?` operator.',
+            'Risky when relying on functions called on both sides of the `?` operator.'
         );
     }
 
@@ -142,7 +136,7 @@ final class TernaryToElvisOperatorFixer extends AbstractFixer
         $before = ['end' => $index];
 
         while (!$tokens[$index]->equalsAny(self::VALID_BEFORE_ENDTYPES)) {
-            if ($tokens[$index]->isGivenKind([\T_INC, \T_DEC])) {
+            if ($tokens[$index]->isGivenKind([T_INC, T_DEC])) {
                 return null;
             }
 
@@ -162,7 +156,7 @@ final class TernaryToElvisOperatorFixer extends AbstractFixer
             do {
                 $index = $tokens->getPrevMeaningfulToken($index);
 
-                if ($tokens[$index]->isGivenKind([\T_INC, \T_DEC])) {
+                if ($tokens[$index]->isGivenKind([T_INC, T_DEC])) {
                     return null;
                 }
 

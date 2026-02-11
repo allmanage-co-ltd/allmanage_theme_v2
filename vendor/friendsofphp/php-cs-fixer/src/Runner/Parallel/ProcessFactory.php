@@ -25,33 +25,37 @@ use Symfony\Component\Process\PhpExecutableFinder;
  * @readonly
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class ProcessFactory
 {
+    private InputInterface $input;
+
+    public function __construct(InputInterface $input)
+    {
+        $this->input = $input;
+    }
+
     public function create(
         LoopInterface $loop,
-        InputInterface $input,
         RunnerConfig $runnerConfig,
         ProcessIdentifier $identifier,
         int $serverPort
     ): Process {
-        $commandArgs = $this->getCommandArgs($serverPort, $identifier, $input, $runnerConfig);
+        $commandArgs = $this->getCommandArgs($serverPort, $identifier, $runnerConfig);
 
         return new Process(
             implode(' ', $commandArgs),
             $loop,
-            $runnerConfig->getParallelConfig()->getProcessTimeout(),
+            $runnerConfig->getParallelConfig()->getProcessTimeout()
         );
     }
 
     /**
      * @private
      *
-     * @return non-empty-list<string>
+     * @return list<string>
      */
-    public function getCommandArgs(int $serverPort, ProcessIdentifier $identifier, InputInterface $input, RunnerConfig $runnerConfig): array
+    public function getCommandArgs(int $serverPort, ProcessIdentifier $identifier, RunnerConfig $runnerConfig): array
     {
         $phpBinary = (new PhpExecutableFinder())->find(false);
 
@@ -72,30 +76,33 @@ final class ProcessFactory
         }
 
         $commandArgs = [
-            ProcessUtils::escapeArgument($phpBinary),
-            ProcessUtils::escapeArgument($mainScript),
+            escapeshellarg($phpBinary),
+            escapeshellarg($mainScript),
             'worker',
-            \sprintf('--port=%s', (string) $serverPort),
-            \sprintf('--identifier=%s', ProcessUtils::escapeArgument($identifier->toString())),
+            '--port',
+            (string) $serverPort,
+            '--identifier',
+            escapeshellarg($identifier->toString()),
         ];
 
         if ($runnerConfig->isDryRun()) {
             $commandArgs[] = '--dry-run';
         }
 
-        if (filter_var($input->getOption('diff'), \FILTER_VALIDATE_BOOLEAN)) {
+        if (filter_var($this->input->getOption('diff'), FILTER_VALIDATE_BOOLEAN)) {
             $commandArgs[] = '--diff';
         }
 
-        if (filter_var($input->getOption('stop-on-violation'), \FILTER_VALIDATE_BOOLEAN)) {
+        if (filter_var($this->input->getOption('stop-on-violation'), FILTER_VALIDATE_BOOLEAN)) {
             $commandArgs[] = '--stop-on-violation';
         }
 
         foreach (['allow-risky', 'config', 'rules', 'using-cache', 'cache-file'] as $option) {
-            $optionValue = $input->getOption($option);
+            $optionValue = $this->input->getOption($option);
 
             if (null !== $optionValue) {
-                $commandArgs[] = \sprintf('--%s=%s', $option, ProcessUtils::escapeArgument($optionValue));
+                $commandArgs[] = "--{$option}";
+                $commandArgs[] = escapeshellarg($optionValue);
             }
         }
 

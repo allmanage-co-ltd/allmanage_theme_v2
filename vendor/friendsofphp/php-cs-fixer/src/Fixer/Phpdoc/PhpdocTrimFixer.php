@@ -24,8 +24,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Graham Campbell <hello@gjcampbell.co.uk>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PhpdocTrimFixer extends AbstractFixer
 {
@@ -33,21 +31,15 @@ final class PhpdocTrimFixer extends AbstractFixer
     {
         return new FixerDefinition(
             'PHPDoc should start and end with content, excluding the very first and last line of the docblocks.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        /**
-                         *
-                         * Foo must be final class.
-                         *
-                         *
-                         */
-                        final class Foo {}
-
-                        PHP,
-                ),
-            ],
+            [new CodeSample('<?php
+/**
+ *
+ * Foo must be final class.
+ *
+ *
+ */
+final class Foo {}
+')]
         );
     }
 
@@ -64,13 +56,13 @@ final class PhpdocTrimFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_DOC_COMMENT);
+        return $tokens->isTokenKindFound(T_DOC_COMMENT);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {
-            if (!$token->isGivenKind(\T_DOC_COMMENT)) {
+            if (!$token->isGivenKind(T_DOC_COMMENT)) {
                 continue;
             }
 
@@ -79,7 +71,7 @@ final class PhpdocTrimFixer extends AbstractFixer
             // we need re-parse the docblock after fixing the start before
             // fixing the end in order for the lines to be correctly indexed
             $content = $this->fixEnd($content);
-            $tokens[$index] = new Token([\T_DOC_COMMENT, $content]);
+            $tokens[$index] = new Token([T_DOC_COMMENT, $content]);
         }
     }
 
@@ -98,7 +90,7 @@ final class PhpdocTrimFixer extends AbstractFixer
                 (\R\h*(?:\*\h*)?\S) # first line with useful content
             ~x',
             '$1$2',
-            $content,
+            $content
         );
     }
 
@@ -117,7 +109,7 @@ final class PhpdocTrimFixer extends AbstractFixer
                 (\R\h*\*/$)            # DocComment end
             ~xu',
             '$1$2',
-            $content,
+            $content
         );
     }
 }

@@ -23,8 +23,6 @@ use PhpCsFixer\Tokenizer\Tokens;
  * Transform named argument tokens.
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class NamedArgumentTransformer extends AbstractTransformer
 {
@@ -47,7 +45,7 @@ final class NamedArgumentTransformer extends AbstractTransformer
 
         $stringIndex = $tokens->getPrevMeaningfulToken($index);
 
-        if (!$tokens[$stringIndex]->isGivenKind(\T_STRING)) {
+        if (!$tokens[$stringIndex]->isGivenKind(T_STRING)) {
             return;
         }
 

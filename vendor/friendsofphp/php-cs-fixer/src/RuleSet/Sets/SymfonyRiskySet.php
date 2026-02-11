@@ -14,19 +14,17 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\RuleSet\Sets;
 
-use PhpCsFixer\RuleSet\AbstractRuleSetDefinition;
+use PhpCsFixer\RuleSet\AbstractRuleSetDescription;
 
 /**
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-final class SymfonyRiskySet extends AbstractRuleSetDefinition
+final class SymfonyRiskySet extends AbstractRuleSetDescription
 {
     public function getRules(): array
     {
         return [
-            '@PHP5x6Migration:risky' => true,
+            '@PHP56Migration:risky' => true,
             '@PSR12:risky' => true,
             'array_push' => true,
             'combine_nested_dirname' => true,
@@ -43,7 +41,6 @@ final class SymfonyRiskySet extends AbstractRuleSetDefinition
             'is_null' => true,
             'logical_operators' => true,
             'long_to_shorthand_operator' => true,
-            'modern_serialization_methods' => true,
             'modernize_strpos' => true,
             'modernize_types_casting' => true,
             'native_constant_invocation' => ['strict' => false],
@@ -57,7 +54,6 @@ final class SymfonyRiskySet extends AbstractRuleSetDefinition
             'no_alias_functions' => true,
             'no_homoglyph_names' => true,
             'no_php4_constructor' => true,
-            'no_trailing_whitespace_in_string' => false, // override PER-CS
             'no_unneeded_final_method' => true,
             'no_useless_sprintf' => true,
             'non_printable_character' => true,
@@ -69,7 +65,6 @@ final class SymfonyRiskySet extends AbstractRuleSetDefinition
             'psr_autoloading' => true,
             'self_accessor' => true,
             'set_type_to_cast' => true,
-            'static_lambda' => true,
             'string_length_to_empty' => true,
             'string_line_ending' => true,
             'ternary_to_elvis_operator' => true,
@@ -78,6 +73,6 @@ final class SymfonyRiskySet extends AbstractRuleSetDefinition
 
     public function getDescription(): string
     {
-        return 'Rules that follow the official `Symfony Coding Standards <https://symfony.com/doc/current/contributing/code/standards.html>`_. Extends ``@PER-CS:risky``.';
+        return 'Rules that follow the official `Symfony Coding Standards <https://symfony.com/doc/current/contributing/code/standards.html>`_.';
     }
 }

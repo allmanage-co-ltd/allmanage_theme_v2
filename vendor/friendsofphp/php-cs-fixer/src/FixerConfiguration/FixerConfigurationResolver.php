@@ -14,15 +14,13 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\FixerConfiguration;
 
-use PhpCsFixer\Future;
 use PhpCsFixer\Preg;
+use PhpCsFixer\Utils;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @readonly
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class FixerConfigurationResolver implements FixerConfigurationResolverInterface
 {
@@ -68,10 +66,10 @@ final class FixerConfigurationResolver implements FixerConfigurationResolverInte
                         throw new InvalidOptionsException(\sprintf('Aliased option "%s"/"%s" is passed multiple times.', $name, $alias));
                     }
 
-                    Future::triggerDeprecation(new \RuntimeException(\sprintf(
+                    Utils::triggerDeprecation(new \RuntimeException(\sprintf(
                         'Option "%s" is deprecated, use "%s" instead.',
                         $alias,
-                        $name,
+                        $name
                     )));
 
                     $configuration[$name] = $configuration[$alias];

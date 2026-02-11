@@ -1,10 +1,8 @@
-# Allmanageテーマ
+# allmanage_theme_v2
 
-従来の既存テーマの古い記述や、グローバル関数をひっかきまわす構成を一新して、新たにオブジェクト指向の「クラス」と型定義を取り入れソースが肥えてきたとしてもある程度の管理コストで理解できる塩梅を目指しています。
+**日々更新していきますので、必ず、案件ごとに新しく git clone もしくは zip を落として使用してください。**
 
-**作成中**
-
-## 方針
+## テーマの方針
 
 - 何がどこにあるかわからない煩雑なテーマを辞めて、見るべきディレクトリを明確化することでスピード＆クオリティを高める
 - グローバルに呼べるbootstrap/functions.phpにはロジックを書かずに実装を他へ逃がす事で必要のない実装を見なくて良くする
@@ -13,7 +11,6 @@
 - 古い書き方を辞めてモダンな書き方に触れることで技術者がLaravelにもスイッチしやすくする
 
 ## コーディングについて
-### **日々更新していきますので、必ず、案件ごとに新しく git clone もしくは zip を落として使用してください。**
 
 1. 基本的には`views` `config` `assets` `bootstrap/functions.php` だけを見ればコーディング作業ができるように作っていますので、一番最初はこれらのディレクトリをチェックしてください。
 
@@ -21,11 +18,37 @@
 
 3. CSSやJSの登録、カスタム投稿・タクソノミーの作成、ページURLの設定は`config`ディレクトリを編集してください。その設定ファイルをもとに`app`ディレクトリの中でロジックを組んでいます。
 
-4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app/Services`に逃がしています。
+4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app`に逃がしています。
 
 2. アドバイスや改善点は積極的に提案し、より良いテーマにしたいです。
 
-## 動作環境について
+---
+
+## ディレクトリ概要
+
+```
+├─ app/                # PHP実装（CMS連携・サービス・ヘルパー）
+├─ assets/             # CSS / JS / 画像 / SCSS
+├─ bootstrap/          # 起動処理・グローバル関数
+├─ config/             # 各種設定（投稿タイプ、タクソノミー、URLなど）
+├─ views/              # page/single/archive/taxonomy/layout/component
+├─ functions.php       # テーマ起動エントリー（原則編集しない）
+└─ docker-compose.yaml # ローカル開発用WordPress環境
+```
+
+### 開発時に主に触る場所
+
+- 画面表示を変更したい: `views/` と必要に応じて `assets/`
+- WP の挙動やフックを変更したい: `app/CMS/`
+- 投稿タイプ・タクソノミー: `config/`
+- プラグイン特有のフックやカスタム: `app/CMS/Plugins/`
+- 汎用処理（設定、ログ、CSV/PDF、HTTP）: `app/Services/`
+- viewテンプレートから使う関数: `bootstrap/functions.php`
+    - 処理本体は `app/` の定説なクラスへ実装してください
+    - `~/functions.php` は最小責務のため、基本的に編集しません
+
+### 動作環境について
+
 
 モダンPHPで構成されていますので、本番、テストに関わらず、テーマを動かすには`Conposer`環境が**必須**です。
 未インストールの場合は下記を参考にインストールしてください。
@@ -56,13 +79,26 @@ Wordpress  => [http://localhost:8888](http://localhost:8888)
 PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
 
 
-## Sassについて
+### Sassについて
 
 基本は vscode プラグインのLive Sass Compailerを使用します。
 
 コンパイルのルール（入出力先）などは`./.vscode/settings.json`に記載してあるのでそのままコンパイルしていただければ問題ありません。
 
-## 必須プラグインについて
+---
+
+### よく使う Composer スクリプト
+
+```bash
+composer run cs       # PHP-CS-Fixer (dry-run)
+composer run cs:fix   # PHP-CS-Fixer 実行
+composer run analyse  # PHPStan
+composer run rector   # Rector (dry-run)
+composer run rector:fix
+```
+---
+
+### 必須プラグインについて
 1. `WPvivid Backup Plugin` バックアップ・データ移行
 
 2. `Advanced Custom Fields Pro` 各種カスタムフィールド・オプションページ `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`
@@ -72,45 +108,3 @@ PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
 4. `Website LLMs.txt` AIO 対策のため導入
 
 5. `mw wp form` お問い合わせフォーム作成
-
----
-
-## View構成
-
-```
-views/
-├─ page/
-├─ single/
-├─ archive/
-├─ taxonomy/
-├─ component/
-└─ layout/
-└─ admin/
-```
-
-- テンプレート階層は App\Services\View\Render で解決
-- WordPress標準テンプレート階層（テーマ直下）は一切使わない
-
----
-
-## アプリケーション構成
-
-```
-app/
-├─ Hooks/             WPコアフック
-├─ Hooks/Admin/       管理画面拡張フック
-├─ Hooks/Plugins/     プラグイン連携フック
-├─ Services/          共通サービス、特定の汎用機能、viewから逃がしたいロジック等
-└─ Views/             ページの表示切り替え、コンポーネント描画、状態を持つモジュール用ロジック
-```
----
-
-## 起動
-
-テーマ読み込み時に `bootstrap/App` が起動され
-各 Hooks クラスの `boot()` が呼ばれることで初期化される
-
-```
-functions.php
- └─ bootstrap/App::boot()
-```

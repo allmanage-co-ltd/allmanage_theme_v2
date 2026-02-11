@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Helpers\Path;
+
 /**---------------------------------------------
  * 設定取得サービスクラス
  * ---------------------------------------------
@@ -11,16 +13,11 @@ namespace App\Services;
  *
  * 例：
  * - Config::get('assets.version')
- * - Config::get('admin.post_types')
+ * - Config::get('cms.post_types')
  * - Config::get('csv.show_admin_menu', false)
  */
 class Config extends Service
 {
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * 設定値取得
      *
@@ -41,7 +38,7 @@ class Config extends Service
         }
 
         if (!array_key_exists($file, $configs)) {
-            $config_path = theme_dir() . "/config/{$file}.php";
+            $config_path = Path::root() . "/config/{$file}.php";
 
             if (!file_exists($config_path)) {
                 return $default;

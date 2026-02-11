@@ -23,8 +23,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Jack Cherng <jfcherng@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class CompactNullableTypeDeclarationFixer extends AbstractFixer
 {
@@ -34,9 +32,10 @@ final class CompactNullableTypeDeclarationFixer extends AbstractFixer
             'Remove extra spaces in a nullable type declaration.',
             [
                 new CodeSample(
-                    "<?php\nfunction sample(? string \$str): ? string\n{}\n",
+                    "<?php\nfunction sample(? string \$str): ? string\n{}\n"
                 ),
             ],
+            'Rule is applied only in a PHP 7.1+ environment.'
         );
     }
 
@@ -47,6 +46,14 @@ final class CompactNullableTypeDeclarationFixer extends AbstractFixer
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
+        static $typehintKinds = [
+            CT::T_ARRAY_TYPEHINT,
+            T_CALLABLE,
+            T_NS_SEPARATOR,
+            T_STATIC,
+            T_STRING,
+        ];
+
         for ($index = $tokens->count() - 1; $index >= 0; --$index) {
             if (!$tokens[$index]->isGivenKind(CT::T_NULLABLE_TYPE)) {
                 continue;
@@ -56,13 +63,7 @@ final class CompactNullableTypeDeclarationFixer extends AbstractFixer
             // between '?' and the variable type
             if (
                 $tokens[$index + 1]->isWhitespace()
-                && $tokens[$index + 2]->isGivenKind([
-                    CT::T_ARRAY_TYPEHINT,
-                    \T_CALLABLE,
-                    \T_NS_SEPARATOR,
-                    \T_STATIC,
-                    \T_STRING,
-                ])
+                && $tokens[$index + 2]->isGivenKind($typehintKinds)
             ) {
                 $tokens->removeTrailingWhitespace($index);
             }

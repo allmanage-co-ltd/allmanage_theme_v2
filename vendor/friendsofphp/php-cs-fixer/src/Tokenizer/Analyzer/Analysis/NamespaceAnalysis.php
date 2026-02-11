@@ -17,11 +17,9 @@ namespace PhpCsFixer\Tokenizer\Analyzer\Analysis;
 /**
  * @readonly
  *
- * @TODO v4: previously was mareked as internal - yet it leaked to public interface of `DocBlock`, consider making it so again.
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
+ * @internal
  */
-final class NamespaceAnalysis
+final class NamespaceAnalysis implements StartEndTokenAwareAnalysis
 {
     /**
      * The fully qualified namespace name.
@@ -34,28 +32,25 @@ final class NamespaceAnalysis
     private string $shortName;
 
     /**
-     * The start index of the namespace declaration in the analysed Tokens.
+     * The start index of the namespace declaration in the analyzed Tokens.
      */
     private int $startIndex;
 
     /**
-     * The end index of the namespace declaration in the analysed Tokens.
+     * The end index of the namespace declaration in the analyzed Tokens.
      */
     private int $endIndex;
 
     /**
-     * The start index of the scope of the namespace in the analysed Tokens.
+     * The start index of the scope of the namespace in the analyzed Tokens.
      */
     private int $scopeStartIndex;
 
     /**
-     * The end index of the scope of the namespace in the analysed Tokens.
+     * The end index of the scope of the namespace in the analyzed Tokens.
      */
     private int $scopeEndIndex;
 
-    /**
-     * @internal
-     */
     public function __construct(string $fullName, string $shortName, int $startIndex, int $endIndex, int $scopeStartIndex, int $scopeEndIndex)
     {
         $this->fullName = $fullName;

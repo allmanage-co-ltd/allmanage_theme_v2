@@ -14,14 +14,12 @@ declare(strict_types=1);
 
 namespace PhpCsFixer\RuleSet\Sets;
 
-use PhpCsFixer\RuleSet\AbstractRuleSetDefinition;
+use PhpCsFixer\RuleSet\AbstractRuleSetDescription;
 
 /**
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
-final class DoctrineAnnotationSet extends AbstractRuleSetDefinition
+final class DoctrineAnnotationSet extends AbstractRuleSetDescription
 {
     public function getRules(): array
     {
@@ -39,6 +37,6 @@ final class DoctrineAnnotationSet extends AbstractRuleSetDefinition
 
     public function getDescription(): string
     {
-        return 'Rules covering ``Doctrine`` annotations with configuration based on examples found in `Doctrine Annotation documentation <https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/annotations.html>`_ and `Symfony documentation <https://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/routing.html>`_.';
+        return 'Rules covering Doctrine annotations with configuration based on examples found in `Doctrine Annotation documentation <https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/annotations.html>`_ and `Symfony documentation <https://symfony.com/doc/master/bundles/SensioFrameworkExtraBundle/annotations/routing.html>`_.';
     }
 }

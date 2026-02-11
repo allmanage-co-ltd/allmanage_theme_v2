@@ -1,23 +1,43 @@
 <?php
 if (is_local()) {
-    //グローバルに呼び出せる汎用関数のサンプルです。
+    /**
+     * グローバルに呼び出せる汎用関数の一部サンプルです。
+     * ざっくりこんな関数が呼べるんだなと把握いただければ削除してください。
+     */
 
     // echo home();
-    // echo img_dir();
     // echo theme_uri();
     // echo theme_dir();
     // echo img_dir();
     // echo url('company');
 
-    // d(config('admin.client_menu.hidden'));
+    // the_component('searchform', ['hoge' => $fuga]);
 
-    // slog()->info('test', config('assets.css'));
+    // foreach (config('app.runtime.local') as $t) {
+    //     echo $t . '<br>';
+    // }
 
-    // $post = db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get()
+    // $query = wpquery()
+    //     ->setPostType(['news'])
+    //     ->setPerPage(10)
+    //     ->setOrderByDate()
+    //     // ->debug();
+    //     ->build();
+    // d($query);
+
+    // slog()->info('test');
+
+    // $post = db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
     // d($post);
 
-    sess()->set('allmanage', 'hoge');
-    sess()->debug();
+    // $client = http_client();
+    // $res    = $client->get(home() . '/wp-json/wp/v2/posts', []);
+    // d($res[]);
+
+    // http_sess()->set('allmanage', 'hoge');
+    // http_sess()->debug();
+
+    // pdf_writer(['key' => 'hoge'], 'sample.php', 'sample', false);
 }
 ?>
 

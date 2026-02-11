@@ -24,8 +24,6 @@ use Symfony\Component\Console\Helper\ProgressBar;
  * @readonly
  *
  * @internal
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PercentageBarOutput implements ProgressOutputInterface
 {
@@ -51,7 +49,7 @@ final class PercentageBarOutput implements ProgressOutputInterface
      * This class is not intended to be serialized,
      * and cannot be deserialized (see __wakeup method).
      */
-    public function __serialize(): array
+    public function __sleep(): array
     {
         throw new \BadMethodCallException('Cannot serialize '.self::class);
     }
@@ -60,11 +58,9 @@ final class PercentageBarOutput implements ProgressOutputInterface
      * Disable the deserialization of the class to prevent attacker executing
      * code by leveraging the __destruct method.
      *
-     * @param array<string, mixed> $data
-     *
      * @see https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection
      */
-    public function __unserialize(array $data): void
+    public function __wakeup(): void
     {
         throw new \BadMethodCallException('Cannot unserialize '.self::class);
     }

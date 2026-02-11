@@ -143,13 +143,13 @@ class ExtEvLoop implements LoopInterface
         $callback = function () use ($timer, $timers, $that) {
             \call_user_func($timer->getCallback(), $timer);
 
-            if ($timers->offsetExists($timer)) {
+            if ($timers->contains($timer)) {
                 $that->cancelTimer($timer);
             }
         };
 
         $event = $this->loop->timer($timer->getInterval(), 0.0, $callback);
-        $this->timers->offsetSet($timer, $event);
+        $this->timers->attach($timer, $event);
 
         return $timer;
     }
@@ -163,7 +163,7 @@ class ExtEvLoop implements LoopInterface
         };
 
         $event = $this->loop->timer($timer->getInterval(), $timer->getInterval(), $callback);
-        $this->timers->offsetSet($timer, $event);
+        $this->timers->attach($timer, $event);
 
         return $timer;
     }
@@ -176,7 +176,7 @@ class ExtEvLoop implements LoopInterface
 
         $event = $this->timers[$timer];
         $event->stop();
-        $this->timers->offsetUnset($timer);
+        $this->timers->detach($timer);
     }
 
     public function futureTick($listener)

@@ -24,8 +24,6 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 /**
  * @author Kuba Werłos <werlos@gmail.com>
- *
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise.
  */
 final class PhpdocVarAnnotationCorrectOrderFixer extends AbstractFixer
 {
@@ -33,16 +31,10 @@ final class PhpdocVarAnnotationCorrectOrderFixer extends AbstractFixer
     {
         return new FixerDefinition(
             '`@var` and `@type` annotations must have type and name in the correct order.',
-            [
-                new CodeSample(
-                    <<<'PHP'
-                        <?php
-                        /** @var $foo int */
-                        $foo = 2 + 2;
-
-                        PHP,
-                ),
-            ],
+            [new CodeSample('<?php
+/** @var $foo int */
+$foo = 2 + 2;
+')]
         );
     }
 
@@ -59,13 +51,13 @@ final class PhpdocVarAnnotationCorrectOrderFixer extends AbstractFixer
 
     public function isCandidate(Tokens $tokens): bool
     {
-        return $tokens->isTokenKindFound(\T_DOC_COMMENT);
+        return $tokens->isTokenKindFound(T_DOC_COMMENT);
     }
 
     protected function applyFix(\SplFileInfo $file, Tokens $tokens): void
     {
         foreach ($tokens as $index => $token) {
-            if (!$token->isGivenKind(\T_DOC_COMMENT)) {
+            if (!$token->isGivenKind(T_DOC_COMMENT)) {
                 continue;
             }
 
@@ -76,7 +68,7 @@ final class PhpdocVarAnnotationCorrectOrderFixer extends AbstractFixer
             $newContent = Preg::replace(
                 '/(@(?:type|var)\s*)(\$\S+)(\h+)([^\$](?:[^<\s]|<[^>]*>)*)(\s|\*)/i',
                 '$1$4$3$2$5',
-                $token->getContent(),
+                $token->getContent()
             );
 
             if ($newContent === $token->getContent()) {
