@@ -2,6 +2,7 @@
 
 namespace App\CMS\Wrapper;
 
+use App\Helpers\Fmt;
 use wpdb;
 
 /**---------------------------------------------
@@ -53,7 +54,7 @@ class MyDpdb
         $query = $this->wpdb->prepare($this->sql, $this->params);
 
         echo '<pre style="background:#111;color:#0f0;padding:12px;">';
-        echo htmlspecialchars($query, ENT_QUOTES, 'UTF-8');
+        echo Fmt::h($query);
         echo '</pre>';
 
         return $this;
