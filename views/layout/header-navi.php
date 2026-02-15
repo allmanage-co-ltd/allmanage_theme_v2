@@ -3,7 +3,7 @@
 
         <div class="l-gnavi">
             <div class="l-gnavi__logo u-visible_tb">
-                <img src="<?= img_dir(); ?>/logo.png" alt="<?= get_bloginfo('name'); ?>">
+                <img src="<?= img_dir(); ?>/common/logo.png" alt="<?= get_bloginfo('name'); ?>">
             </div>
             <div class="l-gnavi__navi">
 

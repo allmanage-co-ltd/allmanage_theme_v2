@@ -46,7 +46,7 @@ if (is_local()) {
         <?php the_component('searchform') ?>
 
         <div class="item-image">
-            <img src="<?= img_dir() ?>/logo.png" alt="">
+            <img src="<?= img_dir() ?>/common/logo.png" alt="">
         </div>
 
     </div>

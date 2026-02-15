@@ -1,5 +1,4 @@
 <!-- assets/scss/object/component/_translate.scss -->
-
 <div id="google_translate_element"></div>
 
 <div class="c-translate">

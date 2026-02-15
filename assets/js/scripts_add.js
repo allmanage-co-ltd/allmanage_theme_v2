@@ -245,7 +245,7 @@ jQuery(function ($) {
   }
 
   /**
-   *
+   * イメージモーダル
    */
   if ($('.item-image').length) {
     const $modal = $("#imgModal");

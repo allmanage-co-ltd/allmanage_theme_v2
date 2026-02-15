@@ -51,7 +51,7 @@ function img_dir(): string
 /**
  * WP_Query ビルダー取得
  *
- * デバッグをするには->build()を呼ぶとargsの中身が見れる
+ * デバッグをするには->debug()を呼ぶとargsの中身が見れる
  *
  * 使用例:
  *   wpquery()->setPostType(...)->setPerPage(...)->build()
@@ -97,7 +97,7 @@ function datepicker(array $options = []): void
  *
  * header → view → footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\View\Render側で判定し、呼ぶviewを切り替えています。
+ * App\CMS\Presenter\View側で判定し、呼ぶviewを切り替えています。
  *
  * 使用例（テンプレートページで）:
  *   the_view();

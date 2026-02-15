@@ -27,31 +27,29 @@ lint:
 	$(PHP) vendor/bin/phpstan analyse
 
 .PHONY: gen
-gen: ## Generate class file ( make gen dir=Hook name=Test )
+gen: ## Generate class file ( make gen dir=Hooks name=Test )
 	@test -n "$(dir)" || (echo "Error: dir required" && exit 1)
 	@test -n "$(name)" || (echo "Error: name required" && exit 1)
-	@mkdir -p app/$(dir)s
-	@echo "<?php" > app/$(dir)s/$(name).php
-	@echo "" >> app/$(dir)s/$(name).php
-	@echo "namespace App\\$(dir)s;" >> app/$(dir)s/$(name).php
-	@echo "" >> app/$(dir)s/$(name).php
-	@echo "/**---------------------------------------------" >> app/$(dir)s/$(name).php
-	@echo "* $(name)" >> app/$(dir)s/$(name).php" >> app/$(dir)s/$(name).php
-	@echo "* ---------------------------------------------" >> app/$(dir)s/$(name).php
-	@echo "*" >> app/$(dir)s/$(name).php
-	@echo "*" >> app/$(dir)s/$(name).php
-	@echo "*" >> app/$(dir)s/$(name).php
-	@echo "*/" >> app/$(dir)s/$(name).php
-	@echo "class $(name) extends $(dir)" >> app/$(dir)s/$(name).php
-	@echo "{" >> app/$(dir)s/$(name).php
-	@echo "  public function __construct() {}" >> app/$(dir)s/$(name).php
-	@echo "" >> app/$(dir)s/$(name).php
-	@echo "  /**" >> app/$(dir)s/$(name).php
-	@echo "   *" >> app/$(dir)s/$(name).php
-	@echo "   */" >> app/$(dir)s/$(name).php
-	@echo "  public function boot(): void" >> app/$(dir)s/$(name).php
-	@echo "  {" >> app/$(dir)s/$(name).php
-	@echo "    //" >> app/$(dir)s/$(name).php
-	@echo "  }" >> app/$(dir)s/$(name).php
-	@echo "}" >> app/$(dir)s/$(name).php
-	@echo "✓ Created app/$(dir)s/$(name).php"
+	@mkdir -p app/$(dir)
+	@echo "<?php" > app/$(dir)/$(name).php
+	@echo "" >> app/$(dir)/$(name).php
+	@echo "namespace App\\$(dir);" >> app/$(dir)/$(name).php
+	@echo "" >> app/$(dir)/$(name).php
+	@echo "/**---------------------------------------------" >> app/$(dir)/$(name).php
+	@echo "* $(name)" >> app/$(dir)/$(name).php"
+	@echo "* ---------------------------------------------" >> app/$(dir)/$(name).php
+	@echo "*" >> app/$(dir)/$(name).php
+	@echo "*/" >> app/$(dir)/$(name).php
+	@echo "class $(name)" >> app/$(dir)/$(name).php
+	@echo "{" >> app/$(dir)/$(name).php
+	@echo "  public function __construct() {}" >> app/$(dir)/$(name).php
+	@echo "" >> app/$(dir)/$(name).php
+	@echo "  /**" >> app/$(dir)/$(name).php
+	@echo "   *" >> app/$(dir)/$(name).php
+	@echo "   */" >> app/$(dir)/$(name).php
+	@echo "  public function boot(): void" >> app/$(dir)/$(name).php
+	@echo "  {" >> app/$(dir)/$(name).php
+	@echo "    //" >> app/$(dir)/$(name).php
+	@echo "  }" >> app/$(dir)/$(name).php
+	@echo "}" >> app/$(dir)/$(name).php
+	@echo "✓ Created app/$(dir)/$(name).php"

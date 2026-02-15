@@ -29,7 +29,7 @@ class Metadata
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="format-detection" content="telephone=no">
 
-    <link rel="icon" href="{$img_dir}{$favicon}">
+    <link rel="icon" href="{$img_dir}/common{$favicon}">
     <link rel="apple-touch-icon" href="{$img_dir}/apple-touch-icon.png">
     HTML;
     }
@@ -41,15 +41,17 @@ class Metadata
     {
         $title       = self::getTitle();
         $description = self::getDescription();
+        $keywords    = Config::get('seo.keywords');
         $ogp_image   = self::getOgp();
         $current_url = home_url(add_query_arg([], $_SERVER['REQUEST_URI']));
         $site_name   = Config::get('seo.name', get_bloginfo('name'));
-        $og_type     = is_front_page() ? 'website' : 'article';
+        $og_type     = is_front_page() || is_home() ? 'website' : 'article';
 
         $html = <<<HTML
 
     <title>{$title}</title>
     <meta name="description" content="{$description}">
+    <meta name="keywords" content="{$keywords}">
 
     <meta property="og:type" content="{$og_type}">
     <meta property="og:url" content="{$current_url}">
@@ -78,6 +80,7 @@ class Metadata
         }
 
         $html .= <<<HTML
+
 
     <link rel="canonical" href="{$current_url}">
     HTML;
@@ -215,7 +218,7 @@ class Metadata
      */
     public static function getOgp()
     {
-        $default_image = img_dir() . Config::get('seo.ogp', 'ogp.jpg');
+        $default_image = img_dir() . '/common' . Config::get('seo.ogp', 'ogp.jpg');
 
         switch (true) {
             case is_single() && has_post_thumbnail():
@@ -263,7 +266,7 @@ class Metadata
     {
         $site_name = Config::get('seo.name', get_bloginfo('name'));
         $site_url  = home_url();
-        $logo_url  = img_dir() . Config::get('seo.logo');
+        $logo_url  = img_dir() . '/common' . Config::get('seo.logo');
 
         if (is_front_page()) {
             // トップページ用の組織情報
@@ -309,6 +312,7 @@ class Metadata
         $encoded_jsonld = json_encode($json_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
         return <<<HTML
+
 
     <script type="application/ld+json">
         {$encoded_jsonld}

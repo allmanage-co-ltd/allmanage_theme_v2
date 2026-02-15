@@ -9,6 +9,7 @@ return [
     // ログファイルの出力先
     'log'     => '/storage/logs/app.log',
 
+    // 実行環境判定
     'runtime' => [
         'local'  => [
             'localhost',

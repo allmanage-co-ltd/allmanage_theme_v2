@@ -25,24 +25,19 @@ use App\CMS\Plugins\Welcart;
 class App
 {
     /**
-     * 各フッククラスを初期化
+     * 各CMSフッククラスを初期化
      */
     public function boot(): void
     {
-        //
         (new SetupTheme())->boot();
         (new Shortcode())->boot();
         (new Enqueue())->boot();
         (new Seo())->boot();
-
-        //
         (new RegisterPostType())->boot();
         (new RegisterTaxonomy())->boot();
         (new RegisterOptionPage)->boot();
         (new EditMenuAdmin())->boot();
         (new EditMenuClient())->boot();
-
-        //
         (new AdvancedCustomFields())->boot();
         (new MwWpForm())->boot();
         (new Welcart())->boot();
