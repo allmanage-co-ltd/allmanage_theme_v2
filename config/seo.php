@@ -11,9 +11,11 @@ return [
     'title'       => 'Allmanageテーマ',
     'description' => 'Allmanageテーマです',
     'keywords'    => 'allmanage,test',
-    'logo'        => '/logo.png',
+    'logo'        => '/logo.svg',
     'favicon'     => '/favicon.png',
     'ogp'         => '/ogp.jpg',
+
+    'copy' => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
     'gtags'       => [
         'XXXXXXXX',

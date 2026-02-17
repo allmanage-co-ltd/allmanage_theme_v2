@@ -42,12 +42,23 @@ if (is_local()) {
 ?>
 
 <main class="p-home">
-    <div class="c-inner">
-        <?php the_component('searchform') ?>
-
-        <div class="item-image">
-            <img src="<?= img_dir() ?>/common/logo.png" alt="">
+    <div class="p-home_kv">
+        <div class="p-home_kv__img">
+            <picture class="img c-ofi">
+                <source srcset="<?= img_dir(); ?>/home/img_kv.jpg" media="(min-width: 768px)" />
+                <img src="<?= img_dir(); ?>/home/img_kv.jpg" alt="" class="c-ofi__img">
+            </picture>
         </div>
+        <div class="p-home_kv__catch">
+            <div class="jp"></div>
+            <div class="en"></div>
+        </div>
+    </div>
+    <div class="p-home__body">
+        <section class="">
+            <div class="c-inner">
 
+            </div>
+        </section>
     </div>
 </main>
