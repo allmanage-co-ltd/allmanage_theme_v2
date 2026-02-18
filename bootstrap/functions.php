@@ -201,86 +201,34 @@ function slog()
 }
 
 /**
- * GuzzleのラッパーHTTPクライアント
- *
- * 使用例:
- *   $client = http_client();
- *   $response = $client->get('https://api.example.com/users', [
- *       'query' => ['page' => 1],
- *       'headers' => [
- *           'Accept' => 'application/json',
- *       ],
- *    ]);
- *   $data = json_decode($response['body'], true);
- *   if ($client->isOk($response)) {
- *       $data = $client->decodeJson($response);
- *   }
- */
-function http_client(): \App\Services\HTTP\Client
-{
-    return new \App\Services\HTTP\Client();
-}
-
-/**
- * $_POST or $_GETの値取得ヘルパー
- *
- * 使用例:
- *   $name = http_input()->get('name');
- *   $data = http_input()->only(['email', 'tel']);
- *   $all  = http_input()->all();
- */
-function http_input(): \App\Services\HTTP\Input
-{
-    return new \App\Services\HTTP\Input();
-}
-
-/**
  * セッション関連のヘルパー
  *
  * 使用例:
- *   http_sess()->set('user_id', 1);
- *   $id = http_sess()->get('user_id');
- *   http_sess()->forget('user_id');
- *   http_sess()->flash('message', '送信しました');
- *   $message = http_sess()->pull('message');
+ *   sess()->set('user_id', 1);
+ *   $id = sess()->get('user_id');
+ *   sess()->forget('user_id');
+ *   sess()->flash('message', '送信しました');
+ *   $message = sess()->pull('message');
  */
-function http_sess(): \App\Services\HTTP\Session
+function sess(): \App\Services\Session
 {
-    return new \App\Services\HTTP\Session();
+    return new \App\Services\Session();
 }
 
 /**
- * 必要になったら実装
- */
-// function csv_reader()
-// {
-//     (new \App\Services\CSV\Writer())->execute();
-// }
-
-/**
- * 必要になったら実装
- */
-// function csv_writer()
-// {
-//     (new \App\Services\CSV\Writer())->execute();
-// }
-
-/**
- * 【仮実装】HTMLデータからPDFを出力
- *
- * dataにはviewで必要なデータ配列を渡してください、配列のキーがそのまま変数名になります。
- *  ・例：['name' => 'hoge'] → $key = $name
- * view_filenameはviews/pdf/にあるphpファイル名を指定します。
- * output_nameは出力時のファイル名を指定します。
- * downloadはダウンロードするかどうかを指定します。falseの場合は画面に出力します。
+ * curlを用いたhttpリクエストのヘルパー
  *
  * 使用例:
- *   pdf_writer(['key' => 'データが渡せます'], 'sample.php', 'sample', false);
+ *   $res = curl('POST', 'https://api.example.com/users');
+ *   if ($res->ok()) {
+ *       d($res->body());
+ *   }
  */
-function pdf_writer(array $data, string $view_filename, string $output_name, bool $download)
+function curl(string $method = 'GET', string $url, array $options = []): \App\Services\Curl
 {
-    (new \App\Services\PDF\Writer($data, $view_filename, $output_name, $download))->execute();
+    return \App\Services\Curl::request($method, $url, $options);
 }
+
 
 /**
  * ローカル環境判定

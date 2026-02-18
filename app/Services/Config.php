@@ -16,7 +16,7 @@ use App\Helpers\Path;
  * - Config::get('cms.post_types')
  * - Config::get('csv.show_admin_menu', false)
  */
-class Config extends Service
+class Config
 {
     /**
      * 設定値取得

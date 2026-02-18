@@ -25,9 +25,7 @@
         ]
     },
     "require": {
-        "monolog/monolog": "^3.0",
-        "tecnickcom/tcpdf": "^6.7",
-        "guzzlehttp/guzzle": "^7.9"
+        "monolog/monolog": "^3.0"
     },
     "config": {
         "allow-plugins": {

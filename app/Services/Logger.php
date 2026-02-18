@@ -13,7 +13,7 @@ use Monolog\Logger as MonoLogger;
  * - テーマ全体で共通の Logger インスタンスを使い回す
  * - ログの出力先やレベルをここで一元管理する
  */
-class Logger extends Service
+class Logger
 {
     public function __construct()
     {

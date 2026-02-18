@@ -57,6 +57,6 @@ class RegisterOptionPage extends Admin
             return;
         }
 
-        include theme_dir() . "/views/admin/{$view}";
+        include theme_dir() . "/views/app/admin/{$view}";
     }
 }

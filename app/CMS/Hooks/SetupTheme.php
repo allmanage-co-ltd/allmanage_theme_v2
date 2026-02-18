@@ -2,7 +2,7 @@
 
 namespace App\CMS\Hooks;
 
-use App\Services\HTTP\Session;
+use App\Services\Session;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス

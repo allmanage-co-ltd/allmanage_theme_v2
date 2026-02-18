@@ -9,7 +9,7 @@ namespace App\Services;
  * - ローカル判定、モバイル判定、Bot 判定をまとめて提供する
  * - テンプレートや各所で $_SERVER を直接触らせないための窓口
  */
-class Runtime extends Service
+class Runtime
 {
     /**
      * local環境判定
