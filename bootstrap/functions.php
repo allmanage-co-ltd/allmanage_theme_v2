@@ -224,11 +224,10 @@ function sess(): \App\Services\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method = 'GET', string $url, array $options = []): \App\Services\Curl
+function curl(string $method, string $url, array $options = []): \App\Services\Curl
 {
     return \App\Services\Curl::request($method, $url, $options);
 }
-
 
 /**
  * ローカル環境判定

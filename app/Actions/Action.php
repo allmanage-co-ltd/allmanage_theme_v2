@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Services;
+namespace App\Actions;
 
 /**---------------------------------------------
- * アクションクラス
+ * Action基底クラス
  * ---------------------------------------------
- * ServiceやHelperを用いた具体的な実行命令を書く
- *
- * ImportProductsCSV
- * GenerateInvoicePDF
- * 
+ * ユースケース単位の処理を表現する。
+ * 詳細な設計思想は Actions/README.md を参照。
  */
 abstract class Action
 {
-    //
+    // 必要なら共通ユーティリティだけ置く
 }

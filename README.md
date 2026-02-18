@@ -2,25 +2,28 @@
 
 **日々更新していきますので、必ず、案件ごとに新しく git clone もしくは zip を落として使用してください。**
 
+この README は、全体像を把握するための入口です。
+実装ルールの詳細は各ディレクトリの README を優先してください。
+
 ## テーマの方針
 
 - 何がどこにあるかわからない煩雑なテーマを辞めて、見るべきディレクトリを明確化することでスピード＆クオリティを高める
-- グローバルに呼べるbootstrap/functions.phpにはロジックを書かずに実装を他へ逃がす事で必要のない実装を見なくて良くする
+- グローバルに呼べる bootstrap/functions.php にはロジックを書かずに実装を他へ逃がす事で必要のない実装を見なくて良くする
 - ロジックにはクラスを取り入れることで新機能の追加によるテーマ肥大化コストを減らしテーマを資産として蓄積する
 - ロジックには型定義を積極的に書くことで何が返るか明確にして不安要素をを減らす
-- 古い書き方を辞めてモダンな書き方に触れることで技術者がLaravelにもスイッチしやすくする
+- 古い書き方を辞めてモダンな書き方に触れることで技術者が Laravel にもスイッチしやすくする
 
 ## コーディングについて
 
 1. 基本的には`views` `config` `assets` `bootstrap/functions.php` だけを見ればコーディング作業ができるように作っていますので、一番最初はこれらのディレクトリをチェックしてください。
 
-2. WordPress標準ではテーマ直下にファイルが散らばりますが、それらをすべて`views`ディレクトリに逃がしていますので、テーマ直下を触る必要はありません。
+2. WordPress 標準ではテーマ直下にファイルが散らばりますが、それらをすべて`views`ディレクトリに逃がしていますので、テーマ直下を触る必要はありません。
 
-3. CSSやJSの登録、カスタム投稿・タクソノミーの作成、ページURLの設定は`config`ディレクトリを編集してください。その設定ファイルをもとに`app`ディレクトリの中でロジックを組んでいます。
+3. CSS や JS の登録、カスタム投稿・タクソノミーの作成、ページ URL の設定は`config`ディレクトリを編集してください。その設定ファイルをもとに`app`ディレクトリの中でロジックを組んでいます。
 
 4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app`に逃がしています。
 
-2. アドバイスや改善点は積極的に提案し、より良いテーマにしたいです。
+5. アドバイスや改善点は積極的に提案し、より良いテーマにしたいです。
 
 ---
 
@@ -43,14 +46,13 @@
 - 投稿タイプ・タクソノミー: `config/`
 - プラグイン特有のフックやカスタム: `app/CMS/Plugins/`
 - 汎用処理（設定、ログ、CSV/PDF、HTTP）: `app/Services/`
-- viewテンプレートから使う関数: `bootstrap/functions.php`
-    - 処理本体は `app/` の定説なクラスへ実装してください
-    - `~/functions.php` は最小責務のため、基本的に編集しません
+- view テンプレートから使う関数: `bootstrap/functions.php`
+  - 処理本体は `app/` の定説なクラスへ実装してください
+  - `~/functions.php` は最小責務のため、基本的に編集しません
 
 ### 動作環境について
 
-
-モダンPHPで構成されていますので、本番、テストに関わらず、テーマを動かすには`Conposer`環境が**必須**です。
+モダン PHP で構成されていますので、本番、テストに関わらず、テーマを動かすには`Conposer`環境が**必須**です。
 未インストールの場合は下記を参考にインストールしてください。
 [https://kinsta.com/jp/blog/install-composer/](https://kinsta.com/jp/blog/install-composer/)
 
@@ -62,9 +64,9 @@ cd allmanage_theme
 composer install
 ```
 
-### Dockerでの開発環境
+### Docker での開発環境
 
-お使いのPCにDocker及びDocker Desktopがインストール済みの場合、Local等で開発環境をセットせずに1コマンドでWordpressのセットアップが可能です。
+お使いの PC に Docker 及び Docker Desktop がインストール済みの場合、Local 等で開発環境をセットせずに 1 コマンドで Wordpress のセットアップが可能です。
 
 ```sh
 # 開発環境の起動
@@ -74,14 +76,14 @@ docker compose up
 docker compose stop
 
 ```
-Wordpress  => [http://localhost:8888](http://localhost:8888)
+
+Wordpress => [http://localhost:8888](http://localhost:8888)
 
 PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
 
+### Sass について
 
-### Sassについて
-
-基本は vscode プラグインのLive Sass Compailerを使用します。
+基本は vscode プラグインの Live Sass Compailer を使用します。
 
 コンパイルのルール（入出力先）などは`./.vscode/settings.json`に記載してあるのでそのままコンパイルしていただければ問題ありません。
 
@@ -96,9 +98,11 @@ composer run analyse  # PHPStan
 composer run rector   # Rector (dry-run)
 composer run rector:fix
 ```
+
 ---
 
 ### 必須プラグインについて
+
 1. `WPvivid Backup Plugin` バックアップ・データ移行
 
 2. `Advanced Custom Fields Pro` 各種カスタムフィールド・オプションページ `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`

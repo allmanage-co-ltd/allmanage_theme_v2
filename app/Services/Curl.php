@@ -49,7 +49,7 @@ class Curl
     /**
      * GET|POST
      */
-    public static function request(string $method = 'GET', string $url, array $options = []): self
+    public static function request(string $method, string $url, array $options = []): self
     {
         return self::excute($method, $url, $options);
     }
@@ -76,6 +76,14 @@ class Curl
     public function body(): string
     {
         return $this->body;
+    }
+
+    /**
+     * 生ヘッダー取得
+     */
+    public function headers(): array
+    {
+        return $this->headers;
     }
 
     /**
