@@ -11,16 +11,17 @@ return [
     'title'       => 'Allmanageテーマ',
     'description' => 'Allmanageテーマです',
     'keywords'    => 'allmanage,test',
-    'logo'        => '/logo.svg',
-    'favicon'     => '/favicon.png',
-    'ogp'         => '/ogp.jpg',
+    'logo'        => img_dir() . '/common/logo.svg',
+    'favicon'     => img_dir() . '/common/favicon.png',
+    'ogp'         => img_dir() . '/common/ogp.jpg',
 
-    'copy' => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
+    'copy'        => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
     'gtags'       => [
         'XXXXXXXX',
     ],
 
+    // 未実装（現状ベタ貼りしてください）
     'gtm'         => [
         'XXXXXXXX',
     ]

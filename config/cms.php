@@ -5,6 +5,7 @@ return [
      * register_post_typeの設定
      *----------------------------------*/
     'post_types'   => [
+        // お知らせ
         'news' => [
             'labels'        => [
                 'name'          => 'NEWS',
@@ -22,6 +23,15 @@ return [
                 'revisions'
             ],
         ],
+        //
+        // 'ここに追加のカスタム投稿タイプ' => [
+        //     'labels'        => [
+        //         'name'          => '',
+        //         'singular_name' => '',
+        //     ],
+        //     ...
+        // ],
+
     ],
     /**-----------------------------------
      * register_taxonomyの設定
@@ -40,7 +50,7 @@ return [
      *----------------------------------*/
     'option_pages' => [
         'csv-in-expoter' => [
-            'show'       => true,
+            'show'       => false,
             'page_title' => 'CSV',
             'menu_title' => 'CSV',
             'capability' => 'manage_options',

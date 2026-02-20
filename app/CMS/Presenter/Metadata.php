@@ -20,7 +20,7 @@ class Metadata
     public static function getBase()
     {
         $img_dir = img_dir();
-        $favicon = Config::get('seo.favicon', '/favicon.ico');
+        $favicon = Config::get('seo.favicon', img_dir() . '/favicon.ico');
 
         return <<<HTML
     <meta name="author" content="allmanage">
@@ -29,7 +29,7 @@ class Metadata
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="format-detection" content="telephone=no">
 
-    <link rel="icon" href="{$img_dir}/common{$favicon}">
+    <link rel="icon" href="{$favicon}">
     <link rel="apple-touch-icon" href="{$img_dir}/apple-touch-icon.png">
     HTML;
     }
@@ -218,7 +218,7 @@ class Metadata
      */
     public static function getOgp()
     {
-        $default_image = img_dir() . '/common' . Config::get('seo.ogp', 'ogp.jpg');
+        $default_image = Config::get('seo.ogp', img_dir() . '/ogp.jpg');
 
         switch (true) {
             case is_single() && has_post_thumbnail():
@@ -266,7 +266,7 @@ class Metadata
     {
         $site_name = Config::get('seo.name', get_bloginfo('name'));
         $site_url  = home_url();
-        $logo_url  = img_dir() . '/common' . Config::get('seo.logo');
+        $logo_url  = Config::get('seo.logo', img_dir() . '/logo.svg');
 
         if (is_front_page()) {
             // トップページ用の組織情報

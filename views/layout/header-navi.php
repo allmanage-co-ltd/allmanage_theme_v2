@@ -4,12 +4,12 @@
         <div class="l-gnavi">
             <div class="l-gnavi__wrap">
                 <div class="l-gnavi__logo u-visible_tb">
-                    <img src="<?= img_dir(); ?>/common/<?= config('seo.logo') ?>" alt="<?= get_bloginfo('name'); ?>">
+                    <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>">
                 </div>
                 <div class="l-gnavi__navi">
                     <?php
-                // the_component('translate')
-                ?>
+                    // the_component('translate')
+                    ?>
                     <ul class="l-gnavi__list">
                         <li class="l-gnavi__item">
                             <a href="<?= url('home') ?>" class="l-gnavi__link">トップ</a>

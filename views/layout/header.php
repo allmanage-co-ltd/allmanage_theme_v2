@@ -17,17 +17,17 @@
     <header class="l-header <?= !is_home() || !is_front_page() ? '-page' : ''; ?>" id="js-header">
         <div class="l-header__inner">
             <?php if (is_home() || is_front_page()): ?>
-            <h1 class="l-header__logo">
-                <a href="<?= url('home'); ?>">
-                    <img src="<?= img_dir(); ?>/common/<?= config('seo.logo') ?>" alt="<?= get_bloginfo('name'); ?>">
-                </a>
-            </h1>
+                <h1 class="l-header__logo">
+                    <a href="<?= url('home'); ?>">
+                        <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>">
+                    </a>
+                </h1>
             <?php else: ?>
-            <div class="l-header__logo">
-                <a href="<?= url('home'); ?>">
-                    <img src="<?= img_dir(); ?>/common/<?= config('seo.logo') ?>" alt="<?= get_bloginfo('name'); ?>">
-                </a>
-            </div>
+                <div class="l-header__logo">
+                    <a href="<?= url('home'); ?>">
+                        <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>">
+                    </a>
+                </div>
             <?php endif; ?>
             <?php the_layout('header-navi') ?>
         </div>
