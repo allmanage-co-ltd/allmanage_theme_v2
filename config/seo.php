@@ -24,11 +24,11 @@ return [
     'copy'        => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
     'gtags'       => [
-        // 'XXXXXXXX',
+        // 'G-XXXXXXXX',
     ],
 
     // 未実装（現状ベタ貼りしてください）
     'gtms'       => [
-        // 'XXXXXXXX',
+        // 'G-XXXXXXXX',
     ]
 ];

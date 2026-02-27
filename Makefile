@@ -14,14 +14,6 @@ composer: ##
 	@test -n "$(c)" || (echo "Error: command required" && exit 1)
 	php8.2 /usr/bin/composer $(c)
 
-.PHONY: cs
-cs:
-	$(PHP) vendor/bin/php-cs-fixer fix --dry-run > storage/logs/php-cs-fixer.log || true
-
-.PHONY: cs-fix
-cs-fix:
-	$(PHP) vendor/bin/php-cs-fixer fix > storage/logs/php-cs-fixer-fix.log || true
-
 .PHONY: stan
 stan:
 	$(PHP) vendor/bin/phpstan analyse -c phpstan.neon > storage/logs/phpstan.log || true

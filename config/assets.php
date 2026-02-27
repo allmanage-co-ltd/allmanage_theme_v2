@@ -6,7 +6,8 @@ return [
      *----------------------------------*/
     'version'   => '1.0.0',
 
-    // フロント・管理画面で共通。無しの場合はデフォルトが読み込まれる
+    // フロントのjQuery。無しの場合はデフォルトが読み込まれる
+    // 管理画面はデフォルトjQueryで固定しています。
     'jquery'    => 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
 
     // フロントCSS
@@ -33,13 +34,11 @@ return [
 
     // 管理画面CSS
     'admin-css' => [
-        // 'https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4',
         theme_uri() . '/assets/css/admin.css',
     ],
 
     // 管理画面JS
     'admin-js'  => [
-        // 'https://cdn.tailwindcss.com?plugins=typography',
         theme_uri() . '/assets/js/admin.js',
     ],
 
