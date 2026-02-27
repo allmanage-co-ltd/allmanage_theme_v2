@@ -1,9 +1,23 @@
 # Actions ディレクトリガイド
 
 `Actions/` は、**ユースケース単位の処理を組み立てる層**です。
+特定のクライアントのユースケースに応じて、使用してください。
+※`Services`で定義された基盤ロジックを使って、用途に応じた具体的な何かを行う。
 
-Service / Helper などの基盤ロジックを組み合わせて
-「最終的に何を実行するのか」を表現します。
+例えば、畳の商品情報をカスタム投稿で管理しており
+そのCSV一括取得を行うロジックを書く必要がある場合など。
+
+```php
+<?php
+class ExportTatamiCSV {
+    public function __invoke(): TatamiCSV  {
+        // ここで畳の商品情報を取得して、データを詰めてCSVサービスに渡すなど行う
+    }
+}
+```
+
+このActionクラスを、`bootstrap/functions.php`で呼ぶのか、
+管理画面で呼ぶのかは特に制限していませんので自由にしてください。
 
 ---
 
@@ -11,8 +25,8 @@ Service / Helper などの基盤ロジックを組み合わせて
 
 - 1 Action = 1 ユースケース
 - 業務フローの制御を書く
-- 処理の流れが読める構造にする
-- 実装詳細は Service に委譲する
+- 実装基板は Service で書く
+    - ※`Services`で定義された基盤ロジックを使って、用途に応じた具体的な何かを行う。
 
 例:
 
@@ -24,66 +38,3 @@ Service / Helper などの基盤ロジックを組み合わせて
 
 ---
 
-## 責務
-
-- 入力値を受け取る
-- 必要な Service を呼び出す
-- フローを制御する
-- 例外を呼び出し元へ返す
-
----
-
-## 非責務
-
-- 直接 DB クエリを書かない
-- 直接 cURL を書かない
-- 直接 fopen しない
-- HTML を描画しない
-- WordPress グローバル状態を直接操作しすぎない
-
-それらは Service / Wrapper の責務です。
-
----
-
-## 書き方の目安
-
-- 名前は「動詞 + 対象」
-  - `ImportProductsCsv`
-  - `SyncOrders`
-  - `GenerateInvoicePdf`
-- 依存はコンストラクタ注入
-- 返り値型をできるだけ明示
-- 例外を握りつぶさない
-- 状態を持たない（ステートレス設計）
-
----
-
-## サンプル
-
-```php
-<?php
-
-namespace App\Actions;
-
-use App\Services\CSV;
-use App\Repositories\ProductRepository;
-
-class ImportProductsCsv extends Action
-{
-    // コードはサンプルです
-    public function __construct(
-        private CSV $csv,
-        private ProductRepository $repo,
-    ) {}
-
-    // コードはサンプルです
-    public function __invoke(): void
-    {
-        $rows = $this->csv->read();
-
-        foreach ($rows as $row) {
-            $this->repo->save($row);
-        }
-    }
-}
-```

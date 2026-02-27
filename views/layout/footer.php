@@ -9,7 +9,7 @@
             <div class="l-footer__top">
                 <div class="l-footer__logo">
                     <a href="<?= home(); ?>">
-                        <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>">
+                        <img src="<?= config('seo.logo_ft') ?>" alt="<?= config('seo.name'); ?>">
                     </a>
                 </div>
                 <?php the_layout('footer-navi'); ?>

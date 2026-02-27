@@ -2,6 +2,7 @@
 
 namespace App\CMS\Hooks;
 
+use App\Services\Config;
 use App\Services\Session;
 
 /**---------------------------------------------
@@ -24,6 +25,7 @@ class SetupTheme extends Hook
         add_action('init', [$this, 'trashDefaultPosts']);
         add_filter('excerpt_length', [$this, 'customExcerptLength'], 999);
         add_action('after_setup_theme', [$this, 'themeSupportAdd']);
+        add_action('save_post', [$this, 'save_costom_post_slug'], 10, 3);
     }
 
     /**
@@ -101,6 +103,41 @@ class SetupTheme extends Hook
                 wp_trash_post($post_id);
             }
         }
+    }
+
+    /**
+     * カスタム投稿タイプのスラッグをpost_idに固定
+     */
+    function save_costom_post_slug($post_id, $post, $update)
+    {
+        // 自動保存・リビジョンは除外
+        if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
+            return;
+        }
+
+        // 対象のカスタム投稿タイプのみ
+        $taget_post_types = Config::get('cms.post_types');
+
+        foreach ($taget_post_types as $name => $arr) {
+            if ($post->post_type !== $name) {
+                return;
+            }
+        }
+
+        // すでにIDになっているなら何もしない
+        if ($post->post_name === (string) $post_id) {
+            return;
+        }
+
+        // 無限ループ防止
+        remove_action('save_post', __FUNCTION__);
+
+        wp_update_post([
+            'ID'        => $post_id,
+            'post_name' => $post_id,
+        ]);
+
+        add_action('save_post', __FUNCTION__, 10, 3);
     }
 
     /**

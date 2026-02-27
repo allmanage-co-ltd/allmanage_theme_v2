@@ -10,8 +10,10 @@ return [
     'name'        => 'Allmanage',
     'title'       => 'Allmanageテーマ',
     'description' => 'Allmanageテーマです',
-    'keywords'    => 'allmanage,test',
+    'keywords'    => '',
     'logo'        => img_dir() . '/common/logo.svg',
+    'logo_white'  => img_dir() . '/common/logo_white.svg',
+    'logo_ft'     => img_dir() . '/common/logo_ft.png',
     'favicon'     => img_dir() . '/common/favicon.png',
     'ogp'         => img_dir() . '/common/ogp.jpg',
 
