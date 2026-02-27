@@ -20,8 +20,6 @@
 @import "foundation/plugins/_slideout.scss";
 @import "foundation/plugins/_slick.scss";
 
-
-
 /*--------------------------------------------
   Layout
 --------------------------------------------*/
@@ -34,8 +32,6 @@
 @import "layout/_header";
 @import "layout/_megamenu";
 @import "layout/_sidebar";
-
-
 
 /*--------------------------------------------
   Object
@@ -56,7 +52,6 @@
 @import "object/component/_cookie";
 @import "object/component/_image_modal";
 
-
 // project
 @import "object/project/page/_home";
 @import "object/project/page/_company";
@@ -68,8 +63,6 @@
 @import "object/project/page/_404";
 @import "object/project/_kv";
 
-
-
 // utility
 //@import "object/utility/**";
 @import "object/utility/_align";
@@ -78,7 +71,6 @@
 @import "object/utility/_margin";
 @import "object/utility/_padding";
 @import "object/utility/_utility";
-
 
 // wordpress
 @import "object/_wp";

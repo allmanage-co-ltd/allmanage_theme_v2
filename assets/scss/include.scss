@@ -1,2 +1,8 @@
 // オルマネ 追加修正用
-@import 'mixin';
+@function vw($px, $base: 1920) {
+  @return ($px / $base) * 100vw;
+}
+
+@function fluid($min, $mid, $max, $base: 1920) {
+  @return clamp(#{$min}px, #{$mid}, #{$max}px);
+}

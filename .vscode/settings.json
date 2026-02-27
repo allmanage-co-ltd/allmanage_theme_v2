@@ -1,4 +1,5 @@
 {
+    // SASSコンパイラ設定
     "liveSassCompile.settings.formats": [
         {
             "format": "expanded",
@@ -10,12 +11,34 @@
         "/assets/scss/style.scss",
         // "/assets/inc/include.scss"
     ],
+    // エディタ設定
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
     "editor.tabSize": 4,
+    "editor.formatOnSave": true,
     "[php]": {
         "editor.tabSize": 4,
         "files.insertFinalNewline": true,
     },
-    "editor.formatOnSave": true,
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[scss]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    // ファイルの整理整頓
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        // "composer.json": "composer.lock, phpstan.neon, phpunit.xml, rector.php",
+        // "docker-compose.yaml": "Dockerfile, docker-compose.*.yml",
+        // "Makefile": ".env*, .env.*",
+        "index.php": "archive.php, single.php, page.php, category.php, taxonomy.php, search.php, searchform.php, header.php, footer.php, sidebar.php"
+    },
+    "files.exclude": {
+        ".phpunit.cache": true
+    }
 }
