@@ -3,32 +3,33 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Set\ValueObject\LevelSetList;
+use Rector\Set\ValueObject\SetList;
+use Rector\ValueObject\PhpVersion;
 
-return static function (RectorConfig $config): void {
-
-    // ここでPHPバージョンに合わせてセット
-    $config->sets([
-        LevelSetList::UP_TO_PHP_74,
-        LevelSetList::UP_TO_PHP_80,
-        LevelSetList::UP_TO_PHP_81,
-        LevelSetList::UP_TO_PHP_82,
-        LevelSetList::UP_TO_PHP_83,
-    ]);
-
-    // 対象ディレクトリ
-    $config->paths([
+return RectorConfig::configure()
+    ->withPaths([
         __DIR__ . '/',
-    ]);
-
-    // 除外ディレクトリ
-    $config->skip([
-        __DIR__ . '/vender',
+    ])
+    ->withSkip([
+        __DIR__ . '/vendor',
         __DIR__ . '/tests',
         __DIR__ . '/docker',
         __DIR__ . '/assets',
         __DIR__ . '/.vscode',
         __DIR__ . '/.github',
         __DIR__ . '/.git',
-    ]);
-};
+    ])
+    ->withPhpVersion(PhpVersion::PHP_83)
+    ->withSets([
+        SetList::PHP_80,
+        SetList::PHP_81,
+        SetList::PHP_82,
+        SetList::PHP_83,
+    ])
+    ->withPHPStanConfigs([
+        __DIR__ . '/phpstan.neon',
+    ])
+    ->withCache(__DIR__ . '/storage/cache/rector')
+    ->withTypeCoverageLevel(0)
+    ->withDeadCodeLevel(0)
+    ->withCodeQualityLevel(0);

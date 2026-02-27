@@ -14,13 +14,8 @@ use App\Helpers\Fmt;
  */
 class Cookie
 {
-    private $days;
-    private $link;
-
-    public function __construct($days = 365, $link = '/privacy')
+    public function __construct(private $days = 365, private $link = '/privacy')
     {
-        $this->days = $days;
-        $this->link = $link;
     }
 
     /**

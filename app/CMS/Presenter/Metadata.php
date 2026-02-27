@@ -220,14 +220,11 @@ class Metadata
     {
         $default_image = Config::get('seo.ogp', img_dir() . '/ogp.jpg');
 
-        switch (true) {
-            case is_single() && has_post_thumbnail():
-                return get_the_post_thumbnail_url(get_the_ID(), 'large');
-            case is_page() && has_post_thumbnail():
-                return get_the_post_thumbnail_url(get_the_ID(), 'large');
-            default:
-                return $default_image;
-        }
+        return match (true) {
+            is_single() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
+            is_page() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
+            default => $default_image,
+        };
     }
 
     /**

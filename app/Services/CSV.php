@@ -32,12 +32,12 @@ use RuntimeException;
 class CSV
 {
     public function __construct(
-        private string $path = 'php://output',
-        private string $delimiter = ',',
-        private string $enclosure = '"',
-        private string $escape = '\\',
-        private bool $withBom = false,
-        private ?string $encoding = null
+        private readonly string $path = 'php://output',
+        private readonly string $delimiter = ',',
+        private readonly string $enclosure = '"',
+        private readonly string $escape = '\\',
+        private readonly bool $withBom = false,
+        private readonly ?string $encoding = null
     ) {
         //
     }

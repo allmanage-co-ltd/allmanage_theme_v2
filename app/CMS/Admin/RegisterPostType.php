@@ -19,9 +19,10 @@ class RegisterPostType extends Admin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
-        add_action('init', [$this, 'register']);
+        add_action('init', $this->register(...));
     }
 
     /**

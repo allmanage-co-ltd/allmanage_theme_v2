@@ -14,6 +14,7 @@ class EditMenuAdmin extends Admin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
         if (!$this->target()) {

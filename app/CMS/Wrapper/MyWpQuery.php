@@ -15,7 +15,7 @@ namespace App\CMS\Wrapper;
 class MyWpQuery
 {
     private array $args = [];
-    private int $paged;
+    private readonly int $paged;
 
     public function __construct()
     {

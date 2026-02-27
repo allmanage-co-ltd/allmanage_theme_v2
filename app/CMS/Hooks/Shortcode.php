@@ -14,6 +14,7 @@ class Shortcode extends Hook
     /**
      * フック登録
      */
+    #[\Override]
     public function boot(): void
     {
         add_shortcode('home', 'home');

@@ -20,9 +20,10 @@ class RegisterOptionPage extends Admin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
-        add_action('admin_menu', [$this, 'register']);
+        add_action('admin_menu', $this->register(...));
     }
 
     /**

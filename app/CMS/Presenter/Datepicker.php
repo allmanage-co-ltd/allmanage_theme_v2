@@ -42,7 +42,7 @@ class Datepicker
      */
     public function boot(): void
     {
-        add_action('wp_footer', [$this, 'render'], 9998);
+        add_action('wp_footer', $this->render(...), 9998);
     }
 
     /**

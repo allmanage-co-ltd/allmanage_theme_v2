@@ -14,13 +14,10 @@ use WP_Query;
 class Pagination
 {
     // 現在のページ番号
-    private int $paged;
+    private readonly int $paged;
 
     // 総ページ数
-    private int $pages;
-
-    // 表示するページ番号の最大数
-    private int $range;
+    private readonly int $pages;
 
     /**
      * コンストラクタ
@@ -30,11 +27,10 @@ class Pagination
      */
     public function __construct(
         WP_Query $query,
-        int $range = 5
+        private readonly int $range = 5
     ) {
         $this->paged = max(1, (int) ($query->get('paged') ?: 1));
         $this->pages = (int) ($query->max_num_pages ?: 1);
-        $this->range = $range;
     }
 
     /**

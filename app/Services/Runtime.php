@@ -25,7 +25,7 @@ class Runtime
         $locals = Config::get('app.runtime.local');
 
         foreach ($locals as $local) {
-            if (strpos($host, $local) !== false) {
+            if (str_contains((string) $host, (string) $local)) {
                 return true;
             }
         }
@@ -61,7 +61,7 @@ class Runtime
         }
 
         foreach ($keywords as $word) {
-            if (stripos($ua, $word) !== false) {
+            if (stripos((string) $ua, (string) $word) !== false) {
                 return true;
             }
         }

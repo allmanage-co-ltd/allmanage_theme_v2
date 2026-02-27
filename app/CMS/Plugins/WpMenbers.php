@@ -19,6 +19,7 @@ class WpMenbers extends Plugin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
         //

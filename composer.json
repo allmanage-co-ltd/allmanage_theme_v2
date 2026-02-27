@@ -10,8 +10,8 @@
   },
   "scripts": {
     "analyse": "vendor/bin/phpstan analyse > storage/logs/phpstan.log || true",
-    "rector": "vendor/bin/rector process --dry-run > storage/logs/rectorr.log || true",
-    "rector:fix": "vendor/bin/rector process > storage/logs/rector-fix.log || true",
+    "rector": "vendor/bin/rector process --dry-run > storage/logs/rector.log || true",
+    "rector-fix": "vendor/bin/rector process > storage/logs/rector-fix.log || true",
     "test": "vendor/bin/pest -v"
   },
   "autoload": {

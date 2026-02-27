@@ -24,18 +24,19 @@ class MwWpForm extends Plugin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
         // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'validation'], 10, 3);
         // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'entryAutobackMyMail'], 10, 3);
-        add_filter('mwform_default_content', [$this, 'defaultContent']);
-        add_filter('mwform_default_settings', [$this, 'defaultSettings'], 10, 2);
-        add_filter('mwform_custom_mail_tag', [$this, 'tag'], 10, 3);
-        add_action('wp_footer', [$this, 'footerScript'], 9999);
-        add_action('wp_print_footer_scripts', [$this, 'appendFormClass'], 9999);
-        add_filter('user_can_richedit', [$this, 'disableVisualEditor']);
-        add_action('load-post.php', [$this, 'disableVisualEditor']);
-        add_action('load-post-new.php', [$this, 'disableVisualEditor']);
+        add_filter('mwform_default_content', $this->defaultContent(...));
+        add_filter('mwform_default_settings', $this->defaultSettings(...), 10, 2);
+        add_filter('mwform_custom_mail_tag', $this->tag(...), 10, 3);
+        add_action('wp_footer', $this->footerScript(...), 9999);
+        add_action('wp_print_footer_scripts', $this->appendFormClass(...), 9999);
+        add_filter('user_can_richedit', $this->disableVisualEditor(...));
+        add_action('load-post.php', $this->disableVisualEditor(...));
+        add_action('load-post-new.php', $this->disableVisualEditor(...));
     }
 
     /**

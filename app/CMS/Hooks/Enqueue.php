@@ -13,7 +13,7 @@ use App\Services\Config;
  */
 class Enqueue extends Hook
 {
-    private string $version;
+    private readonly string $version;
 
     public function __construct()
     {
@@ -23,11 +23,12 @@ class Enqueue extends Hook
     /**
      * フック登録
      */
+    #[\Override]
     public function boot(): void
     {
-        add_action('wp_enqueue_scripts', [$this, 'enqueueFront']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueAdmin']);
-        add_action('login_enqueue_scripts', [$this, 'enqueueAdmin']);
+        add_action('wp_enqueue_scripts', $this->enqueueFront(...));
+        add_action('admin_enqueue_scripts', $this->enqueueAdmin(...));
+        add_action('login_enqueue_scripts', $this->enqueueAdmin(...));
     }
 
     /**
@@ -83,7 +84,7 @@ class Enqueue extends Hook
 
         foreach ($styles as $handle => $src) {
             wp_enqueue_style(
-                is_string($handle) ? $handle : md5($src),
+                is_string($handle) ? $handle : md5((string) $src),
                 $src,
                 [],
                 $this->version
@@ -102,7 +103,7 @@ class Enqueue extends Hook
 
         foreach ($scripts as $handle => $src) {
             wp_enqueue_script(
-                is_string($handle) ? $handle : md5($src),
+                is_string($handle) ? $handle : md5((string) $src),
                 $src,
                 ['jquery'],
                 $this->version,

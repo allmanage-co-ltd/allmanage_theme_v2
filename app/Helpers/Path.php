@@ -39,7 +39,7 @@ class Path
     {
         $first = array_shift($parts);
 
-        return rtrim($first, '/')
+        return rtrim((string) $first, '/')
             . '/'
             . implode('/', array_map(
                 fn($p) => trim($p, '/'),

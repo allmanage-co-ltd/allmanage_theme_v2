@@ -16,13 +16,11 @@ use wpdb;
  */
 class MyDpdb
 {
-    private wpdb $wpdb;
     private ?string $sql = null;
     private array $params = [];
 
-    public function __construct(wpdb $wpdb)
+    public function __construct(private readonly wpdb $wpdb)
     {
-        $this->wpdb = $wpdb;
     }
 
     /**

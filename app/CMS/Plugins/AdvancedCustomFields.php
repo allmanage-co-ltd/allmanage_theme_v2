@@ -19,6 +19,7 @@ class AdvancedCustomFields extends Plugin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
         // add_action('acf/init', [$this, 'registerOptionPage']);

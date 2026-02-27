@@ -29,15 +29,16 @@ class EditMenuClient extends Admin
     /**
      * 初期化処理
      */
+    #[\Override]
     public function boot(): void
     {
         if (!$this->target()) {
             return;
         }
 
-        add_action('admin_menu', [$this, 'removeMenusForEditor'], 9999);
-        add_action('admin_init', [$this, 'hideUpdateNoticeForEditor']);
-        add_action('admin_bar_menu', [$this, 'customizeAdminBarForLimitedUsers'], 9999);
+        add_action('admin_menu', $this->removeMenusForEditor(...), 9999);
+        add_action('admin_init', $this->hideUpdateNoticeForEditor(...));
+        add_action('admin_bar_menu', $this->customizeAdminBarForLimitedUsers(...), 9999);
     }
 
     /**
@@ -79,7 +80,7 @@ class EditMenuClient extends Admin
 
         global $menu;
 
-        foreach ($menu as $key => $value) {
+        foreach ($menu as $value) {
             $menu_slug = $value[2];
             $keep      = in_array($menu_slug, $hidden_menus);
 

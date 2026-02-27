@@ -20,6 +20,7 @@ class Welcart extends Plugin
     /**
      * フック登録
      */
+    #[\Override]
     public function boot(): void
     {
         // add_filter('posts_search', 'searchInItemCode', 10, 2);
@@ -83,7 +84,7 @@ class Welcart extends Plugin
         }
 
         if (isset($wp_query->query_vars['s'])) {
-            $search_words = explode(' ', $wp_query->query_vars['s']);
+            $search_words = explode(' ', (string) $wp_query->query_vars['s']);
             if (count($search_words) > 0) {
                 $search = '';
                 foreach ($search_words as $word) {
@@ -130,7 +131,7 @@ class Welcart extends Plugin
      */
     public function filterCartRows($html, $cart)
     {
-        $html = preg_replace('/<td class="num">.*?<\/td>/s', '', $html); // No.を削除
+        $html = preg_replace('/<td class="num">.*?<\/td>/s', '', (string) $html); // No.を削除
         $html = preg_replace('/<td class="aright unitprice" data-label="単価">.*?<\/td>/s', '', $html); // 単価を削除
         $html = preg_replace('/<td class="unitprice" data-label="単価">.*?<\/td>/s', '', $html);        // 単価を削除
         $html = preg_replace('/<td class="stock" data-label="在庫状態">.*?<\/td>/s', '', $html);         // 在庫状態を削除

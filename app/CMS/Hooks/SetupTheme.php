@@ -17,16 +17,17 @@ class SetupTheme extends Hook
     /**
      * フック登録
      */
+    #[\Override]
     public function boot(): void
     {
-        add_action('plugins_loaded', [$this, 'sessionStart'], 0);
-        add_action('init', [$this, 'removeWpFeatures']);
-        add_filter('excerpt_more', [$this, 'customExcerptMore']);
-        add_action('init', [$this, 'trashDefaultPosts']);
-        add_filter('excerpt_length', [$this, 'customExcerptLength'], 999);
-        add_action('after_setup_theme', [$this, 'themeSupportAdd']);
-        add_action('save_post', [$this, 'save_costom_post_slug'], 10, 3);
-        add_action('after_switch_theme', [$this, 'default_permalink_slug']);
+        add_action('plugins_loaded', $this->sessionStart(...), 0);
+        add_action('init', $this->removeWpFeatures(...));
+        add_filter('excerpt_more', $this->customExcerptMore(...));
+        add_action('init', $this->trashDefaultPosts(...));
+        add_filter('excerpt_length', $this->customExcerptLength(...), 999);
+        add_action('after_setup_theme', $this->themeSupportAdd(...));
+        add_action('save_post', $this->save_costom_post_slug(...), 10, 3);
+        add_action('after_switch_theme', $this->default_permalink_slug(...));
     }
 
     /**

@@ -16,10 +16,11 @@ class Seo extends Hook
     /**
      * フック登録
      */
+    #[\Override]
     public function boot(): void
     {
-        add_filter('wp_robots', [$this, 'addNoindex']);
-        add_action('wp_head', [$this, 'addMetadata']);
+        add_filter('wp_robots', $this->addNoindex(...));
+        add_action('wp_head', $this->addMetadata(...));
     }
 
     /**

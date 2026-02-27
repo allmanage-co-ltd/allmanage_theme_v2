@@ -40,9 +40,9 @@ class Curl
      * レスポンス保持
      */
     private function __construct(
-        private int $status,
-        private string $body,
-        private array $headers = []
+        private readonly int $status,
+        private readonly string $body,
+        private readonly array $headers = []
     ) {
     }
 
