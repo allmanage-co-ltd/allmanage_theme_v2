@@ -26,6 +26,7 @@ class SetupTheme extends Hook
         add_filter('excerpt_length', [$this, 'customExcerptLength'], 999);
         add_action('after_setup_theme', [$this, 'themeSupportAdd']);
         add_action('save_post', [$this, 'save_costom_post_slug'], 10, 3);
+        add_action('after_switch_theme', [$this, 'default_permalink_slug']);
     }
 
     /**
@@ -84,6 +85,17 @@ class SetupTheme extends Hook
         if (is_page()) {
             remove_filter('the_content', 'wpautop');
         }
+    }
+
+    /**
+     * デフォルトのパーマリンク構造をpost_idに設定
+     */
+    function default_permalink_slug() 
+    {
+        global $wp_rewrite;
+
+        $wp_rewrite->set_permalink_structure('/%post_id%/');
+        flush_rewrite_rules();
     }
 
     /**

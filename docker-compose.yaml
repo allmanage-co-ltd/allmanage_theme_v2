@@ -1,4 +1,4 @@
-name: "Allmanageテーマ"
+name: "allmanage_theme_v2"
 
 services:
   db:
@@ -31,6 +31,7 @@ services:
       WORDPRESS_DEBUG: true
     volumes:
       - wp_data:/var/www/html
+      - ./docker/.htaccess:/var/www/html/.htaccess
       - .:/var/www/html/wp-content/themes/allmanage_theme_v2
 
   phpmyadmin:
