@@ -23,25 +23,23 @@ class Welcart extends Plugin
     #[\Override]
     public function boot(): void
     {
-        // add_filter('posts_search', 'searchInItemCode', 10, 2);
+        // add_filter('posts_search', $this->searchInItemCode(...), 10, 2);
 
-        // add_action('admin_menu', 'AddOriginSubmenuAdminView');
-        // add_filter('usces_filter_backCustomer_page', 'filterBackCustomerPage', 10, 1);
-        // add_filter('usces_filter_cart_prebutton', 'changeCartPrebuttonUrl');
+        // add_action('admin_menu', $this->AddOriginSubmenuAdminView(...));
+        // add_filter('usces_filter_cart_prebutton', $this->changeCartPrebuttonUrl(...));
 
-        // add_filter('usces_filter_cart_rows', 'myFilterCartRows', 10, 2);
-        // add_filter('usces_filter_confirm_rows', 'myFilterCartRows', 10, 2);
+        // add_filter('usces_filter_cart_rows', $this->myFilterCartRows(...), 10, 2);
+        // add_filter('usces_filter_confirm_rows', $this->myFilterCartRows(...), 10, 2);
 
-        //
-        // add_filter('usces_filter_after_zipcode', 'removeAllExamples', 10, 2);
-        // add_filter('usces_filter_after_address1', 'removeAllExamples', 10, 2);
-        // add_filter('usces_filter_after_address2', 'removeAllExamples', 10, 2);
-        // add_filter('usces_filter_after_address3', 'removeAllExamples', 10, 2);
-        // add_filter('usces_filter_after_tel', 'removeAllExamples', 10, 2);
-        // add_filter('usces_filter_after_fax', 'removeAllExamples', 10, 2);
+        // add_filter('usces_filter_after_zipcode', $this->removeAllExamples(...), 10, 2);
+        // add_filter('usces_filter_after_address1', $this->removeAllExamples(...), 10, 2);
+        // add_filter('usces_filter_after_address2', $this->removeAllExamples(...), 10, 2);
+        // add_filter('usces_filter_after_address3', $this->removeAllExamples(...), 10, 2);
+        // add_filter('usces_filter_after_tel', $this->removeAllExamples(...), 10, 2);
+        // add_filter('usces_filter_after_fax', $this->removeAllExamples(...), 10, 2);
 
-        // add_filter('usces_filter_cart_rows', 'myFilterCartRows', 10, 2);
-        // add_filter('usces_filter_confirm_rows', 'myFilterCartRows', 10, 2);
+        // add_filter('usces_filter_cart_rows', $this->myFilterCartRows(...), 10, 2);
+        // add_filter('usces_filter_confirm_rows', $this->myFilterCartRows(...), 10, 2);
     }
 
     /**
@@ -116,17 +114,6 @@ class Welcart extends Plugin
     }
 
     /**
-     * カート／確認画面の行表示調整
-     */
-    // function filterBackCustomerPage($page)
-    // {
-    //   if (usces_is_login()) {
-    //     $page = 'cart';
-    //   }
-    //   return $page;
-    // }
-
-    /**
      * 入力フォーム内のサンプル文言を削除
      */
     public function filterCartRows($html, $cart)
@@ -139,7 +126,7 @@ class Welcart extends Plugin
     }
 
     /**
-     *
+     * フォームの不要なデフォルトテキストを削除
      */
     public function removeAllExamples($ex, $applyform)
     {

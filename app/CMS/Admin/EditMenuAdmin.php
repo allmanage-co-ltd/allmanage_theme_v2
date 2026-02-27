@@ -17,7 +17,7 @@ class EditMenuAdmin extends Admin
     #[\Override]
     public function boot(): void
     {
-        if (!$this->target()) {
+        if (!$this->target_roles()) {
             return;
         }
 
@@ -27,7 +27,7 @@ class EditMenuAdmin extends Admin
     /**
      * 対象ユーザー判定
      */
-    public function target(): bool
+    public function target_roles(): bool
     {
         return current_user_can('administrator');
     }

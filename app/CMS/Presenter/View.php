@@ -61,7 +61,7 @@ class View
     {
         // トップページ
         if (is_front_page()) {
-            return theme_dir() . '/views/page/index.php';
+            return theme_dir() . '/views/page/home.php';
         }
 
         // 検索ページ

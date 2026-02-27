@@ -32,7 +32,7 @@ class EditMenuClient extends Admin
     #[\Override]
     public function boot(): void
     {
-        if (!$this->target()) {
+        if (!$this->target_roles()) {
             return;
         }
 
@@ -44,7 +44,7 @@ class EditMenuClient extends Admin
     /**
      * 対象ユーザー判定
      */
-    public function target(): bool
+    public function target_roles(): bool
     {
         if (current_user_can('administrator')) {
             return false;

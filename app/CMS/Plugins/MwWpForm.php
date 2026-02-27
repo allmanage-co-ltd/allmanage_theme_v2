@@ -27,8 +27,8 @@ class MwWpForm extends Plugin
     #[\Override]
     public function boot(): void
     {
-        // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'validation'], 10, 3);
-        // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, [$this, 'entryAutobackMyMail'], 10, 3);
+        // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, $this->validation(...), 10, 3);
+        // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, $this->entryAutobackMyMail(...), 10, 3);
         add_filter('mwform_default_content', $this->defaultContent(...));
         add_filter('mwform_default_settings', $this->defaultSettings(...), 10, 2);
         add_filter('mwform_custom_mail_tag', $this->tag(...), 10, 3);
