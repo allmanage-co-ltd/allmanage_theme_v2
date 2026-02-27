@@ -17,7 +17,7 @@ return [
             'show_in_rest'  => false,
             'supports'      => [
                 'title',
-                'excerpt',
+                // 'excerpt',
                 'editor',
                 'thumbnail',
                 'revisions'

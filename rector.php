@@ -24,9 +24,9 @@ return static function (RectorConfig $config): void {
     // 除外ディレクトリ
     $config->skip([
         __DIR__ . '/vender',
-        __DIR__ . '/style',
-        __DIR__ . '/img',
-        __DIR__ . '/js',
+        __DIR__ . '/tests',
+        __DIR__ . '/docker',
+        __DIR__ . '/assets',
         __DIR__ . '/.vscode',
         __DIR__ . '/.github',
         __DIR__ . '/.git',

@@ -12,8 +12,6 @@ parameters:
         - node_modules
     ignoreErrors:
         - '#WP_Term::\$cat_ID#'
-    bootstrapFiles:
-        - phpstan-bootstrap.php
     scanFiles:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
     treatPhpDocTypesAsCertain: false

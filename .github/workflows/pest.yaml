@@ -1,0 +1,40 @@
+name: Run Tests
+
+on:
+  push:
+    paths:
+      - "**.php"
+  pull_request:
+    paths:
+      - "**.php"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer:v2
+
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run Pest (verbose)
+        id: pest
+        run: |
+          vendor/bin/pest -v | tee pest-report.txt
+          exit ${PIPESTATUS[0]}
+
+      - name: Add Summary
+        if: always()
+        run: |
+          echo "## 🧪 Pest Test Result" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat pest-report.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

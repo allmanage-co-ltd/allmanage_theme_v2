@@ -8,23 +8,27 @@ return [
      * echo config(seo.name);
      *----------------------------------*/
     'name'        => 'Allmanage',
+
     'title'       => 'Allmanageテーマ',
     'description' => 'Allmanageテーマです',
-    'keywords'    => '',
+    'keywords'    => '', // 今時は意味ないらしいです
+
     'logo'        => img_dir() . '/common/logo.svg',
     'logo_white'  => img_dir() . '/common/logo_white.svg',
     'logo_ft'     => img_dir() . '/common/logo_ft.png',
+
     'favicon'     => img_dir() . '/common/favicon.png',
+    
     'ogp'         => img_dir() . '/common/ogp.jpg',
 
     'copy'        => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
     'gtags'       => [
-        'XXXXXXXX',
+        // 'XXXXXXXX',
     ],
 
     // 未実装（現状ベタ貼りしてください）
-    'gtm'         => [
-        'XXXXXXXX',
+    'gtms'       => [
+        // 'XXXXXXXX',
     ]
 ];

@@ -92,8 +92,6 @@ PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
 ### よく使う Composer スクリプト
 
 ```bash
-composer run cs       # PHP-CS-Fixer (dry-run)
-composer run cs:fix   # PHP-CS-Fixer 実行
 composer run analyse  # PHPStan
 composer run rector   # Rector (dry-run)
 composer run rector:fix
