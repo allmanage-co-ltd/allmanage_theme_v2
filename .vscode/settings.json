@@ -9,7 +9,7 @@
     ],
     "liveSassCompile.settings.includeItems": [
         "/assets/scss/style.scss",
-        // "/assets/inc/include.scss"
+        // "/assets/scss/include.scss"
     ],
     // エディタ設定
     "editor.detectIndentation": false,
@@ -36,7 +36,7 @@
         // "composer.json": "composer.lock, phpstan.neon, phpunit.xml, rector.php",
         // "docker-compose.yaml": "Dockerfile, docker-compose.*.yml",
         // "Makefile": ".env*, .env.*",
-        "index.php": "archive.php, single.php, page.php, category.php, taxonomy.php, search.php, searchform.php, header.php, footer.php, sidebar.php"
+        "index.php": "archive.php, single.php, page.php, category.php, taxonomy.php, search.php, searchform.php, header.php, footer.php, sidebar.php, 404.php"
     },
     "files.exclude": {
         ".phpunit.cache": true
