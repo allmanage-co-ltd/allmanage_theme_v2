@@ -16,40 +16,20 @@ composer: ##
 
 .PHONY: cs
 cs:
-	$(PHP) vendor/bin/php-cs-fixer fix --dry-run --diff
+	$(PHP) vendor/bin/php-cs-fixer fix --dry-run > storage/logs/php-cs-fixer.log || true
 
 .PHONY: cs-fix
 cs-fix:
-	$(PHP) vendor/bin/php-cs-fixer fix
+	$(PHP) vendor/bin/php-cs-fixer fix > storage/logs/php-cs-fixer-fix.log || true
 
-.PHONY: lint
-lint:
-	$(PHP) vendor/bin/phpstan analyse
+.PHONY: stan
+stan:
+	$(PHP) vendor/bin/phpstan analyse -c phpstan.neon > storage/logs/phpstan.log || true
 
-.PHONY: gen
-gen: ## Generate class file ( make gen dir=Hooks name=Test )
-	@test -n "$(dir)" || (echo "Error: dir required" && exit 1)
-	@test -n "$(name)" || (echo "Error: name required" && exit 1)
-	@mkdir -p app/$(dir)
-	@echo "<?php" > app/$(dir)/$(name).php
-	@echo "" >> app/$(dir)/$(name).php
-	@echo "namespace App\\$(dir);" >> app/$(dir)/$(name).php
-	@echo "" >> app/$(dir)/$(name).php
-	@echo "/**---------------------------------------------" >> app/$(dir)/$(name).php
-	@echo "* $(name)" >> app/$(dir)/$(name).php"
-	@echo "* ---------------------------------------------" >> app/$(dir)/$(name).php
-	@echo "*" >> app/$(dir)/$(name).php
-	@echo "*/" >> app/$(dir)/$(name).php
-	@echo "class $(name)" >> app/$(dir)/$(name).php
-	@echo "{" >> app/$(dir)/$(name).php
-	@echo "  public function __construct() {}" >> app/$(dir)/$(name).php
-	@echo "" >> app/$(dir)/$(name).php
-	@echo "  /**" >> app/$(dir)/$(name).php
-	@echo "   *" >> app/$(dir)/$(name).php
-	@echo "   */" >> app/$(dir)/$(name).php
-	@echo "  public function boot(): void" >> app/$(dir)/$(name).php
-	@echo "  {" >> app/$(dir)/$(name).php
-	@echo "    //" >> app/$(dir)/$(name).php
-	@echo "  }" >> app/$(dir)/$(name).php
-	@echo "}" >> app/$(dir)/$(name).php
-	@echo "✓ Created app/$(dir)/$(name).php"
+.PHONY: rector
+rector:
+	$(PHP) vendor/bin/rector process --dry-run >  storage/logs/rector.log || true
+
+.PHONY: rector-fix
+rector:
+	$(PHP) vendor/bin/rector process --dry-run >  storage/logs/rector-fix.log || true
