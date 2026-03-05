@@ -29,14 +29,18 @@ class Logger
 
         $file = Path::root() . Config::get('app.log');
 
-        self::$app = new MonoLogger('app');
+        self::$app = new MonoLogger(
+            'app',
+            [],
+            [],
+            new \DateTimeZone('Asia/Tokyo')
+        );
         self::$app->pushHandler(
             new StreamHandler($file, MonoLogger::INFO)
         );
 
         return self::$app;
     }
-
 
     /**
      * アクセスログ（日別）
@@ -55,7 +59,12 @@ class Logger
 
         $file = $dir . '/' . date('Y-m-d') . '.log';
 
-        self::$access = new MonoLogger('access');
+        self::$access = new MonoLogger(
+            'access',
+            [],
+            [],
+            new \DateTimeZone('Asia/Tokyo')
+        );
         self::$access->pushHandler(
             new StreamHandler($file, MonoLogger::INFO)
         );
