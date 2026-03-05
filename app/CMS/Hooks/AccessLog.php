@@ -30,6 +30,11 @@ class AccessLog extends Hook
             return;
         }
 
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (str_contains($uri, '/wp-content/')) {
+            return;
+        }
+
         Logger::access()->info('request', [
             'ip'      => $_SERVER['REMOTE_ADDR'] ?? '',
             'xff'     => $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '',
