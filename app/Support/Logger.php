@@ -35,6 +35,7 @@ class Logger
             [],
             new \DateTimeZone('Asia/Tokyo')
         );
+
         self::$app->pushHandler(
             new StreamHandler($file, MonoLogger::INFO)
         );
@@ -53,8 +54,8 @@ class Logger
 
         $dir = Path::root() . Config::get('app.access_log_dir');
 
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            throw new \RuntimeException("アクセスログのディレクトリ作成に失敗しました: {$dir}");
         }
 
         $file = $dir . '/' . date('Y-m-d') . '.log';
@@ -65,6 +66,7 @@ class Logger
             [],
             new \DateTimeZone('Asia/Tokyo')
         );
+
         self::$access->pushHandler(
             new StreamHandler($file, MonoLogger::INFO)
         );
