@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services;
+namespace App\Support;
 
 use RuntimeException;
 
 /**---------------------------------------------
- * CSVサービスクラス
+ * Csvサポートクラス
  * ---------------------------------------------
  * - このクラスはあくまでI/O専用
  * - 投稿取得・データ変換はAction側で行う
@@ -16,20 +16,20 @@ use RuntimeException;
  *       [1, 'Hello'],
  *       [2, 'World'],
  *   ];
- *   $csv = new CSV(path: '/tmp/posts.csv',  withBom: true);
+ *   $csv = new Csv(path: '/tmp/posts.csv',  withBom: true);
  *   $csv->write($rows);
  *
  * ■管理画面からダウンロード出力する場合
  *   header('Content-Type: text/csv; charset=UTF-8');
  *   header('Content-Disposition: attachment; filename=posts.csv');
- *   $csv = new CSV(withBom: true);
+ *   $csv = new Csv(withBom: true);
  *   $csv->write($rows);
  *   exit;
  *
  * ■Excel（Windows）向けSJIS出力
- *   $csv = new CSV(encoding: 'SJIS-win');
+ *   $csv = new Csv(encoding: 'SJIS-win');
  */
-class CSV
+class Csv
 {
     public function __construct(
         private readonly string $path = 'php://output',
@@ -48,13 +48,13 @@ class CSV
     public function read(): array
     {
         if (!file_exists($this->path)) {
-            throw new RuntimeException("CSVファイルが存在しません: {$this->path}");
+            throw new RuntimeException("Csvファイルが存在しません: {$this->path}");
         }
 
         $fp = fopen($this->path, 'r');
 
         if (!$fp) {
-            throw new RuntimeException("CSVを開けません: {$this->path}");
+            throw new RuntimeException("Csvを開けません: {$this->path}");
         }
 
         $rows = [];
@@ -76,7 +76,7 @@ class CSV
         $fp = fopen($this->path, 'w');
 
         if (!$fp) {
-            throw new RuntimeException("CSVを書き込めません: {$this->path}");
+            throw new RuntimeException("Csvを書き込めません: {$this->path}");
         }
 
         // BOM（Excel対策）
@@ -86,13 +86,13 @@ class CSV
 
         foreach ($rows as $row) {
             if (!is_array($row)) {
-                throw new RuntimeException("CSVの行は配列である必要があります");
+                throw new RuntimeException("Csvの行は配列である必要があります");
             }
 
             $row = $this->convertEncoding($row);
 
             if (fputcsv($fp, $row, $this->delimiter, $this->enclosure, $this->escape) === false) {
-                throw new RuntimeException("CSV書き込みに失敗しました");
+                throw new RuntimeException("Csv書き込みに失敗しました");
             }
         }
 

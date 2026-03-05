@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Support;
 
 /**---------------------------------------------
  * セッション管理サービス

@@ -6,17 +6,15 @@
 ## ざっくり構成
 
 - `CMS/` : WordPress 依存ロジック（フック、管理画面、プラグイン連携、表示解決）
-    - WordPressが提供する関数はこの中でのみ使用できます。
-- `Services/` : I/O や外部依存を扱う共通サービス
-- `Helpers/` : 軽量ユーティリティ（整形、パス解決など）
-- `Actions/` : ユースケース単位の実行フロー
+  - WordPress が提供する関数はこの中でのみ使用できます。
+- `Support/` : I/O や外部依存を扱う共通サービス、汎用ユーティリティ
+- `UseCase/` : ユースケース単位の実行フロー
 
 ## 最初に読む README
 
 - `app/CMS/README.md`
-- `app/Services/README.md`
-- `app/Helpers/README.md`
-- `app/Actions/README.md`
+- `app/Support/README.md`
+- `app/UseCase/README.md`
 
 それぞれのディレクトリで、責務と実装の温度感を合わせています。
 

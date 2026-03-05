@@ -2,7 +2,7 @@
 
 namespace App\CMS\Wrapper;
 
-use App\Helpers\Fmt;
+use App\Support\Fmt;
 use wpdb;
 
 /**---------------------------------------------

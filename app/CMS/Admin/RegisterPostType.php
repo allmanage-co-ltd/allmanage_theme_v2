@@ -2,7 +2,7 @@
 
 namespace App\CMS\Admin;
 
-use App\Services\Config;
+use App\Support\Config;
 
 /**---------------------------------------------
  * カスタム投稿タイプ登録クラス

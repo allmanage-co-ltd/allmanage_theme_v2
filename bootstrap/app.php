@@ -1,5 +1,6 @@
 <?php
 
+use App\CMS\Hooks\AccessLog;
 use App\CMS\Hooks\Enqueue;
 use App\CMS\Hooks\SetupTheme;
 use App\CMS\Hooks\Shortcode;
@@ -31,6 +32,7 @@ class App
     {
         (new SetupTheme())->boot();
         (new Shortcode())->boot();
+        (new AccessLog())->boot();
         (new Enqueue())->boot();
         (new Seo())->boot();
         (new RegisterPostType())->boot();

@@ -2,7 +2,7 @@
 
 namespace App\CMS\Hooks;
 
-use App\Services\Config;
+use App\Support\Config;
 
 /**---------------------------------------------
  * アセット登録フッククラス

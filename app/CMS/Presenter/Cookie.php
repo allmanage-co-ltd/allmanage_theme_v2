@@ -2,7 +2,7 @@
 
 namespace App\CMS\Presenter;
 
-use App\Helpers\Fmt;
+use App\Support\Fmt;
 
 /**---------------------------------------------
  * Cookieポップアップ生成クラス

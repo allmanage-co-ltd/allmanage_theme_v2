@@ -2,7 +2,7 @@
 
 namespace App\CMS\Admin;
 
-use App\Services\Config;
+use App\Support\Config;
 
 /**---------------------------------------------
  * 管理画面メニュー制御クラス（クライアント向け）

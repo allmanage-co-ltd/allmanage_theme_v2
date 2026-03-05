@@ -1,40 +1,48 @@
 <?php
 
-namespace App\Helpers;
-
-use App\Services\Config;
+namespace App\Support;
 
 /**---------------------------------------------
- *
+ * パス取得
  * ---------------------------------------------
  */
 class Path
 {
-    // ルートパス
+    /**
+     * ルートパス
+     */
     public static function root(): string
     {
         return realpath(dirname(__DIR__, 2));
     }
 
-    // appパス
+    /**
+     * appパス
+     */
     public static function app(string $path = ''): string
     {
         return self::join(self::root(), 'app', $path);
     }
 
-    // configパス
+    /**
+     * configパス
+     */
     public static function config(string $path = ''): string
     {
         return self::join(self::root(), 'config', $path);
     }
 
-    // viewsパス
+    /**
+     * viewsパス
+     */
     public static function views(string $path = ''): string
     {
         return self::join(self::root(), 'views', $path);
     }
 
-    // パス結合
+    /**
+     * パス結合
+     */
     private static function join(string ...$parts): string
     {
         $first = array_shift($parts);

@@ -2,7 +2,7 @@
 
 namespace App\CMS\Presenter;
 
-use App\Services\Config;
+use App\Support\Config;
 
 /**---------------------------------------------
  * メタ情報管理サービス
@@ -222,8 +222,8 @@ class Metadata
 
         return match (true) {
             is_single() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
-            is_page() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
-            default => $default_image,
+            is_page() && has_post_thumbnail()   => get_the_post_thumbnail_url(get_the_ID(), 'large'),
+            default                             => $default_image,
         };
     }
 

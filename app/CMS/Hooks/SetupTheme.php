@@ -2,8 +2,8 @@
 
 namespace App\CMS\Hooks;
 
-use App\Services\Config;
-use App\Services\Session;
+use App\Support\Session;
+use App\Support\Config;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス
@@ -91,7 +91,7 @@ class SetupTheme extends Hook
     /**
      * デフォルトのパーマリンク構造をpost_idに設定
      */
-    function default_permalink_slug() 
+    function default_permalink_slug()
     {
         global $wp_rewrite;
 

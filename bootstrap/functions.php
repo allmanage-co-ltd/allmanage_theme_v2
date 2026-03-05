@@ -11,13 +11,11 @@
  * ルール：
  * - 引数と返り値のシグネチャは呼び出し先と一致させる
  * - echoやincludeなど描画系の関数は命名を 「the_○○」 とする
- * - WP関数のラッパーでも OK
- * - 必ず「使用例」を記載すること
+ * - 必ず「使用例」を記載すること、それ以外は書かない
  *---------------------------------------------/
 
 /**
- * サイトのルートURLを返す
- * WPの home_url() のラッパー
+ * サイトのルートURL
  */
 function home(): string
 {
@@ -54,7 +52,8 @@ function img_dir(): string
  * デバッグをするには->debug()を呼ぶとargsの中身が見れる
  *
  * 使用例:
- *   wpquery()->setPostType(...)->setPerPage(...)->build()
+ *   wpquery()->setPostType(...)->setPerPage(...)->build();
+ *   wpquery()->setPostType(...)->setPerPage(...)->debug();
  */
 function wpquery(): \App\CMS\Wrapper\MyWpQuery
 {
@@ -171,11 +170,11 @@ function the_pagination(\WP_Query $query, int $range = 5): void
  * 設定値取得
  *
  * 使用例:
- *   echo config('site.name');
+ *   echo config('seo.name');
  */
 function config(string $key, $default = null)
 {
-    return \App\Services\Config::get($key, $default);
+    return \App\Support\Config::get($key, $default);
 }
 
 /**
@@ -186,7 +185,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Services\Config::get("permalink.{$slug}", '/');
+    return \App\Support\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -197,7 +196,7 @@ function url(string $slug): string
  */
 function slog()
 {
-    return \App\Services\Logger::new();
+    return \App\Support\Logger::app();
 }
 
 /**
@@ -210,9 +209,9 @@ function slog()
  *   sess()->flash('message', '送信しました');
  *   $message = sess()->pull('message');
  */
-function sess(): \App\Services\Session
+function sess(): \App\Support\Session
 {
-    return new \App\Services\Session();
+    return new \App\Support\Session();
 }
 
 /**
@@ -224,9 +223,9 @@ function sess(): \App\Services\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method, string $url, array $options = []): \App\Services\Curl
+function curl(string $method, string $url, array $options = []): \App\Support\Curl
 {
-    return \App\Services\Curl::request($method, $url, $options);
+    return \App\Support\Curl::request($method, $url, $options);
 }
 
 /**
@@ -237,7 +236,7 @@ function curl(string $method, string $url, array $options = []): \App\Services\C
  */
 function is_local(): bool
 {
-    return \App\Services\Runtime::isLocal();
+    return \App\Support\Runtime::isLocal();
 }
 
 /**
@@ -248,7 +247,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Services\Runtime::isMobile();
+    return \App\Support\Runtime::isMobile();
 }
 
 /**
@@ -259,5 +258,5 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Services\Runtime::isBot();
+    return \App\Support\Runtime::isBot();
 }
