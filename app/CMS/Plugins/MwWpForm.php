@@ -121,7 +121,7 @@ class MwWpForm extends Plugin
     /**
      * カスタムメールタグ定義
      */
-    public function tag(mixed $value, string $key, int $id): mixed
+    public function tag(mixed $value, string $key, ?int $id): mixed
     {
         $tz = date_default_timezone_get();
         date_default_timezone_set('Asia/Tokyo');
@@ -159,7 +159,7 @@ class MwWpForm extends Plugin
     {
         echo <<<HTML
     <script>
-      if ($('.mw_wp_form'.length)){
+      if ($('.mw_wp_form').length){
         $('.mw_wp_form form').addClass('h-adr')
       }
     </script>
