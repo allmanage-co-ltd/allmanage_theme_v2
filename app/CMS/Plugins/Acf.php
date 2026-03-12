@@ -7,7 +7,7 @@ namespace App\CMS\Plugins;
  * ---------------------------------------------
  *
  */
-class AdvancedCustomFields extends Plugin
+class Acf extends Plugin
 {
     public function __construct()
     {
@@ -41,5 +41,36 @@ class AdvancedCustomFields extends Plugin
         //         'redirect'   => false,
         //     ]);
         // }
+    }
+
+    /**
+     * ACF存在確認
+     */
+    public static function isActive(): bool
+    {
+        return function_exists('get_fields');
+    }
+
+    /**
+     * キーからフィールドを一括取得して返却、なければ空配列
+     */
+    public static function getByKeys(int $post_id, array $keys): array
+    {
+        if (!self::isActive()) {
+            return [];
+        }
+
+        static $cache = [];
+        if (!isset($cache[$post_id])) {
+            $cache[$post_id] = get_fields($post_id) ?: [];
+        }
+
+        $fields  = $cache[$post_id];
+        $results = [];
+        foreach ($keys as $key) {
+            $results[$key] = $fields[$key] ?? null;
+        }
+
+        return $results;
     }
 }

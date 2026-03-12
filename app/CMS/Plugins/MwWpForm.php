@@ -27,13 +27,14 @@ class MwWpForm extends Plugin
     #[\Override]
     public function boot(): void
     {
-        // add_filter('mwform_validation_mw-wp-form-' . self::MWFORM_ID_CONTACT, $this->validation(...), 10, 3);
-        // add_filter('mwform_admin_mail_mw-wp-form-' . self::MWFORM_ID_CONTACT, $this->entryAutobackMyMail(...), 10, 3);
+        // $contact_form_id = 1;
+        // add_filter("mwform_validation_mw-wp-form-{$contact_form_id}", $this->validation(...), 10, 3);
+        // add_filter("mwform_admin_mail_mw-wp-form-{$contact_form_id}", $this->entryAutobackMyMail(...), 10, 3);
+
         add_filter('mwform_default_content', $this->defaultContent(...));
         add_filter('mwform_default_settings', $this->defaultSettings(...), 10, 2);
         add_filter('mwform_custom_mail_tag', $this->tag(...), 10, 3);
         add_action('wp_footer', $this->footerScript(...), 9999);
-        add_action('wp_print_footer_scripts', $this->appendFormClass(...), 9999);
         add_filter('user_can_richedit', $this->disableVisualEditor(...));
         add_action('load-post.php', $this->disableVisualEditor(...));
         add_action('load-post-new.php', $this->disableVisualEditor(...));
@@ -73,6 +74,14 @@ class MwWpForm extends Plugin
         </script>
       HTML;
         }
+
+        echo <<<HTML
+        <script>
+        if ($('.mw_wp_form').length){
+            $('.mw_wp_form form').addClass('h-adr')
+        }
+        </script>
+        HTML;
     }
 
     /**
@@ -106,13 +115,13 @@ class MwWpForm extends Plugin
     {
         switch ($Data->get('hoge')) {
             case 'fuga':
-                $Mail_raw->to = '';
-                $Mail_raw->bcc = '';
+                $Mail_raw->to      = '';
+                $Mail_raw->bcc     = '';
                 $Mail_raw->subject = '';
-                // no break
+            // no break
             default:
-                $Mail_raw->to = '';
-                $Mail_raw->bcc = '';
+                $Mail_raw->to      = '';
+                $Mail_raw->bcc     = '';
                 $Mail_raw->subject = '';
         }
         return $Mail_raw;
@@ -144,26 +153,11 @@ class MwWpForm extends Plugin
     public function disableVisualEditor($can)
     {
         $screen = get_current_screen();
-
         if ($screen && $screen->post_type === 'mw-wp-form') {
             return false;
         }
 
         return $can;
-    }
-
-    /**
-     * フォーム要素にクラスを追加
-     */
-    public function appendFormClass(): void
-    {
-        echo <<<HTML
-    <script>
-      if ($('.mw_wp_form').length){
-        $('.mw_wp_form form').addClass('h-adr')
-      }
-    </script>
-    HTML;
     }
 
     /**

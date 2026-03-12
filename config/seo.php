@@ -7,28 +7,29 @@ return [
      *
      * echo config(seo.name);
      *----------------------------------*/
-    'name'        => 'Allmanage',
+    'name'               => 'Allmanage',
+    'copy'               => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
-    'title'       => 'Allmanageテーマ',
-    'description' => 'Allmanageテーマです',
-    'keywords'    => '', // 今時は意味ないらしいです
+    'title'              => 'Allmanageテーマ',
+    'description'        => 'Allmanageテーマです',
+    'keywords'           => '',
 
-    'logo'        => img_dir() . '/common/logo.svg',
-    'logo_white'  => img_dir() . '/common/logo_white.svg',
-    'logo_ft'     => img_dir() . '/common/logo_ft.png',
+    'logo'               => img_dir() . '/common/logo.svg',
+    'logo_white'         => img_dir() . '/common/logo_white.svg',
+    'logo_ft'            => img_dir() . '/common/logo_ft.png',
 
-    'favicon'     => img_dir() . '/common/favicon.png',
-    
-    'ogp'         => img_dir() . '/common/ogp.jpg',
+    'favicon'            => img_dir() . '/common/favicon.png',
+    'ogp'                => img_dir() . '/common/ogp.jpg',
 
-    'copy'        => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
-
-    'gtags'       => [
+    'gtags'              => [
         // 'G-XXXXXXXX',
     ],
 
-    // 未実装（現状ベタ貼りしてください）
-    'gtms'       => [
-        // 'G-XXXXXXXX',
-    ]
+    /**-----------------------------------
+     * All In One SEOを使用するかどうか
+     *
+     * true   → All In One SEOを使用する場合（デフォルトメタデータを出力しない）
+     * false  → テーマデフォルトのメタデータを出力する
+     *----------------------------------*/
+    'use_all_in_one_seo' => false,
 ];

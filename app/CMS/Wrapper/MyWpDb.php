@@ -14,7 +14,7 @@ use wpdb;
  * - $wpdb をグローバルで使い回さない
  * - Service / Admin / UI から直接 wpdb を触らせない
  */
-class MyDpdb
+class MyWpDb
 {
     private ?string $sql = null;
     private array $params = [];
@@ -25,8 +25,8 @@ class MyDpdb
 
     /**
      * ファクトリ関数
-     * \App\CMS\Wrapper\MyDpdb::new()->stmt('....', ['arg'])->debug();
-     * \App\CMS\Wrapper\MyDpdb::new()->stmt('....', ['arg'])->get();
+     * \App\CMS\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->debug();
+     * \App\CMS\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->get();
      */
     public static function new(): self
     {

@@ -27,13 +27,13 @@
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
     "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.defaultFormatter": "vscode.typescript-language-features"
     },
     // ファイルの整理整頓
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
-        // "composer.json": "composer.lock, phpstan.neon, phpunit.xml, rector.php",
+        "composer.json": "composer.lock, phpstan.neon, phpunit.xml, rector.php",
         // "docker-compose.yaml": "Dockerfile, docker-compose.*.yml",
         // "Makefile": ".env*, .env.*",
         "index.php": "archive.php, single.php, page.php, category.php, taxonomy.php, search.php, searchform.php, header.php, footer.php, sidebar.php, 404.php"

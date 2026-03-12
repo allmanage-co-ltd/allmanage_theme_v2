@@ -4,6 +4,7 @@ namespace App\CMS\Hooks;
 
 use App\Support\Runtime;
 use App\CMS\Presenter\Metadata;
+use App\Support\Config;
 
 /**---------------------------------------------
  * SEO 関連フッククラス
@@ -48,8 +49,10 @@ class Seo extends Hook
     public function addMetadata(): void
     {
         echo Metadata::getBase();
-        echo Metadata::getFull();
+        if (!Config::get('seo.use_all_in_one_seo')) {
+            echo Metadata::getFull();
+            echo Metadata::getJsonld();
+        }
         echo Metadata::getGtags();
-        echo Metadata::getJsonld();
     }
 }

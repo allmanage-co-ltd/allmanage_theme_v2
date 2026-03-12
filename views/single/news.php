@@ -1,3 +1,8 @@
+<?php
+// $sample = get_acf_action(get_the_ID())->sample();
+// d($sample);
+?>
+
 <main class="p-news -single">
 
     <div class="p-kv_under">

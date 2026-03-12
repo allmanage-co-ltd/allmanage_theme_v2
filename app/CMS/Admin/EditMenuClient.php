@@ -20,7 +20,7 @@ class EditMenuClient extends Admin
 
     public function __construct()
     {
-        $config                     = Config::get('cms.client_menu');
+        $config                     = Config::get('menu.client_menu');
         $this->hidden_client_menus  = $config['hidden'];
         $this->visible_custom_menus = $config['visible'];
         $this->opts                 = $config['default_option'];

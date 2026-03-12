@@ -8,8 +8,7 @@ $query = wpquery()
     // ->debug(); // ->build()せずに組み立てたargsのみデバッグ
     ->build();
 
-// slog()->info('test', [$query->build()]);
-// echo (int) $query->found_posts; // TOTAL
+// echo (int) $query->found_posts;
 ?>
 
 <main class="p-search -archive">

@@ -3,13 +3,10 @@
 namespace App\CMS\Plugins;
 
 /**---------------------------------------------
- *
+ * Wp Members 連携クラス
  * ---------------------------------------------
- *
- *
- *
  */
-class WpMenbers extends Plugin
+class WpMembers extends Plugin
 {
     public function __construct()
     {

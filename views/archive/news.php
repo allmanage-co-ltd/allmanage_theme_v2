@@ -30,7 +30,12 @@ $query = wpquery()
             <ul class="c-card_news">
                 <?php while ($query->have_posts()): ?>
                 <?php $query->the_post(); ?>
-                <?php $news_cat = get_the_terms(get_the_ID(), 'news_cat'); ?>
+                <?php
+                        $post_id  = get_the_ID();
+                        $news_cat = get_the_terms($post_id, 'news_cat');
+                        // $sample   = get_acf_action($post_id)->sample();
+                        // d($sample);
+                        ?>
                 <li class="c-card_news__item">
                     <a href="<?php the_permalink(); ?>" class="c-card_news__link">
                         <div class="c-card_news__info">

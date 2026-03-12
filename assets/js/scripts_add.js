@@ -1,7 +1,9 @@
 jQuery(function ($) {
-  /**
-   * ヘッダー高さ
-   */
+  /*********************************************
+   * ヘッダー高さとボディの高さを計算し、CSS変数に格納
+   * var(--header-height)
+   * var(--body-height)
+   ********************************************/
   function setHeaderHeight() {
     const $header = $("#js-header");
     if ($header.length) {
@@ -25,9 +27,9 @@ jQuery(function ($) {
     setBodyHeight();
   });
 
-  /**
+  /*********************************************
    * スクロールアニメーション
-   */
+   ********************************************/
   const $header = $(".l-header");
 
   $(window).on("load scroll", function () {
@@ -50,9 +52,9 @@ jQuery(function ($) {
     });
   });
 
-  /**
+  /*********************************************
    * ヘッダー表示制御
-   */
+   ********************************************/
   let lastScrollTop = 0;
   let isHeaderHidden = false;
   let headerHeight = $header.outerHeight();
@@ -94,9 +96,9 @@ jQuery(function ($) {
   $(window).on("scroll", handleScroll);
   handleResize();
 
-  /**
+  /*********************************************
    * ToTop
-   */
+   ********************************************/
   const totop = $("#js-totop").hide();
 
   $(window).scroll(function () {
@@ -108,11 +110,12 @@ jQuery(function ($) {
     return false;
   });
 
-  /**
+  /*********************************************
    * slick
-   */
-  if ($(".js-mvSlide").length) {
-    $(".js-mvSlide").slick({
+   ********************************************/
+  const jsMvSlide = $(".js-mvSlide");
+  if (jsMvSlide.length) {
+    jsMvSlide.slick({
       fade: true,
       autoplay: true,
       autoplaySpeed: 6000,
@@ -124,9 +127,9 @@ jQuery(function ($) {
     });
   }
 
-  /**
+  /*********************************************
    * 多言語翻訳
-   */
+   ********************************************/
   if ($("#google_translate_element").length) {
     function googleTranslateElementInit() {
       try {
@@ -252,9 +255,9 @@ jQuery(function ($) {
     window.manualRetry = manualRetry;
   }
 
-  /**
+  /*********************************************
    * イメージモーダル
-   */
+   ********************************************/
   if ($(".item-image").length) {
     const $modal = $("#imgModal");
     const $img = $("#imgModal img");

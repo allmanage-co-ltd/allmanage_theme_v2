@@ -10,9 +10,10 @@ use App\CMS\Admin\EditMenuClient;
 use App\CMS\Admin\RegisterOptionPage;
 use App\CMS\Admin\RegisterPostType;
 use App\CMS\Admin\RegisterTaxonomy;
-use App\CMS\Plugins\AdvancedCustomFields;
+use App\CMS\Plugins\Acf;
 use App\CMS\Plugins\MwWpForm;
 use App\CMS\Plugins\Welcart;
+// use App\CMS\Plugins\WpMembers;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
@@ -40,8 +41,9 @@ class App
         (new RegisterOptionPage)->boot();
         (new EditMenuAdmin())->boot();
         (new EditMenuClient())->boot();
-        (new AdvancedCustomFields())->boot();
+        (new Acf())->boot();
         (new MwWpForm())->boot();
         (new Welcart())->boot();
+        // (new WpMembers())->boot();
     }
 }

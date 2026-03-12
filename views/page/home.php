@@ -36,8 +36,6 @@ if (is_local()) {
 
     // http_sess()->set('allmanage', 'hoge');
     // http_sess()->debug();
-
-    // pdf_writer(['key' => 'hoge'], 'sample.php', 'sample', false);
 }
 ?>
 
