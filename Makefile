@@ -23,5 +23,5 @@ rector:
 	$(PHP) vendor/bin/rector process --dry-run >  storage/logs/rector.log || true
 
 .PHONY: rector-fix
-rector:
-	$(PHP) vendor/bin/rector process --dry-run >  storage/logs/rector-fix.log || true
+rector-fix:
+	$(PHP) vendor/bin/rector process >  storage/logs/rector-fix.log || true

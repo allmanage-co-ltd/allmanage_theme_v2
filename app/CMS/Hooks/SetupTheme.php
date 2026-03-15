@@ -100,25 +100,6 @@ class SetupTheme extends Hook
     }
 
     /**
-     * デフォルト投稿（ID 1,2,3）をゴミ箱へ移動
-     */
-    public function trashDefaultPosts(): void
-    {
-        $post_ids = [1, 2, 3];
-
-        foreach ($post_ids as $post_id) {
-            $post = get_post($post_id);
-            if (!$post) {
-                continue;
-            }
-
-            if ($post->post_status !== 'trash') {
-                wp_trash_post($post_id);
-            }
-        }
-    }
-
-    /**
      * カスタム投稿タイプのスラッグをpost_idに固定
      */
     function save_costom_post_slug($post_id, $post, $update)
@@ -171,5 +152,24 @@ class SetupTheme extends Hook
     public function customExcerptMore($more)
     {
         return '...';
+    }
+
+    /**
+     * デフォルト投稿（ID 1,2,3）をゴミ箱へ移動
+     */
+    public function trashDefaultPosts(): void
+    {
+        $post_ids = [1, 2, 3];
+
+        foreach ($post_ids as $post_id) {
+            $post = get_post($post_id);
+            if (!$post) {
+                continue;
+            }
+
+            if ($post->post_status !== 'trash') {
+                wp_trash_post($post_id);
+            }
+        }
     }
 }

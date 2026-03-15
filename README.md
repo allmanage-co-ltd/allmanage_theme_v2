@@ -111,7 +111,7 @@
 
 ## Composerについて
 
-Composer 環境でで構成されていますので、本番、テストに関わらず、テーマを動かすには`Conposer`環境及び`composer install`でインストールされる依存ライブラリ`vendor`の配置が**必須**です。
+Composer 環境でで構成されていますので、本番、テストに関わらず、テーマを動かすには`Composer`環境および`composer install`でインストールされる依存ライブラリ`vendor`の配置が**必須**です。
 
 テーマ直下に`vendor`がなければテーマが動きませんが、git 管理の許容範囲かつ、着手ハードルを下げるため、`vendor`も git 管理に含めており、クローンもしくは zip で展開した段階から動くようになっています。
 
@@ -119,7 +119,7 @@ Composer 環境でで構成されていますので、本番、テストに関�
 >
 > 引用は関係ない参考記事：https://qiita.com/akira-hagi/items/553da1e122f7c300d6ac
 
-> omposer とは、特定のコマンドを打つだけで PHP のライブラリがインストールできる PHP のパッケージ管理ツールです。
+> Composer とは、特定のコマンドを打つだけで PHP のライブラリがインストールできる PHP のパッケージ管理ツールです。
 > 有名な HTTP クライアントの`Guzzle`や、メール送信ライブラリの`PHPMailer`を簡単に導入できます。
 
 > その他にも、ショートカットコマンドの登録や、PHP クラスのオートロード、ファイルのグローバル読み込みなど便利に使えます。
@@ -128,7 +128,7 @@ Composer 環境でで構成されていますので、本番、テストに関�
 [https://kinsta.com/jp/blog/install-composer/](https://kinsta.com/jp/blog/install-composer/)
 
 ```sh
-# conposerインストール後にテーマ直下のディレクトリで
+# Composerインストール後にテーマ直下のディレクトリで
 # シェルで書きコマンドを叩き依存関係をインストールします。
 # 問題なくインストールできればテーマが稼働します。
 composer install
@@ -144,7 +144,7 @@ composer run analyse      # PHPStan
 composer run rector       # Rector (実行せず結果を確認)
 
 # PHPバージョンアップ時のソースコード自動修正
-composer run rector:fix   # Rector （実行）
+composer run rector-fix   # Rector （実行）
 
 # Pestで書いたテストファイルを実行する
 composer test

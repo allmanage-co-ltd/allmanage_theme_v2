@@ -32,3 +32,9 @@
 これまでは`include.scss`一枚で済んでいましたが、弊社含め3人以上で制作に携わる機会が多くなってきましたので、ファイルもしくはフォルダ分割することにします。
 
 複数人で同時期に作業することが多く、gitの取入れも不完全なため、苦肉の策で人名を使いますが、屋号などでも問題ないです。
+
+
+## コンパイル設定の注意
+
+`include.scss` を使う場合は、`.vscode/settings.json` の `liveSassCompile.settings.includeItems` で`/assets/scss/include.scss` のコメントアウトを外してください。
+（現状の初期設定では `style.scss` のみがコンパイル対象です）
