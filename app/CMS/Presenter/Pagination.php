@@ -27,7 +27,9 @@ class Pagination
      */
     public function __construct(
         WP_Query $query,
-        private readonly int $range = 5
+        private readonly int $range = 5,
+        private readonly string $prev_text = '←',
+        private readonly string $next_text = '→',
     ) {
         $this->paged = max(1, (int) ($query->get('paged') ?: 1));
         $this->pages = (int) ($query->max_num_pages ?: 1);
@@ -48,14 +50,14 @@ class Pagination
         [$start, $end] = $this->calculateRange();
 
         echo <<<HTML
-<div class="wp-pager">
-  <ul class="wp-pager__list">
-    <li class="wp-pager__item -first">{$this->prev()}</li>
-    {$this->pageLinks($start, $end)}
-    <li class="wp-pager__item -last">{$this->next()}</li>
-  </ul>
-</div>
-HTML;
+        <div class="wp-pager">
+            <ul class="wp-pager__list">
+                <li class="wp-pager__item -first">{$this->prev()}</li>
+                {$this->pageLinks($start,$end)}
+                <li class="wp-pager__item -last">{$this->next()}</li>
+            </ul>
+        </div>
+        HTML;
     }
 
     /**
@@ -95,7 +97,7 @@ HTML;
 
         return <<<HTML
 <a href="{$this->link($this->paged - 1)}" class="prev page-numbers">
-  ←
+  {$this->prev_text}
 </a>
 HTML;
     }
@@ -113,7 +115,7 @@ HTML;
 
         return <<<HTML
 <a href="{$this->link($this->paged + 1)}" class="next page-numbers">
-  →
+  {$this->next_text}
 </a>
 HTML;
     }

@@ -15,9 +15,7 @@ $name = config('seo.name');
         </div>
     </div>
 
-    <div class="c-inner">
-        <?php the_breadcrumb() ?>
-    </div>
+    <?php the_breadcrumb() ?>
 
     <div class="l-content -under">
         <section class="">

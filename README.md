@@ -1,26 +1,28 @@
 # allmanage_theme_v2
 
-**日々更新していきますので、必ず、案件ごとに新しく git clone もしくは zip を落として使用してください。**
+- **日々更新していきますので、必ず、案件ごとに新しく git clone もしくは zip を落として使用してください。**
 
-この README は、全体像や基本ルール、動作環境等を把握するために必ず一読してください。
+- **この README は、全体像や基本ルール、動作環境等を把握するために必ず一読し、各ディレクトリの README も必ず一読してから実装に入ってください。**
 
-また、各ディレクトリの README も必ず一読してから実装に入ってください。
+- **テーマの変更履歴は`VERSION.md`に記載しています**
 
-※コメントは 80%ほど AI に書いてもらってから修正していますので、一部おかしい部分があるかもしれません。違和感のあるコメントは指摘してください。
+- **※コメントは 80%ほど AI に書いてもらっていますので、一部おかしい部分があるかもしれません。違和感のあるコメントはご指摘ください。**
 
-### 対応バージョン
+## テーマドキュメント一覧
 
-PHP：8.3+
-
-Wordpress：6.1+
+- [テーマについて（本ドキュメント）](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/README.md)
+- [テーマ変更履歴](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/VERSION.md)
+- [VIEWSの記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/views/README.md)
+- [SASSの記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
+- [appディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
+- [CMSディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/CMS/README.md)
+- [Supportディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/Support/README.md)
+- [UseCaseディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/UseCase/README.md)
 
 ## テーマの方針
 
-- このテーマをこねくり回して社内の資産として蓄積し、今後関わるエンジニアが楽できるようにしたい
-- 何がどこにあるかわからない煩雑なテーマを辞めて、見るべきディレクトリを明確化することで社内外問わずスピード＆クオリティを高める
-- 見る必要のないコードを見なくてもコーディングできるようにする
-- ロジックには型やクラスを取り入れることで新機能の追加によるテーマ肥大化コストを減らしテーマを資産として蓄積する
-- 古い書き方を辞めてモダンな書き方に触れることで技術者が Laravel にもスイッチしやすくする
+- ドキュメントの整備と保守性の高いソースコードで、数年後に触るエンジニアが楽に修正できるようにする
+- 見る必要のないコードを見なくてもコーディングできるようにして、スピード＆クオリティを高める
 
 ## 運用ルール
 
@@ -51,17 +53,17 @@ Wordpress：6.1+
 ## ディレクトリ概要
 
 ```
-├─ app/                # PHP実装（CMS連携・サービス・ヘルパー）
+├─ app/                # PHP実装（CMS連携・基盤ロジック・ユースケース）
 ├─ assets/             # CSS / JS / 画像 / SCSS
-├─ bootstrap/          # 起動処理・グローバル関数
-├─ config/             # 各種設定（投稿タイプ、タクソノミー、URLなど）
-├─ views/              # page/single/archive/taxonomy/layout/component
+├─ bootstrap/          # CMS起動処理・グローバル関数
+├─ config/             # 各種設定（投稿タイプ、タクソノミー、パーマリンク、管理画面メニューなど）
+├─ views/              # page/single/archive/taxonomy/layout/componentの描画
 ├─ tests/              # ロジックのテスト用（Pest採用）
 ├─ functions.php       # テーマ起動エントリー（原則編集しない）
 └─ docker-compose.yaml # ローカル開発用WordPress環境
 ```
 
-### 開発時に主に触る場所
+## 開発時に主に触る場所
 
 - 画面表示を変更したい: `views/` と `assets/`
 - WP の挙動やフックを変更したい: `app/CMS/`
@@ -73,7 +75,41 @@ Wordpress：6.1+
   - 処理本体は `app/` の定説なクラスへ実装してください
   - テーマ直下の`functions.php` は編集しません
 
-### 動作環境について
+## 対応バージョン
+
+- PHP：8.0+
+
+- Wordpress：6.0+
+
+## Sass について
+
+基本は vscode プラグインの Live Sass Compailer を使用します。
+
+コンパイルのルール（入出力先）などは`./.vscode/settings.json`に記載してあるのでそのままコンパイルしていただければ問題ありません。
+
+## 推奨プラグインについて
+
+- `WPvivid Backup Plugin`
+
+  - バックアップ・データ移行
+
+- `Advanced Custom Fields Pro`
+
+  - 各種カスタムフィールド・オプションページ
+  - `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`
+
+- `XML Sitemap Generator for Google`
+
+  - サイトマップ生成
+
+- `Website LLMs.txt`
+
+  - AIO 対策のため導入
+
+- `MW WP Form`
+  - お問い合わせフォーム作成
+
+## Composerについて
 
 Composer 環境でで構成されていますので、本番、テストに関わらず、テーマを動かすには`Conposer`環境及び`composer install`でインストールされる依存ライブラリ`vendor`の配置が**必須**です。
 
@@ -98,31 +134,6 @@ Composer 環境でで構成されていますので、本番、テストに関�
 composer install
 ```
 
-### Docker での開発環境
-
-お使いの PC に Docker 及び Docker Desktop がインストール済みの場合、Local 等で開発環境をセットせずに 1 コマンドで Wordpress のセットアップが可能です。
-
-Wordpress => [http://localhost:8888](http://localhost:8888)
-
-PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
-
-```sh
-# 開発環境の起動
-docker compose up
-
-# 開発環境の中止
-docker compose stop
-
-```
-
-### Sass について
-
-基本は vscode プラグインの Live Sass Compailer を使用します。
-
-コンパイルのルール（入出力先）などは`./.vscode/settings.json`に記載してあるのでそのままコンパイルしていただければ問題ありません。
-
----
-
 ### よく使う Composer スクリプト
 
 ```bash
@@ -139,29 +150,22 @@ composer run rector:fix   # Rector （実行）
 composer test
 ```
 
----
+## Dockerについて
 
-### 推奨プラグインについて
+お使いの PC に Docker 及び Docker Desktop がインストール済みの場合、Local 等で開発環境をセットせずに 1 コマンドで Wordpress のセットアップが可能です。
 
-- `WPvivid Backup Plugin`
+Wordpress => [http://localhost:8888](http://localhost:8888)
 
-  - バックアップ・データ移行
+PhpMyAdmin => [http://localhost:8889](http://localhost:8889)
 
-- `Advanced Custom Fields Pro`
+```sh
+# 開発環境の起動
+docker compose up
 
-  - 各種カスタムフィールド・オプションページ
-  - `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`
+# 開発環境の中止
+docker compose stop
 
-- `XML Sitemap Generator for Google`
-
-  - サイトマップ生成
-
-- `Website LLMs.txt`
-
-  - AIO 対策のため導入
-
-- `MW WP Form`
-  - お問い合わせフォーム作成
+```
 
 ### 今後の展望
 

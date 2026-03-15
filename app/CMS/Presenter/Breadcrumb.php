@@ -30,10 +30,14 @@ class Breadcrumb
         $this->breadcrumb();
 
         echo <<<HTML
-  <ul class="l-breadcrumb_list">
-    {$this->implode()}
-  </ul>
-HTML;
+        <div class="l-breadcrumb">
+            <div class="c-inner">
+                <ul class="l-breadcrumb_list">
+                    {$this->implode()}
+                </ul>
+            </div>
+        </div>
+        HTML;
     }
 
     /**
@@ -67,9 +71,9 @@ HTML;
                 break;
 
             case is_date():
-                $year = get_query_var('year');
+                $year  = get_query_var('year');
                 $month = get_query_var('monthnum');
-                $day = get_query_var('day');
+                $day   = get_query_var('day');
 
                 if ($day) {
                     $this->items[] = '<li><a href="' . get_year_link($year) . '">' . $year . '年</a></li>';
@@ -84,7 +88,7 @@ HTML;
                 break;
 
             case is_category():
-                $cat = get_queried_object();
+                $cat   = get_queried_object();
                 $catId = $cat->parent
                     ? array_reverse(get_ancestors($cat->term_id, 'category'))[0]
                     : $cat->term_id;
@@ -144,7 +148,7 @@ HTML;
 
             case is_tax():
             case is_archive():
-                $term = get_queried_object();
+                $term     = get_queried_object();
                 $taxonomy = $term->taxonomy ?? null;
                 $postType = $taxonomy
                     ? get_taxonomy($taxonomy)->object_type[0]

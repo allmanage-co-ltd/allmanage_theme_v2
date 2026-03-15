@@ -8,7 +8,7 @@
                 </div>
                 <div class="l-gnavi__navi">
                     <?php
-                    // the_component('translate')
+                    // the_component('translate');
                     ?>
                     <ul class="l-gnavi__list">
                         <li class="l-gnavi__item">

@@ -20,6 +20,6 @@ class Shortcode extends Hook
         add_shortcode('home', 'home');
         add_shortcode('theme_uri', 'theme_uri');
         add_shortcode('theme_dir', 'theme_dir');
-        add_shortcode('img_dir', 'img_dir');
+        add_shortcode('img_uri', 'img_uri');
     }
 }

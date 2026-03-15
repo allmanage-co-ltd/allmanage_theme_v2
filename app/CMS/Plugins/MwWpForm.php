@@ -118,7 +118,7 @@ class MwWpForm extends Plugin
                 $Mail_raw->to      = '';
                 $Mail_raw->bcc     = '';
                 $Mail_raw->subject = '';
-            // no break
+                // no break
             default:
                 $Mail_raw->to      = '';
                 $Mail_raw->bcc     = '';
@@ -190,12 +190,18 @@ class MwWpForm extends Plugin
             'mail_content'          => <<<EOT
 {your_name}様
 
-この度は、お問い合わせいただきありがとうございます。
+この度は、お問い合わせいただき、ありがとうございます。
+こちらのメールは、お問い合わせいただいた時点で配信される自動返信メールとなっております。
+送信していただいた内容を確認し、担当者より改めてご連絡致します。
 
 {$input}
 
+このメールに心当たりの無い場合は、下記の連絡先までお問い合わせください。
+
 =================================
+
 {$profile['name']}
+
 =================================
 EOT,
 

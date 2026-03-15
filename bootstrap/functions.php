@@ -24,7 +24,7 @@
  * 使用する際は定義元のクラスメソッドをカスタムしてください。
  *
  * 使用例:
- *   $sample = get_acf_action( get_the_ID() )->sample();
+ *   $sample = get_acf_action( get_the_ID() )->handle();
  *   $sampe['acf_is_public'];
  *
  * カスタムフィールドが集約した配列が返ります。
@@ -70,7 +70,7 @@ function theme_dir(): string
  *
  * 本当はimg_uriにしたいが、過去テーマからの流用で慣れてるので一旦このまま
  */
-function img_dir(): string
+function img_uri(): string
 {
     return theme_uri() . '/assets/img';
 }
@@ -87,6 +87,28 @@ function img_dir(): string
 function wpquery(): \App\CMS\Wrapper\MyWpQuery
 {
     return \App\CMS\Wrapper\MyWpQuery::new();
+}
+
+/**
+ * 設定値取得
+ *
+ * 使用例:
+ *   echo config('seo.name');
+ */
+function config(string $key, $default = null)
+{
+    return \App\Support\Config::get($key, $default);
+}
+
+/**
+ * permalink 設定からURL取得
+ *
+ * 使用例:
+ *   echo url('news');
+ */
+function url(string $slug): string
+{
+    return \App\Support\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -117,28 +139,6 @@ function db(): \App\CMS\Wrapper\MyWpDb
 function datepicker(array $options = []): void
 {
     (new \App\CMS\Presenter\Datepicker($options))->boot();
-}
-
-/**
- * 設定値取得
- *
- * 使用例:
- *   echo config('seo.name');
- */
-function config(string $key, $default = null)
-{
-    return \App\Support\Config::get($key, $default);
-}
-
-/**
- * permalink 設定からURL取得
- *
- * 使用例:
- *   echo url('news');
- */
-function url(string $slug): string
-{
-    return \App\Support\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -259,10 +259,73 @@ function the_component(string $name, array $data = []): void
  *
  * 使用例:
  *   the_breadcrumb();
+ *
+ * <div class="l-breadcrumb">
+ *     <div class="c-inner">
+ *         <ul class="l-breadcrumb_list">
+ *             <li><a href="/">TOP</a></li>
+ *             <li><a href="/news">NEWS</a></li>
+ *         </ul>
+ *     </div>
+ * </div>
  */
 function the_breadcrumb(): void
 {
     (new \App\CMS\Presenter\Breadcrumb)->render();
+}
+
+/**
+ * ページネーション出力
+ *
+ * 使用例:
+ *   the_pagination($query, 3);
+ *
+ * 出力HTML:
+ *   <div class="wp-pager">
+ *     <ul class="wp-pager__list">
+ *       <li class="wp-pager__item -first">
+ *         <a href="https://example.com/page/2/" class="prev page-numbers">←</a>
+ *       </li>
+ *       <li class="wp-pager__item -current current">
+ *         <a href="https://example.com/page/3/" class="page-numbers">1</a>
+ *       </li>
+ *       <li class="wp-pager__item -last">
+ *         <a href="https://example.com/page/4/" class="next page-numbers">→</a>
+ *       </li>
+ *     </ul>
+ *   </div>
+ */
+function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
+{
+    (new \App\CMS\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
+}
+
+/**
+ * single.phpの記事ナビゲーションを出力
+ *
+ * 使用例:
+ *   the_postnavi( url('news'), 'NEWS一覧', '前の記事', '次の記事');
+ *
+ * 出力HTML:
+ *   <div class="wp-postnav">
+ *       <a href="https://example.com/news/12" class="wp-postnav__prev">
+ *           <span class="wp-postnav__txt">前の記事</span>
+ *       </a>
+ *       <a href="https://example.com/news/" class="wp-postnav__archive">
+ *           NEWS一覧
+ *       </a>
+ *       <a href="https://example.com/news/14" class="wp-postnav__next">
+ *           <span class="wp-postnav__txt">次の記事</span>
+ *       </a>
+ *   </div>
+ */
+function the_postnavi(
+    string $archive_url = '/news',
+    string $archive_text = '一覧へ戻る',
+    string $prev_text = '← 前へ',
+    string $next_text = '次へ →',
+): void {
+    (new \App\CMS\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -274,17 +337,4 @@ function the_breadcrumb(): void
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
     (new \App\CMS\Presenter\Cookie($days, $link))->render();
-}
-
-/**
- * ページネーション出力
- *
- * 吐き出すHTMLはwp_paginateと同じはず。。
- *
- * 使用例:
- *   the_pagination($query, 3);
- */
-function the_pagination(\WP_Query $query, int $range = 5): void
-{
-    (new \App\CMS\Presenter\Pagination($query, $range))->render();
 }

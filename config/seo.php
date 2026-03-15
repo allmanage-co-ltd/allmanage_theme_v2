@@ -14,12 +14,12 @@ return [
     'description'        => 'Allmanageテーマです',
     'keywords'           => '',
 
-    'logo'               => img_dir() . '/common/logo.svg',
-    'logo_white'         => img_dir() . '/common/logo_white.svg',
-    'logo_ft'            => img_dir() . '/common/logo_ft.png',
+    'logo'               => img_uri() . '/common/logo.svg',
+    'logo_white'         => img_uri() . '/common/logo_white.svg',
+    'logo_ft'            => img_uri() . '/common/logo_ft.png',
 
-    'favicon'            => img_dir() . '/common/favicon.png',
-    'ogp'                => img_dir() . '/common/ogp.jpg',
+    'favicon'            => img_uri() . '/common/favicon.png',
+    'ogp'                => img_uri() . '/common/ogp.jpg',
 
     'gtags'              => [
         // 'G-XXXXXXXX',

@@ -33,6 +33,7 @@
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
     "explorer.fileNesting.patterns": {
+        "README.md": "*.md",
         "composer.json": "composer.lock, phpstan.neon, phpunit.xml, rector.php",
         // "docker-compose.yaml": "Dockerfile, docker-compose.*.yml",
         // "Makefile": ".env*, .env.*",

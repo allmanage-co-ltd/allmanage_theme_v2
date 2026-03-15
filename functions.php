@@ -11,14 +11,10 @@ declare(strict_types=1);
  * ※このファイルは最重要なため編集しないでください。
  */
 
-//  Composerへの依存関係を読み込む
-if (file_exists(__DIR__ . '/vendor/autoload.php')) {
-    require_once __DIR__ . '/vendor/autoload.php';
-}
+// Composerへの依存関係を読み込む
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/bootstrap/app.php';
 
-if (file_exists(__DIR__ . '/bootstrap/app.php')) {
-    require_once __DIR__ . '/bootstrap/app.php';
-
-    // アプリケーションを起動
-    (new \App())->boot();
-}
+// アプリケーションを起動
+$app = new \App();
+$app->boot();
