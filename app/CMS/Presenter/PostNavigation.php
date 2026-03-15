@@ -3,14 +3,26 @@
 namespace App\CMS\Presenter;
 
 /**---------------------------------------------
- *
+ * 投稿ナビゲーション生成クラス
  * ---------------------------------------------
+ * - 単一投稿ページの前後ナビゲーションを生成する
+ * - WordPressの前後記事取得ロジックをテンプレートから分離する
+ * - 前の記事 / 一覧 / 次の記事リンクHTMLを生成する
  */
 class PostNavigation
 {
-    private $prev;
-    private $next;
+    // 前の記事
+    private readonly mixed $prev;
 
+    // 次の記事
+    private readonly mixed $next;
+
+    /**
+     * コンストラクタ
+     *
+     * - 前後の記事を取得する
+     * - ナビゲーション表示用のテキストを設定する
+     */
     public function __construct(
         private readonly string $archive_url,
         private readonly string $archive_text = '一覧へ戻る',
@@ -21,6 +33,13 @@ class PostNavigation
         $this->next = get_next_post();
     }
 
+    /**
+     * ナビゲーションHTML出力
+     *
+     * - 前後記事リンクを生成
+     * - 一覧ページリンクを生成
+     * - 前後記事が存在しない場合は該当リンクを出力しない
+     */
     public function render(): void
     {
         $prev_html = '';
@@ -30,8 +49,8 @@ class PostNavigation
             $url = get_permalink($this->prev);
 
             $prev_html = <<<HTML
-            <a href="{$url}" class="wp-postnav__prev">
-                <span class="wp-postnav__txt">{$this->prev_text}</span>
+            <a href="{$url}" class="wp-postnavi__prev">
+                <span class="wp-postnavi__txt">{$this->prev_text}</span>
             </a>
             HTML;
         }
@@ -40,17 +59,17 @@ class PostNavigation
             $url = get_permalink($this->next);
 
             $next_html = <<<HTML
-            <a href="{$url}" class="wp-postnav__next">
-                <span class="wp-postnav__txt">{$this->next_text}</span>
+            <a href="{$url}" class="wp-postnavi__next">
+                <span class="wp-postnavi__txt">{$this->next_text}</span>
             </a>
             HTML;
         }
 
         echo <<<HTML
-        <div class="wp-postnav">
+        <div class="wp-postnavi">
             {$prev_html}
 
-            <a href="{$this->archive_url}" class="wp-postnav__archive">
+            <a href="{$this->archive_url}" class="wp-postnavi__archive">
                 {$this->archive_text}
             </a>
 
