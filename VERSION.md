@@ -77,15 +77,15 @@ function the_postnavi(
 ```html
 <?php the_postnavi( url('news'), 'NEWS一覧', '前の記事', '次の記事'); ?>
 
-<div class="wp-postnav">
-    <a href="..." class="wp-postnav__prev">
-        <span class="wp-postnav__txt">前の記事</span>
+<div class="wp-postnavi">
+    <a href="..." class="wp-postnavi__prev">
+        <span class="wp-postnavi__txt">前の記事</span>
     </a>
-    <a href="..." class="wp-postnav__archive">
+    <a href="..." class="wp-postnavi__archive">
         NEWS一覧
     </a>
-    <a href="..." class="wp-postnav__next">
-        <span class="wp-postnav__txt">次の記事</span>
+    <a href="..." class="wp-postnavi__next">
+        <span class="wp-postnavi__txt">次の記事</span>
     </a>
 </div>
 ```
