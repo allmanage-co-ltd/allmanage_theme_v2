@@ -12,12 +12,12 @@
 
 - [テーマについて（本ドキュメント）](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/README.md)
 - [テーマ変更履歴](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/VERSION.md)
-- [VIEWSの記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/views/README.md)
-- [SASSの記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
-- [appディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
-- [CMSディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/CMS/README.md)
-- [Supportディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/Support/README.md)
-- [UseCaseディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/UseCase/README.md)
+- [VIEWS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/views/README.md)
+- [SASS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
+- [app ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
+- [CMS ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/CMS/README.md)
+- [Support ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/Support/README.md)
+- [UseCase ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/UseCase/README.md)
 
 ## テーマの方針
 
@@ -83,11 +83,21 @@
 
 ## Sass について
 
-基本は vscode プラグインの Live Sass Compailer を使用します。
+基本は vscode プラグインの Live Sass Compailer または、
+`Makefile`に定義したショートカットコマンドを利用して npx でコンパイルします。
 
-コンパイルのルール（入出力先）などは`./.vscode/settings.json`に記載してあるのでそのままコンパイルしていただければ問題ありません。
+どちらの方法でコンパイルしても構いません。
+
+```sh
+make dev type=style    # → style.scss をコンパイル監視
+make dev type=include  # → include.scss をコンパイル監視
+```
 
 ## 推奨プラグインについて
+
+- `MW WP Form`
+
+  - お問い合わせフォーム作成
 
 - `WPvivid Backup Plugin`
 
@@ -98,18 +108,19 @@
   - 各種カスタムフィールド・オプションページ
   - `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`
 
+- `All In One SEO`
+
+  - 主に AIO 対策を意識した SEO 対策として導入
+
 - `XML Sitemap Generator for Google`
 
-  - サイトマップ生成
+  - サイトマップ生成（`All In One SEO`有効時は不要）
 
 - `Website LLMs.txt`
 
-  - AIO 対策のため導入
+  - AIO 対策のため導入（`All In One SEO`有効時は不要）
 
-- `MW WP Form`
-  - お問い合わせフォーム作成
-
-## Composerについて
+## Composer について
 
 Composer 環境でで構成されていますので、本番、テストに関わらず、テーマを動かすには`Composer`環境および`composer install`でインストールされる依存ライブラリ`vendor`の配置が**必須**です。
 
@@ -150,7 +161,7 @@ composer run rector-fix   # Rector （実行）
 composer test
 ```
 
-## Dockerについて
+## Docker について
 
 お使いの PC に Docker 及び Docker Desktop がインストール済みの場合、Local 等で開発環境をセットせずに 1 コマンドで Wordpress のセットアップが可能です。
 

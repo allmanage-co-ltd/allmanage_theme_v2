@@ -26,7 +26,7 @@ class AccessLog extends Hook
      */
     public function log(): void
     {
-        if (Runtime::isBot()) {
+        if (Runtime::isBot() || Runtime::isLocal()) {
             return;
         }
 
