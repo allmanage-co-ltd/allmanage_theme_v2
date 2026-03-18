@@ -12,7 +12,7 @@ use App\CMS\Plugins\Acf;
  * - フック登録とカラム定義の追加はこのクラスに集約する
  * - カラム値の出力はサブクラスに委ねる
  */
-abstract class EditPostColumnsAbstract extends Admin
+abstract class AbstractEditPostColumns extends Admin
 {
     /**
      * 対象の投稿タイプスラッグを返す

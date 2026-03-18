@@ -2,27 +2,30 @@
 
 namespace App\UseCase;
 
-use App\CMS\Admin\EditPostColumnsAbstract;
+use App\CMS\Admin\AbstractEditPostColumns;
 
 /**---------------------------------------------
- * 管理画面カスタム投稿タイプのカラムを編集
+ * 管理画面 投稿一覧カラム編集
  * ---------------------------------------------
- * - 管理画面の投稿一覧に任意のカラムを追加する
- * - この EditNewsPostColumns は実装サンプルです。
- *   他投稿タイプは本ファイルを参考に別ファイルを作成してください。
- *   - app/UseCase/Edit{投稿タイプ名}PostColumns.php
+ * ※ このクラスはサンプルです。他の投稿タイプで使う場合は
+ *    このファイルをコピーして以下を変更してください
+ *    - ファイル名・クラス名: Edit{投稿タイプ名}PostColumns.php
+ *    - postType()・columns()・edit() の中身
  *
- * ※ bootstrap/app.php でインスタンス初期化必須
+ * ---------------------------------------------
+ * ■ 使い方
+ * ---------------------------------------------
+ * bootstrap/app.php でインスタンス化して boot() を呼ぶ:
  *
- *   (new Edit{投稿タイプ名}PostColumns())->boot();
+ *   (new \App\UseCase\Edit{投稿タイプ名}PostColumns())->boot();
  */
-final class EditNewsPostColumns extends EditPostColumnsAbstract
+final class EditNewsPostColumns extends AbstractEditPostColumns
 {
     /**
      * 対象の投稿タイプスラッグ
      *
      * - manage_{postType}_posts_columns フックに使用される
-     * - 投稿タイプのスラッグを返す（register_post_type で登録したもの）
+     * - 投稿タイプのスラッグを返す
      */
     protected function postType(): string
     {
@@ -66,13 +69,6 @@ final class EditNewsPostColumns extends EditPostColumnsAbstract
      * - $column が対象の field_key と一致する場合に値を出力する
      * - columns() で定義した field_key の数だけ if/match で処理を追加する
      * - ACFフィールドは get_field(field_key, post_id) で取得する
-     *
-     * 例（複数カラムの場合）:
-     *   match ($column) {
-     *       'acf_is_public' => print(get_field('acf_is_public', $post_id) ? '公開' : '非公開'),
-     *       'acf_priority'  => print(get_field('acf_priority', $post_id) ?: '−'),
-     *       default         => null,
-     *   };
      */
     public function edit($column, $post_id): void
     {

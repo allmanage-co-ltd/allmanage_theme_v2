@@ -11,7 +11,7 @@ use App\Support\Logger;
  * - ログの内容・条件・フックはサブクラスに委ねる
  * - フック登録とログ記録の責務はこのクラスに集約する
  */
-abstract class AccessLogAbstract extends Hook
+abstract class AbstractAccessLog extends Hook
 {
     /**
      * ログを記録するWordPressフックの一覧

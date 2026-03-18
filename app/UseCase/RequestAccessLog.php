@@ -2,7 +2,7 @@
 
 namespace App\UseCase;
 
-use App\CMS\Hooks\AccessLogAbstract;
+use App\CMS\Hooks\AbstractAccessLog;
 use App\Support\Runtime;
 
 /**---------------------------------------------
@@ -11,7 +11,7 @@ use App\Support\Runtime;
  * - フロント・管理画面両方のアクセスを記録する
  * - 案件や環境に応じて各メソッドを自由に変更してください
  */
-final class RequestAccessLog extends AccessLogAbstract
+final class RequestAccessLog extends AbstractAccessLog
 {
     /**
      * ログを無効にするランタイム条件

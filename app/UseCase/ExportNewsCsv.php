@@ -3,95 +3,102 @@
 namespace App\UseCase;
 
 use App\CMS\Wrapper\MyWpQuery;
-use App\Support\Csv;
+use App\Support\AbstractExportCsv;
 
 /**---------------------------------------------
  * News CSVエクスポート
  * ---------------------------------------------
- * - 管理画面から news 投稿一覧を CSV でダウンロードする
- * - 他の投稿タイプに使う場合はこのファイルをコピーして
- *   クラス名・filename・row_header・rows を変更してください
+ * ※ このクラスはサンプルです。他の投稿タイプで使う場合は
+ *    このファイルをコピーして以下を変更してください
+ *    - ファイル名・クラス名: Export{投稿タイプ名}Csv.php
+ *    - filename()・row_header()・row_data() の中身
  *
- * ■呼び出し例
- *   $export = new ExportNewsCsv();
- *   $export();
+ * ---------------------------------------------
+ * ■ 使い方（ExportNewsCsvの場合）
+ * ---------------------------------------------
+ * app ディレクトリ内から呼ぶ場合:
+ *
+ *   use App\UseCase\ExportNewsCsv;
+ *
+ *   $exporter = new ExportNewsCsv();
+ *   $exporter->handle();   // ダウンロード
+ *   $exporter->toArray();  // 配列で取得
+ *   $exporter->debug();    // デバッグ（useDebug() が true の場合のみ）
+ *
+ * テンプレートから呼ぶ場合は名前空間の関係で中間関数が必要です
+ * bootstrap/functions.php に定義してください:
+ *
+ *   function news_csv_exporter(): \App\UseCase\ExportNewsCsv
+ *   {
+ *       return new \App\UseCase\ExportNewsCsv();
+ *   }
+ *
+ * テンプレート側:
+ *
+ *   <?php news_csv_exporter()->handle(); ?>   // ダウンロード
+ *   <?php news_csv_exporter()->toArray(); ?>  // 配列で取得
+ *   <?php news_csv_exporter()->debug(); ?>    // デバッグ（useDebug() が true の場合のみ）
  */
-final class ExportNewsCsv
+final class ExportNewsCsv extends AbstractExportCsv
 {
-    // ダウンロード時のファイル名（.csv は自動付与）
-    private readonly string $filename;
-
-    public function __construct()
-    {
-        $this->filename = 'news';
-    }
-
     /**
-     * CSVをダウンロード出力する
-     *
-     * - Content-Type と Content-Disposition を設定してブラウザにダウンロードさせる
-     * - BOM付きUTF-8で出力するのでExcelでも文字化けしない
-     * - write() 後は必ず exit すること（WordPress の後続処理を止めるため）
+     * ダウンロード時のファイル名
      */
-    public function __invoke(): void
+    protected function filename(): string
     {
-        $rows = $this->rows();
-
-        header('Content-Type: text/csv; charset=UTF-8');
-        header("Content-Disposition: attachment; filename={$this->filename}.csv");
-
-        (new Csv(withBom: true))->write($rows);
-        exit;
+        return 'news';
     }
 
     /**
      * CSVのヘッダー行
-     *
-     * - 1次元配列で返す
-     * - 出力したいカラムに合わせて変更する
+     * - row_data() の配列順と合わせること
      */
-    private function row_headers(): array
+    protected function row_header(): array
     {
         return [
             'ID',
             'タイトル',
             '本文',
-            '公開日'
+            '公開日',
+            '公開状態'
         ];
     }
 
     /**
-     * CSVの全行データを組み立ててる
-     *
-     * - 1行目はヘッダー行（row_headers() の返り値）
-     * - 2行目以降は投稿データ（WP_Query で取得した投稿を1行1投稿で追加）
-     *
-     * ※ row_headers() のカラム順と foreach 内の配列の順番を必ず合わせること
-     *   例: row_headers() が ['ID', 'タイトル', '公開日'] なら
-     *       $rows[] = [$post->ID, $post->post_title, $post->post_date]
-     *
-     * ※ ACFフィールドを出力する場合は get_field() を使う
-     *   例: $rows[] = [$post->ID, get_field('my_field', $post->ID)]
+     * CSVのデータ行
+     * - news 投稿を全件取得して2次元配列で返す
+     * - ACFフィールドを出力する場合は get_field('field_key', $post->ID) を使う
      */
-    private function rows(): array
+    protected function row_data(): array
     {
-        $rows = [$this->row_headers()];
-
         $query = MyWpQuery::new()
             ->setPostType('news')
             ->setPerPage(-1)
             ->setOrderByDate()
             ->build();
 
+        $rows = [];
         foreach ($query->posts as $post) {
+            $acf    = (new GetAcfFields($post->ID))->news();
             $rows[] = [
                 $post->ID,
                 $post->post_title,
                 $post->post_content,
                 $post->post_date,
+                $acf['acf_is_public'],
             ];
         }
-
         return $rows;
+    }
+
+    /**
+     * デバッグの有効化
+     *
+     * trueの場合、中身の配列をデバッグ表示可能なdebug()メソッドが呼べるようになる
+     * デバッグのタイミング以外は念のため必ずfalseにすること
+     */
+    protected function useDebug(): bool
+    {
+        return false;
     }
 }
