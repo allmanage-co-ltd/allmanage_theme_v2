@@ -1,6 +1,5 @@
 <?php
 
-use App\CMS\Hooks\AccessLog;
 use App\CMS\Hooks\Enqueue;
 use App\CMS\Hooks\SetupTheme;
 use App\CMS\Hooks\Shortcode;
@@ -13,6 +12,9 @@ use App\CMS\Admin\RegisterTaxonomy;
 use App\CMS\Plugins\Acf;
 use App\CMS\Plugins\MwWpForm;
 use App\CMS\Plugins\Welcart;
+use App\UseCase\RequestAccessLog;
+use App\UseCase\EditNewsPostColumns;
+
 // use App\CMS\Plugins\WpMembers;
 
 /**---------------------------------------------
@@ -33,7 +35,6 @@ class App
     {
         (new SetupTheme())->boot();
         (new Shortcode())->boot();
-        (new AccessLog())->boot();
         (new Enqueue())->boot();
         (new Seo())->boot();
         (new RegisterPostType())->boot();
@@ -45,5 +46,8 @@ class App
         (new MwWpForm())->boot();
         (new Welcart())->boot();
         // (new WpMembers())->boot();
+
+        (new RequestAccessLog())->boot();
+        (new EditNewsPostColumns())->boot();
     }
 }

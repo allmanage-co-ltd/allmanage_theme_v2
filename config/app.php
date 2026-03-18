@@ -4,14 +4,10 @@ return [
     /**-----------------------------------
      * アプリケーション設定等
      *----------------------------------*/
-    'root'           => __DIR__ . '/..',
-
-    // ログファイルの出力先
-    'log'            => '/storage/logs/app.log',
-    'access_log_dir' => '/storage/logs/access/',
+    'root'    => __DIR__ . '/..',
 
     // 実行環境判定
-    'runtime'        => [
+    'runtime' => [
         'local'  => [
             'localhost',
             '127.0.0.1',

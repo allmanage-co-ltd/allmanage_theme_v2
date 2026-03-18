@@ -14,14 +14,12 @@ use App\Support\Config;
  */
 class EditMenuClient extends Admin
 {
-    private $hidden_client_menus;
     private $visible_custom_menus;
     private $opts;
 
     public function __construct()
     {
         $config                     = Config::get('menu.client_menu');
-        $this->hidden_client_menus  = $config['hidden'];
         $this->visible_custom_menus = $config['visible'];
         $this->opts                 = $config['default_option'];
     }
@@ -61,20 +59,18 @@ class EditMenuClient extends Admin
      */
     public function removeMenusForEditor()
     {
-        $hidden_menus  = $this->hidden_client_menus;
-        $visible_menus = $this->visible_custom_menus;
+        // 表示するメニューを組み立てる
+        $keep_menus = [];
 
-        // カスタム投稿タイプのメニューを許可対象に追加
-        if (!empty($visible_menus['post_type'])) {
-            foreach ($visible_menus['post_type'] as $post_type) {
-                $hidden_menus[] = 'edit.php?post_type=' . $post_type;
+        if (!empty($this->visible_custom_menus['post_type'])) {
+            foreach ($this->visible_custom_menus['post_type'] as $post_type) {
+                $keep_menus[] = 'edit.php?post_type=' . $post_type;
             }
         }
 
-        // オプションページのメニューを許可対象に追加
-        if (!empty($visible_menus['option'])) {
-            foreach ($visible_menus['option'] as $option_page) {
-                $hidden_menus[] = $option_page;
+        if (!empty($this->visible_custom_menus['option'])) {
+            foreach ($this->visible_custom_menus['option'] as $option_page) {
+                $keep_menus[] = $option_page;
             }
         }
 
@@ -82,12 +78,11 @@ class EditMenuClient extends Admin
 
         foreach ($menu as $value) {
             $menu_slug = $value[2];
-            $keep      = in_array($menu_slug, $hidden_menus);
+            $keep      = in_array($menu_slug, $keep_menus);
 
-            // サブメニューに許可項目がある場合は保持する
             if (!$keep && !empty($GLOBALS['submenu'][$menu_slug])) {
                 foreach ($GLOBALS['submenu'][$menu_slug] as $submenu_item) {
-                    if (in_array($submenu_item[2], $hidden_menus)) {
+                    if (in_array($submenu_item[2], $keep_menus)) {
                         $keep = true;
                         break;
                     }

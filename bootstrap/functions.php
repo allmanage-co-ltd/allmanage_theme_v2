@@ -24,15 +24,15 @@
  * 使用する際は定義元のクラスメソッドをカスタムしてください。
  *
  * 使用例:
- *   $sample = get_acf_action( get_the_ID() )->handle();
+ *   $sample = get_acf( get_the_ID() )->handle();
  *   $sampe['acf_is_public'];
  *
  * カスタムフィールドが集約した配列が返ります。
  * 配列のキーはそのままカスタムフィールドのキーです。
  */
-function get_acf_action(int $post_id): \App\UseCase\GetAcfAction
+function get_acf(int $post_id): \App\UseCase\GetAcfFields
 {
-    return new \App\UseCase\GetAcfAction($post_id);
+    return new \App\UseCase\GetAcfFields($post_id);
 }
 
 /**---------------------------------------------

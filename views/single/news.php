@@ -1,7 +1,7 @@
 <?php
 $post_id  = get_the_ID();
 $news_cat = get_the_terms($post_id, 'news_cat');
-$sample_fields = get_acf_action($post_id)->handle();
+$sample_fields = get_acf($post_id)->news();
 d($sample_fields);
 ?>
 

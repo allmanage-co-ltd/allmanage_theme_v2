@@ -2,7 +2,6 @@
 
 namespace App\Support;
 
-use App\Support\Path;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonoLogger;
 
@@ -19,28 +18,11 @@ class Logger
     private static ?MonoLogger $access = null;
 
     /**
-     * アプリログ
+     * アプリログ（日別）
      */
     public static function app(): MonoLogger
     {
-        if (self::$app !== null) {
-            return self::$app;
-        }
-
-        $file = Path::root() . Config::get('app.log');
-
-        self::$app = new MonoLogger(
-            'app',
-            [],
-            [],
-            new \DateTimeZone('Asia/Tokyo')
-        );
-
-        self::$app->pushHandler(
-            new StreamHandler($file, MonoLogger::INFO)
-        );
-
-        return self::$app;
+        return self::$app ??= self::createLogger('app', 'logger.use_app_log', 'logger.app_log_dir');
     }
 
     /**
@@ -48,29 +30,39 @@ class Logger
      */
     public static function access(): MonoLogger
     {
-        if (self::$access !== null) {
-            return self::$access;
+        return self::$access ??= self::createLogger('access', 'logger.use_access_log', 'logger.access_log_dir');
+    }
+
+    /**
+     * エラーログ（日別）
+     */
+    // public static function error(): MonoLogger
+    // {
+    //     return self::$access ??= self::createLogger('error', 'logger.use_error_log', 'logger.error_log_dir');
+    // }
+
+    /**
+     * Monolog インスタンスを生成する
+     *
+     * - configのフラグが false の場合はインスタンスを生成しない
+     * - ログディレクトリが存在しない場合は作成する
+     */
+    private static function createLogger(string $channel, string $config_use, string $config_dir): ?MonoLogger
+    {
+        if (!Config::get($config_use)) {
+            return null;
         }
 
-        $dir = Path::root() . Config::get('app.access_log_dir');
+        $dir = Path::root() . Config::get($config_dir);
 
         if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
-            throw new \RuntimeException("アクセスログのディレクトリ作成に失敗しました: {$dir}");
+            throw new \RuntimeException("ログのディレクトリ作成に失敗しました: {$dir}");
         }
 
-        $file = $dir . '/' . date('Y-m-d') . '.log';
+        $file   = $dir . '/' . date('Y-m-d') . '.log';
+        $logger = new MonoLogger($channel, [], [], new \DateTimeZone('Asia/Tokyo'));
+        $logger->pushHandler(new StreamHandler($file, MonoLogger::INFO));
 
-        self::$access = new MonoLogger(
-            'access',
-            [],
-            [],
-            new \DateTimeZone('Asia/Tokyo')
-        );
-
-        self::$access->pushHandler(
-            new StreamHandler($file, MonoLogger::INFO)
-        );
-
-        return self::$access;
+        return $logger;
     }
 }
