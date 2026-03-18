@@ -94,6 +94,10 @@ class Csv
             if (fputcsv($fp, $row, $this->delimiter, $this->enclosure, $this->escape) === false) {
                 throw new RuntimeException("Csv書き込みに失敗しました");
             }
+
+            if ($this->path === 'php://output') {
+                fflush($fp);
+            }
         }
 
         fclose($fp);

@@ -8,25 +8,41 @@ use App\Support\AbstractExportCsv;
 /**---------------------------------------------
  * News CSVエクスポート
  * ---------------------------------------------
- * ※ このクラスはサンプルです。他の投稿タイプで使う場合は
- *    このファイルをコピーして以下を変更してください
- *    - ファイル名・クラス名: Export{投稿タイプ名}Csv.php
- *    - filename()・row_header()・row_data() の中身
+ * このクラスはNewsカスタム投稿を題材にした実装見本です。
+ * 他の投稿タイプの実装はこのファイルを複製して各種適切に変更してください
  *
  * ---------------------------------------------
- * ■ 使い方（ExportNewsCsvの場合）
+ * ■ エクスポート実行方法
+ * ---------------------------------------------
+ * URLアクセス: config/csv.phpへのクラス文字列登録必須
+ *
+ *   ?export=news
+ *
+ * ※ config/csv.php の 'exporter' に必ずクラス文字列を登録してください。
+ *
+ *   'exporter' => [
+ *       \App\UseCase\ExportNewsCsv::class,
+ *   ]
+ *
+ * → exporterにクラスを登録するとHook側でクエリパラメータを判定し、
+ *   filename() と一致する エクスポートクラスの handle() が実行される
+ *
+ * ---------------------------------------------
+ * ■ 直接実行（開発・デバッグ用）
  * ---------------------------------------------
  * app ディレクトリ内から呼ぶ場合:
  *
  *   use App\UseCase\ExportNewsCsv;
  *
  *   $exporter = new ExportNewsCsv();
- *   $exporter->handle();   // ダウンロード
- *   $exporter->toArray();  // 配列で取得
- *   $exporter->debug();    // デバッグ（useDebug() が true の場合のみ）
+ *   $exporter->handle();   // 関数でCSVダウンロード実行
+ *   $exporter->toArray();  // 配列でデータ取得
+ *   $exporter->debug();    // デバッグ
  *
- * テンプレートから呼ぶ場合は名前空間の関係で中間関数が必要です
- * bootstrap/functions.php に定義してください:
+ * ---------------------------------------------
+ * ■ テンプレートから実行する場合
+ * ---------------------------------------------
+ * bootstrap/functions.php に中間関数を定義:
  *
  *   function news_csv_exporter(): \App\UseCase\ExportNewsCsv
  *   {
@@ -35,25 +51,32 @@ use App\Support\AbstractExportCsv;
  *
  * テンプレート側:
  *
- *   <?php news_csv_exporter()->handle(); ?>   // ダウンロード
- *   <?php news_csv_exporter()->toArray(); ?>  // 配列で取得
- *   <?php news_csv_exporter()->debug(); ?>    // デバッグ（useDebug() が true の場合のみ）
+ *   <?php news_csv_exporter()->handle(); ?>
+ *
+ * ※ handle() 実行後は exit されるため、それ以降のHTMLは出力されない
  */
 final class ExportNewsCsv extends AbstractExportCsv
 {
     /**
-     * ダウンロード時のファイル名
+     * カスタム投稿のスラッグを指定
+     *
+     * - Hook側で key() を通じて参照される
+     * - ?export=news の "news" に対応する
+     * - ファイル名のベースとして使用される
      */
-    protected function filename(): string
+    protected function postType(): string
     {
+        // URL : ?export=news
+        // FILE: export_news_20260318124530.csv
         return 'news';
     }
 
     /**
      * CSVのヘッダー行
-     * - row_data() の配列順と合わせること
+     *
+     * - data() の配列順と合わせること
      */
-    protected function row_header(): array
+    protected function header(): array
     {
         return [
             'ID',
@@ -66,10 +89,12 @@ final class ExportNewsCsv extends AbstractExportCsv
 
     /**
      * CSVのデータ行
-     * - news 投稿を全件取得して2次元配列で返す
-     * - ACFフィールドを出力する場合は get_field('field_key', $post->ID) を使う
+     *
+     * - news 投稿を全件取得して逐次返却する
+     * - yield を使用することでメモリ使用量を抑える
+     * - ACF含めカスタムフィールドも取得可能
      */
-    protected function row_data(): array
+    protected function data(): iterable
     {
         $query = MyWpQuery::new()
             ->setPostType('news')
@@ -77,28 +102,16 @@ final class ExportNewsCsv extends AbstractExportCsv
             ->setOrderByDate()
             ->build();
 
-        $rows = [];
         foreach ($query->posts as $post) {
-            $acf    = (new GetAcfFields($post->ID))->news();
-            $rows[] = [
+            $acf = (new GetAcfFields($post->ID))->news();
+
+            yield [
                 $post->ID,
                 $post->post_title,
                 $post->post_content,
-                $post->post_date,
-                $acf['acf_is_public'],
+                get_the_date('Y-m-d H:i:s', $post),
+                $acf['acf_is_public'] ?? '',
             ];
         }
-        return $rows;
-    }
-
-    /**
-     * デバッグの有効化
-     *
-     * trueの場合、中身の配列をデバッグ表示可能なdebug()メソッドが呼べるようになる
-     * デバッグのタイミング以外は念のため必ずfalseにすること
-     */
-    protected function useDebug(): bool
-    {
-        return false;
     }
 }

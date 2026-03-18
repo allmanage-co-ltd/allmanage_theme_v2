@@ -17,30 +17,25 @@ abstract class AbstractExportCsv
      * - .csv は自動付与されるので不要
      * - 例: 'news', 'onsale'
      */
-    abstract protected function filename(): string;
+    abstract protected function postType(): string;
 
     /**
      * CSVのヘッダー行
      *
      * - 1次元配列で返す
-     * - row_data() の各行と順番を合わせること
+     * - data() の各行と順番を合わせること
      * - 例: ['ID', 'タイトル', '公開日']
      */
-    abstract protected function row_header(): array;
+    abstract protected function header(): array;
 
     /**
      * CSVのデータ行
      *
      * - 2次元配列で返す（1要素が1行）
-     * - row_headers() のカラム順と合わせること
+     * - header() のカラム順と合わせること
      * - 例: [[$post->ID, $post->post_title, $post->post_date], ...]
      */
-    abstract protected function row_data(): array;
-
-    /**
-     * デバッグの有効化
-     */
-    abstract protected function useDebug(): bool;
+    abstract protected function data(): iterable;
 
     /**
      * 配列で取得
@@ -58,12 +53,20 @@ abstract class AbstractExportCsv
      */
     public function debug(): void
     {
-        if (!$this->useDebug()) {
-            return;
-        }
-
+        echo '<pre style="margin-top: 150px;">';
         d($this->toArray());
+        echo '</pre>';
         exit;
+    }
+
+    /**
+     * エクスポートキーを取得
+     *
+     * - URLクエリ (?export=xxx) と一致判定に使用する
+     */
+    public function key(): string
+    {
+        return $this->postType();
     }
 
     /**
@@ -75,20 +78,44 @@ abstract class AbstractExportCsv
      */
     public function handle(): void
     {
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+
+        $export_file_name = 'export_' . $this->postType() . '_' . date('YmdHis', time());
+
         header('Content-Type: text/csv; charset=UTF-8');
-        header("Content-Disposition: attachment; filename={$this->filename()}.csv");
-        (new Csv(withBom: true))->write($this->rows());
+        header("Content-Disposition: attachment; filename={$export_file_name}.csv");
+
+        (new Csv(withBom: true))->write($this->stream());
+
         exit;
     }
 
     /**
      * ヘッダー行とデータ行を結合して返す
      *
-     * - 1行目: row_headers() の返り値
-     * - 2行目以降: row_data() の返り値をスプレッド展開
+     * - 1行目: headers() の返り値
+     * - 2行目以降: data() の返り値をスプレッド展開
      */
     private function rows(): array
     {
-        return [$this->row_header(), ...$this->row_data()];
+        return [$this->header(), ...$this->data()];
+    }
+
+    /**
+     * CSV出力用のストリームを生成する
+     *
+     * - 1行目に header() の返り値を出力
+     * - 2行目以降に data() の各行を1件ずつ出力
+     * - 配列に展開せず逐次処理することでメモリ使用量を抑える
+     */
+    private function stream(): iterable
+    {
+        yield $this->header();
+
+        foreach ($this->data() as $row) {
+            yield $row;
+        }
     }
 }

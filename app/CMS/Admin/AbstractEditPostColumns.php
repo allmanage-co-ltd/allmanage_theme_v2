@@ -29,7 +29,7 @@ abstract class AbstractEditPostColumns extends Admin
      * - true の場合、ACF が有効でなければフックを登録しない
      * - ACF 不要なカラムを追加する場合は false を返す
      */
-    abstract protected function hasAcf(): bool;
+    abstract protected function useAcf(): bool;
 
     /**
      * 追加するカラムの定義を返す
@@ -49,7 +49,7 @@ abstract class AbstractEditPostColumns extends Admin
     #[\Override]
     public function boot(): void
     {
-        if ($this->hasAcf() && !Acf::isActive()) {
+        if ($this->useAcf() && !Acf::isActive()) {
             return;
         }
 

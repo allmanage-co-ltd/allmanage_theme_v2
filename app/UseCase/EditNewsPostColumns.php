@@ -5,15 +5,13 @@ namespace App\UseCase;
 use App\CMS\Admin\AbstractEditPostColumns;
 
 /**---------------------------------------------
- * 管理画面 投稿一覧カラム編集
+ * 管理画面 News投稿一覧カラム編集
  * ---------------------------------------------
- * ※ このクラスはサンプルです。他の投稿タイプで使う場合は
- *    このファイルをコピーして以下を変更してください
- *    - ファイル名・クラス名: Edit{投稿タイプ名}PostColumns.php
- *    - postType()・columns()・edit() の中身
+ * このクラスはNewsカスタム投稿を題材にした実装見本です。
+ * 他の投稿タイプの実装はこのファイルを複製して各種適切に変更してください
  *
  * ---------------------------------------------
- * ■ 使い方
+ * ■ 有効化方法
  * ---------------------------------------------
  * bootstrap/app.php でインスタンス化して boot() を呼ぶ:
  *
@@ -25,7 +23,7 @@ final class EditNewsPostColumns extends AbstractEditPostColumns
      * 対象の投稿タイプスラッグ
      *
      * - manage_{postType}_posts_columns フックに使用される
-     * - 投稿タイプのスラッグを返す
+     * - カラムを編集したい投稿タイプのスラッグを返す
      */
     protected function postType(): string
     {
@@ -35,10 +33,9 @@ final class EditNewsPostColumns extends AbstractEditPostColumns
     /**
      * ACFフィールドを使用するかどうか
      *
-     * - true の場合、ACF が有効でなければフックを登録しない
-     * - カスタムフィールドを使わないカラムを追加する場合は false を返す
+     * - true の場合、ACF が有効でなければ処理をパスする
      */
-    protected function hasAcf(): bool
+    protected function useAcf(): bool
     {
         return true;
     }
@@ -53,7 +50,7 @@ final class EditNewsPostColumns extends AbstractEditPostColumns
      * 例:
      *   return [
      *       'acf_is_public' => '公開状況',
-     *       'acf_priority'  => '優先度',
+     *       '...'           => '...',
      *   ];
      */
     protected function columns(): array

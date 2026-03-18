@@ -1,6 +1,8 @@
 <?php
 
 use App\CMS\Hooks\Enqueue;
+use App\CMS\Hooks\ExportCsvHook;
+use App\CMS\Hooks\ImportCsvHook;
 use App\CMS\Hooks\SetupTheme;
 use App\CMS\Hooks\Shortcode;
 use App\CMS\Hooks\Seo;
@@ -37,6 +39,8 @@ class App
         (new Shortcode())->boot();
         (new Enqueue())->boot();
         (new Seo())->boot();
+        (new ExportCsvHook())->boot();
+        (new ImportCsvHook())->boot();
         (new RegisterPostType())->boot();
         (new RegisterTaxonomy())->boot();
         (new RegisterOptionPage)->boot();
