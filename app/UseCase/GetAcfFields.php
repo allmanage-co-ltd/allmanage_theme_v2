@@ -18,7 +18,8 @@ final class GetAcfFields
 {
     public function __construct(
         private readonly int $post_id,
-    ) {}
+    ) {
+    }
 
     /**
      * 複数のカスタム投稿があり、カスタム投稿それぞれにカスタムフィールドがある場合は、
@@ -35,6 +36,7 @@ final class GetAcfFields
         return Acf::getByKeys($this->post_id, [
             // 実際のフィールド名に置き換えてください。
             'acf_is_public',
+            'acf_price',
         ]);
     }
 }

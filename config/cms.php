@@ -41,7 +41,7 @@ return [
      *----------------------------------*/
     'option_pages' => [
         'csv-in-expoter' => [
-            'show'       => false,
+            'show'       => true,
             'page_title' => 'CSV',
             'menu_title' => 'CSV',
             'capability' => 'manage_options',

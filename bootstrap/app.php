@@ -39,8 +39,6 @@ class App
         (new Shortcode())->boot();
         (new Enqueue())->boot();
         (new Seo())->boot();
-        (new ExportCsvHook())->boot();
-        (new ImportCsvHook())->boot();
         (new RegisterPostType())->boot();
         (new RegisterTaxonomy())->boot();
         (new RegisterOptionPage)->boot();
@@ -50,6 +48,9 @@ class App
         (new MwWpForm())->boot();
         (new Welcart())->boot();
         // (new WpMembers())->boot();
+
+        (new ExportCsvHook())->boot();
+        (new ImportCsvHook())->boot();
 
         (new RequestAccessLog())->boot();
         (new EditNewsPostColumns())->boot();

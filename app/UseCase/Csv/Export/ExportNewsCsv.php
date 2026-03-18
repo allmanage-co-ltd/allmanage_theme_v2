@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UseCase;
+namespace App\UseCase\Csv\Export;
 
 use App\CMS\Wrapper\MyWpQuery;
-use App\Support\AbstractExportCsv;
+use App\UseCase\GetAcfFields;
 
 /**---------------------------------------------
  * News CSVエクスポート
@@ -16,7 +16,7 @@ use App\Support\AbstractExportCsv;
  * ---------------------------------------------
  * URLアクセス: config/csv.phpへのクラス文字列登録必須
  *
- *   ?export=news
+ *   <a href="?csv_export=news">CSVダウンロード</a>
  *
  * ※ config/csv.php の 'exporter' に必ずクラス文字列を登録してください。
  *
@@ -58,15 +58,27 @@ use App\Support\AbstractExportCsv;
 final class ExportNewsCsv extends AbstractExportCsv
 {
     /**
+     * 実行権限を持つユーザーロールを指定
+     *
+     * manage_options    : 管理者のみ
+     * edit_posts        : 編集者のみ
+     * edit_others_posts : 編集者以上
+     */
+    protected function auth(): bool
+    {
+        return current_user_can('edit_others_posts');
+    }
+
+    /**
      * カスタム投稿のスラッグを指定
      *
      * - Hook側で key() を通じて参照される
-     * - ?export=news の "news" に対応する
+     * - ?csv_export=news の "news" に対応する
      * - ファイル名のベースとして使用される
      */
     protected function postType(): string
     {
-        // URL : ?export=news
+        // URL : ?csv_export=news
         // FILE: export_news_20260318124530.csv
         return 'news';
     }
@@ -79,11 +91,15 @@ final class ExportNewsCsv extends AbstractExportCsv
     protected function header(): array
     {
         return [
-            'ID',
-            'タイトル',
-            '本文',
-            '公開日',
-            '公開状態'
+            'post_id',
+            'post_status',
+            'post_title',
+            'post_content',
+            'post_date',
+            'post_thumbnail',
+            'news_cat',
+            'acf_is_public',
+            'acf_price',
         ];
     }
 
@@ -104,14 +120,34 @@ final class ExportNewsCsv extends AbstractExportCsv
 
         foreach ($query->posts as $post) {
             $acf = (new GetAcfFields($post->ID))->news();
-
+            error_log(print_r(get_the_terms($post->ID, 'news_cat'), true));
             yield [
                 $post->ID,
+                $post->post_status,
                 $post->post_title,
                 $post->post_content,
                 get_the_date('Y-m-d H:i:s', $post),
+                get_the_post_thumbnail_url($post->ID),
+                $this->getTermSlugs($post->ID, 'news_cat'),
                 $acf['acf_is_public'] ?? '',
+                $acf['acf_price'] ?? '',
             ];
         }
+    }
+
+
+    private function getTermSlugs(int $post_id, string $taxonomy): string
+    {
+        if (!taxonomy_exists($taxonomy)) {
+            return '';
+        }
+
+        $terms = get_the_terms($post_id, $taxonomy);
+
+        if (is_wp_error($terms) || empty($terms)) {
+            return '';
+        }
+
+        return implode(',', array_map(fn($t) => $t->slug ?? '', $terms));
     }
 }

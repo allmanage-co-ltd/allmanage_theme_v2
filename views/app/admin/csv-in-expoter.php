@@ -1,18 +1,44 @@
+<?php
+
+use App\Support\Config;
+?>
+
 <div class="wrap">
     <div class="csv-tool">
 
-        <h1>【未実装】CSVインポート / エクスポート</h1>
+        <h1>CSVインポート / エクスポート</h1>
+
+        <?php if (isset($_GET['import_done'])): ?>
+            <div class="csv-success">インポート完了</div>
+
+            <script>
+                if (window.history.replaceState) {
+                    const url = new URL(window.location);
+                    url.searchParams.delete('import_done');
+                    window.history.replaceState({}, document.title, url.pathname + url.search);
+                }
+            </script>
+        <?php endif; ?>
+
 
         <!-- Export -->
         <section class="csv-section -export">
             <h2>エクスポート</h2>
 
-            <form method="post" action="<?= admin_url('admin-post.php') ?>" class="csv-form">
-                <input type="hidden" name="action" value="csv_export">
+            <form method="get" class="csv-form">
 
                 <div class="csv-field">
                     <label>投稿タイプ</label>
-                    <input type="text" name="post_type" value="news">
+                    <select name="csv_export">
+                        <?php
+                        foreach (Config::get('csv.exporter') as $class):
+                            $instance = new $class();
+                        ?>
+                            <option value="<?= $instance->key() ?>">
+                                <?= $instance->key() ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <button type="submit" class="csv-button -export">
@@ -25,18 +51,32 @@
         <section class="csv-section -import">
             <h2>インポート</h2>
 
-            <form method="post" action="<?= admin_url('admin-post.php') ?>" enctype="multipart/form-data"
-                class="csv-form">
-                <input type="hidden" name="action" value="csv_import">
+            <form method="post" enctype="multipart/form-data" class="csv-form">
 
                 <div class="csv-field">
                     <label>投稿タイプ</label>
-                    <input type="text" name="post_type" value="news">
+                    <select name="csv_import">
+                        <?php
+                        foreach (Config::get('csv.importer') as $class):
+                            $instance = new $class();
+                        ?>
+                            <option value="<?= $instance->key() ?>">
+                                <?= $instance->key() ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="csv-field">
                     <label>CSVファイル</label>
-                    <input type="file" name="csv" accept=".csv">
+                    <input type="file" name="csv" accept=".csv" required>
+                </div>
+
+                <div class="csv-field">
+                    <label>
+                        <input type="checkbox" name="dry_run" value="1">
+                        dry run（実行結果ログのみ表示）
+                    </label>
                 </div>
 
                 <button type="submit" class="csv-button -import">
@@ -44,117 +84,149 @@
                 </button>
             </form>
         </section>
-
     </div>
 </div>
 
 <style>
-.csv-tool {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 24px 0;
-}
+    .csv-tool {
+        max-width: 720px;
+        margin: 40px auto;
+        padding: 32px;
+        background: #fff;
+    }
 
-.csv-tool h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 24px;
-}
+    /* タイトル */
+    .csv-tool h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 32px;
+    }
 
-.csv-section {
-    position: relative;
-    padding-left: 16px;
-    margin-bottom: 48px;
-}
+    /* セクション */
+    .csv-section {
+        padding: 24px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
 
-.csv-section::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 4px;
-    width: 4px;
-    height: calc(100% - 4px);
-    border-radius: 2px;
-}
+    .csv-section:last-child {
+        border-bottom: none;
+    }
 
-.csv-section.-export::before {
-    background: #2271b1;
-    /* WP blue */
-}
+    /* 見出し */
+    .csv-section h2 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: #374151;
+    }
 
-.csv-section.-import::before {
-    background: #00a32a;
-    /* WP green */
-}
+    /* フォーム */
+    .csv-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
 
-.csv-section h2 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-}
+    /* フィールド */
+    .csv-field {
+        display: flex;
+        flex-direction: column;
+    }
 
-.csv-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: flex-end;
-}
+    /* ラベル */
+    .csv-field label {
+        font-size: 11px;
+        color: #6b7280;
+        margin-bottom: 4px;
+    }
 
-.csv-field {
-    flex: 1;
-    min-width: 200px;
-}
+    /* input */
+    .csv-field input[type="text"],
+    .csv-field input[type="file"] {
+        font-size: 14px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+    }
 
-.csv-field label {
-    display: block;
-    font-size: 11px;
-    color: #646970;
-    margin-bottom: 4px;
-}
+    /* focus */
+    .csv-field input:focus {
+        outline: none;
+        border-color: #111827;
+    }
 
-.csv-field input[type="text"],
-.csv-field input[type="file"] {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #c3c4c7;
-    background: transparent;
-    padding: 6px 2px;
-    font-size: 14px;
-}
+    .csv-field select {
+        font-size: 14px;
+        width: 100%;
+        min-width: 100%;
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        appearance: none;
+        cursor: pointer;
 
-.csv-field input:focus {
-    outline: none;
-    border-bottom-color: #2271b1;
-}
+        /* 矢印カスタム */
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' stroke='%236b7280' stroke-width='1.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7l5 5 5-5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 16px;
+    }
 
-.csv-section.-import .csv-field input:focus {
-    border-bottom-color: #00a32a;
-}
+    /* focus */
+    .csv-field select:focus {
+        outline: none;
+        border-color: #111827;
+    }
 
-.csv-button {
-    height: 36px;
-    padding: 0 16px;
-    border: none;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-}
+    /* checkbox */
+    .csv-field input[type="checkbox"] {
+        margin-right: 6px;
+    }
 
-.csv-button.-export {
-    background: #2271b1;
-}
+    /* ボタン */
+    .csv-button {
+        margin-top: 8px;
+        height: 42px;
+        padding: 0 16px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: 0.15s;
+    }
 
-.csv-button.-export:hover {
-    background: #135e96;
-}
+    /* export（アウトライン） */
+    .csv-button.-export {
+        background: transparent;
+        border-color: #2563eb;
+        color: #2563eb;
+    }
 
-.csv-button.-import {
-    background: #00a32a;
-}
+    .csv-button.-export:hover {
+        background: #2563eb;
+        color: #fff;
+    }
 
-.csv-button.-import:hover {
-    background: #008a20;
-}
+    /* import（塗り） */
+    .csv-button.-import {
+        background: #16a34a;
+        color: #fff;
+    }
+
+    .csv-button.-import:hover {
+        background: #15803d;
+    }
+
+    /* 完了メッセージ */
+    .csv-success {
+        margin-bottom: 16px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        background: #ecfdf5;
+        color: #065f46;
+        font-size: 13px;
+    }
 </style>

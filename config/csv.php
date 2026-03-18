@@ -9,13 +9,12 @@ return [
      * - 各クラスは AbstractExportCsv を継承していること
      *
      * 例:
-     *   ?export=news → ExportNewsCsv の handle が実行される
+     *   ?csv_export=news → ExportNewsCsv の handle が実行される
      *
      * ※ postType() の戻り値とクエリパラメータを一致させること
      *----------------------------------*/
     'exporter' => [
-        \App\UseCase\ExportNewsCsv::class,
-        //  \App\UseCase\ExportWorksCsv::class,
+        \App\UseCase\Csv\Export\ExportNewsCsv::class,
     ],
 
     /**-----------------------------------
@@ -31,6 +30,6 @@ return [
      * ※ postType() の戻り値とクエリパラメータを一致させること
      *----------------------------------*/
     'importer' => [
-        //
+        \App\UseCase\Csv\Import\ImportNewsCsv::class,
     ],
 ];

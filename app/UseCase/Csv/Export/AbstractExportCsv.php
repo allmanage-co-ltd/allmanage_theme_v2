@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Support;
+namespace App\UseCase\Csv\Export;
+
+use App\Support\Csv;
+use RuntimeException;
 
 /**---------------------------------------------
  * CSVエクスポート 基底クラス
@@ -11,6 +14,14 @@ namespace App\Support;
  */
 abstract class AbstractExportCsv
 {
+    /**
+     * 実行権限を持つユーザーロールを指定
+     */
+    protected function auth(): bool
+    {
+        return true;
+    }
+
     /**
      * ダウンロード時のファイル名
      *
@@ -60,16 +71,6 @@ abstract class AbstractExportCsv
     }
 
     /**
-     * エクスポートキーを取得
-     *
-     * - URLクエリ (?export=xxx) と一致判定に使用する
-     */
-    public function key(): string
-    {
-        return $this->postType();
-    }
-
-    /**
      * CSVをダウンロード出力する
      *
      * - Content-Type と Content-Disposition を設定してブラウザにダウンロードさせる
@@ -78,18 +79,22 @@ abstract class AbstractExportCsv
      */
     public function handle(): void
     {
-        if (ob_get_length()) {
-            ob_end_clean();
+        try {
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+
+            $export_file_name = 'export_' . $this->postType() . '_' . date('YmdHis', time());
+
+            header('Content-Type: text/csv; charset=UTF-8');
+            header("Content-Disposition: attachment; filename={$export_file_name}.csv");
+
+            (new Csv(withBom: true))->write($this->stream());
+
+            exit;
+        } catch (RuntimeException $e) {
+            wp_die($e->getMessage());
         }
-
-        $export_file_name = 'export_' . $this->postType() . '_' . date('YmdHis', time());
-
-        header('Content-Type: text/csv; charset=UTF-8');
-        header("Content-Disposition: attachment; filename={$export_file_name}.csv");
-
-        (new Csv(withBom: true))->write($this->stream());
-
-        exit;
     }
 
     /**
@@ -117,5 +122,23 @@ abstract class AbstractExportCsv
         foreach ($this->data() as $row) {
             yield $row;
         }
+    }
+
+    /**
+     * エクスポートキーを取得（外部公開用）
+     *
+     * - URLクエリ (?csv_export=xxx) と一致判定に使用する
+     */
+    public function key(): string
+    {
+        return $this->postType();
+    }
+
+    /**
+     * 実行可能か判定（外部公開用）
+     */
+    public function can(): bool
+    {
+        return $this->auth();
     }
 }
