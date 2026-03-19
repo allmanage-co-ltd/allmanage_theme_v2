@@ -19,6 +19,7 @@ final class GetAcfFields
     public function __construct(
         private readonly int $post_id,
     ) {
+        //
     }
 
     /**
@@ -37,6 +38,7 @@ final class GetAcfFields
             // 実際のフィールド名に置き換えてください。
             'acf_is_public',
             'acf_price',
+            'acf_check',
         ]);
     }
 }

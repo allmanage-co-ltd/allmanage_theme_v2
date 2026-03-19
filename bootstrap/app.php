@@ -1,8 +1,7 @@
 <?php
 
 use App\CMS\Hooks\Enqueue;
-use App\CMS\Hooks\ExportCsvHook;
-use App\CMS\Hooks\ImportCsvHook;
+use App\CMS\Hooks\Package;
 use App\CMS\Hooks\SetupTheme;
 use App\CMS\Hooks\Shortcode;
 use App\CMS\Hooks\Seo;
@@ -49,8 +48,7 @@ class App
         (new Welcart())->boot();
         // (new WpMembers())->boot();
 
-        (new ExportCsvHook())->boot();
-        (new ImportCsvHook())->boot();
+        (new Package())->boot();
 
         (new RequestAccessLog())->boot();
         (new EditNewsPostColumns())->boot();

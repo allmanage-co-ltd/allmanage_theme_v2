@@ -1,16 +1,14 @@
 <?php
 
 return [
-    /**-----------------------------------
-     * 読み込むアセット群
-     *----------------------------------*/
+    /**
+     * アセットのバージョン（任意）
+     */
     'version'   => '1.0.0',
 
-    // フロントのjQuery。無しの場合はデフォルトが読み込まれる
-    // 管理画面はデフォルトjQueryで固定しています。
-    'jquery'    => 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
-
-    // フロントCSS
+    /**
+     * フロントCSS
+     */
     'css'       => [
         // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
         'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
@@ -21,7 +19,9 @@ return [
         // theme_uri() . '/assets/css/welcart.css',
     ],
 
-    // フロントJS
+    /**
+     * フロントJS
+     */
     'js'        => [
         'https://cdn.jsdelivr.net/npm/flatpickr',
         'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js',
@@ -32,12 +32,24 @@ return [
         // theme_uri() . '/assets/js/welcart.js',
     ],
 
-    // 管理画面CSS
+    /**
+     * フロントのjQuery
+     *
+     * - 無しの場合はデフォルトが読み込まれる
+     * - 管理画面はデフォルトjQueryで固定しています
+     */
+    'jquery'    => 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+
+    /**
+     * 管理画面CSS
+     */
     'admin-css' => [
         theme_uri() . '/assets/css/admin.css',
     ],
 
-    // 管理画面JS
+    /**
+     * 管理画面JS
+     */
     'admin-js'  => [
         theme_uri() . '/assets/js/admin.js',
     ],

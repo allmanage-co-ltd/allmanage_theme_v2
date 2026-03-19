@@ -1,12 +1,14 @@
 <?php
 
 return [
-    /**-----------------------------------
+    /**
      * お客様用管理画面の設定
-     *----------------------------------*/
+     */
     'client_menu' => [
 
-        // 見せたくないメニュー
+        /**
+         * 隠したいメニューを記載
+         */
         'hidden'         => [
             'index.php',    // ダッシュボード
             'edit.php',     // 投稿・固定ページ
@@ -14,20 +16,26 @@ return [
             'profile.php',  // プロフィール
         ],
 
-        // 見せたいカスタムメニュー
+        /**
+         * 表示したいメニューを記載
+         */
         'visible'        => [
-            'post_type' => [ // edit.php?post_type=
+            // edit.php?post_type={post_type}
+            'post_type' => [
                 'news',
                 'works',
             ],
-            'option'    => [ // admin.php?page=
+            // admin.php?page={option}
+            'option'    => [
                 'usc-e-shop/usc-e-shop.php', // ウェルカート
                 'usces_orderlist',           // ウェルカート
                 'csv-in-expoter',
             ],
         ],
 
-        // その他の表示オプション、非表示はfalse
+        /**
+         * その他の表示オプション、非表示はfalse
+         */
         'default_option' => [
             'helth'       => false, // サイトヘルスステータス
             'activity'    => false, // アクティビティ

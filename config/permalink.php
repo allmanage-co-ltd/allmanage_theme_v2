@@ -1,11 +1,9 @@
 <?php
 
 return [
-    /**-----------------------------------
+    /**
      * ページURLの一覧
-     *
-     * echo url('home');
-     *----------------------------------*/
+     */
     'home'      => home() . '/',
     'company'   => home() . '/company',
     'recruit'   => home() . '/recruit',

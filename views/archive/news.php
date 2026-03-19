@@ -19,11 +19,6 @@ $query = wpquery()
         </div>
     </div>
 
-    <form method="post" enctype="multipart/form-data" action="?import=news&dry_run=1">
-        <input type="file" name="csv">
-        <button>実行</button>
-    </form>
-
     <?php the_breadcrumb() ?>
 
     <div class="l-content -under">

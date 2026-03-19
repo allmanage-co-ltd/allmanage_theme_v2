@@ -1,12 +1,9 @@
 <?php
 
 return [
-    /**-----------------------------------
+    /**
      * 主にheadに入れ込むデータとして使用
-     * nameには会社名を入れると何かと使い道があるかも？
-     *
-     * echo config(seo.name);
-     *----------------------------------*/
+     */
     'name'               => 'Allmanage',
     'copy'               => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 
@@ -25,11 +22,11 @@ return [
         // 'G-XXXXXXXX',
     ],
 
-    /**-----------------------------------
+    /**
      * All In One SEOを使用するかどうか
      *
      * true   → All In One SEOを使用する場合（デフォルトメタデータを出力しない）
      * false  → テーマデフォルトのメタデータを出力する
-     *----------------------------------*/
+     */
     'use_all_in_one_seo' => false,
 ];

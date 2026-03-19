@@ -3,83 +3,49 @@
 namespace App\UseCase\Csv\Export;
 
 use App\CMS\Wrapper\MyWpQuery;
+use App\Packages\Csv\Abstructs\ExportCsv;
 use App\UseCase\GetAcfFields;
 
 /**---------------------------------------------
  * News CSVエクスポート
  * ---------------------------------------------
  * このクラスはNewsカスタム投稿を題材にした実装見本です。
- * 他の投稿タイプの実装はこのファイルを複製して各種適切に変更してください
+ * 他の投稿タイプの実装はこのファイルを複製して各種適切に変更してください。
  *
  * ---------------------------------------------
  * ■ エクスポート実行方法
  * ---------------------------------------------
- * URLアクセス: config/csv.phpへのクラス文字列登録必須
- *
- *   <a href="?csv_export=news">CSVダウンロード</a>
- *
- * ※ config/csv.php の 'exporter' に必ずクラス文字列を登録してください。
- *
- *   'exporter' => [
- *       \App\UseCase\ExportNewsCsv::class,
- *   ]
- *
- * → exporterにクラスを登録するとHook側でクエリパラメータを判定し、
- *   filename() と一致する エクスポートクラスの handle() が実行される
+ *   ?csv_export=news           ← CSVダウンロード
+ *   ?csv_export=news&dry_run=1 ← データをプレビュー表示（ダウンロードなし）
  *
  * ---------------------------------------------
  * ■ 直接実行（開発・デバッグ用）
  * ---------------------------------------------
- * app ディレクトリ内から呼ぶ場合:
- *
- *   use App\UseCase\ExportNewsCsv;
- *
  *   $exporter = new ExportNewsCsv();
- *   $exporter->handle();   // 関数でCSVダウンロード実行
+ *   $exporter->handle();   // CSVダウンロード実行
  *   $exporter->toArray();  // 配列でデータ取得
- *   $exporter->debug();    // デバッグ
- *
- * ---------------------------------------------
- * ■ テンプレートから実行する場合
- * ---------------------------------------------
- * bootstrap/functions.php に中間関数を定義:
- *
- *   function news_csv_exporter(): \App\UseCase\ExportNewsCsv
- *   {
- *       return new \App\UseCase\ExportNewsCsv();
- *   }
- *
- * テンプレート側:
- *
- *   <?php news_csv_exporter()->handle(); ?>
- *
- * ※ handle() 実行後は exit されるため、それ以降のHTMLは出力されない
  */
-final class ExportNewsCsv extends AbstractExportCsv
+final class ExportNewsCsv extends ExportCsv
 {
     /**
-     * 実行権限を持つユーザーロールを指定
+     * 実行を許可するユーザー権限、もしくは条件式
+     * 実行前に検証し、true の場合のみ実行可能
      *
-     * manage_options    : 管理者のみ
-     * edit_posts        : 編集者のみ
-     * edit_others_posts : 編集者以上
+     * - デフォルト: 管理者のみ
+     * - is_admin()等、権限以外でも指定可能
      */
-    protected function auth(): bool
+    public static function isAllowed(): bool
     {
         return current_user_can('edit_others_posts');
     }
 
     /**
-     * カスタム投稿のスラッグを指定
+     * 投稿タイプのスラッグ
      *
-     * - Hook側で key() を通じて参照される
      * - ?csv_export=news の "news" に対応する
-     * - ファイル名のベースとして使用される
      */
-    protected function postType(): string
+    public static function postType(): string
     {
-        // URL : ?csv_export=news
-        // FILE: export_news_20260318124530.csv
         return 'news';
     }
 
@@ -100,6 +66,7 @@ final class ExportNewsCsv extends AbstractExportCsv
             'news_cat',
             'acf_is_public',
             'acf_price',
+            'acf_check',
         ];
     }
 
@@ -108,7 +75,6 @@ final class ExportNewsCsv extends AbstractExportCsv
      *
      * - news 投稿を全件取得して逐次返却する
      * - yield を使用することでメモリ使用量を抑える
-     * - ACF含めカスタムフィールドも取得可能
      */
     protected function data(): iterable
     {
@@ -119,8 +85,7 @@ final class ExportNewsCsv extends AbstractExportCsv
             ->build();
 
         foreach ($query->posts as $post) {
-            $acf = (new GetAcfFields($post->ID))->news();
-            error_log(print_r(get_the_terms($post->ID, 'news_cat'), true));
+            $acf = get_fields($post->ID);
             yield [
                 $post->ID,
                 $post->post_status,
@@ -131,23 +96,8 @@ final class ExportNewsCsv extends AbstractExportCsv
                 $this->getTermSlugs($post->ID, 'news_cat'),
                 $acf['acf_is_public'] ?? '',
                 $acf['acf_price'] ?? '',
+                $acf['acf_check'] ?? '',
             ];
         }
-    }
-
-
-    private function getTermSlugs(int $post_id, string $taxonomy): string
-    {
-        if (!taxonomy_exists($taxonomy)) {
-            return '';
-        }
-
-        $terms = get_the_terms($post_id, $taxonomy);
-
-        if (is_wp_error($terms) || empty($terms)) {
-            return '';
-        }
-
-        return implode(',', array_map(fn($t) => $t->slug ?? '', $terms));
     }
 }

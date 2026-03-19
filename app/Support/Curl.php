@@ -2,7 +2,7 @@
 
 namespace App\Support;
 
-use RuntimeException;
+
 
 /**---------------------------------------------
  * Curl HTTPラッパークラス
@@ -28,9 +28,9 @@ use RuntimeException;
  *   try {
  *       $res = Curl::request('https://api.example.com/users');
  *       if (! $res->ok()) {
- *           throw new RuntimeException('APIエラー');
+ *           throw new \RuntimeException('APIエラー');
  *       }
- *   } catch (\RuntimeException $e) {
+ *   } catch (\\RuntimeException $e) {
  *       Logger::new()->error($e->getMessage());
  *   }
  */
@@ -43,8 +43,7 @@ class Curl
         private readonly int $status,
         private readonly string $body,
         private readonly array $headers = []
-    ) {
-    }
+    ) {}
 
     /**
      * GET|POST
@@ -94,7 +93,7 @@ class Curl
         $decoded = json_decode($this->body, $assoc);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new RuntimeException('JSONデコード失敗');
+            throw new \RuntimeException('JSONデコード失敗');
         }
 
         return $decoded;
@@ -112,7 +111,7 @@ class Curl
         $ch = curl_init();
 
         if (!$ch) {
-            throw new RuntimeException('cURL初期化失敗');
+            throw new \RuntimeException('cURL初期化失敗');
         }
 
         $headers = [];
@@ -144,7 +143,7 @@ class Curl
 
         if ($responseBody === false) {
             $error = curl_error($ch);
-            throw new RuntimeException("HTTPエラー: {$error}");
+            throw new \RuntimeException("HTTPエラー: {$error}");
         }
 
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);

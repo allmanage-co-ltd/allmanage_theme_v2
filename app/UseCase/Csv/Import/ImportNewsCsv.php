@@ -2,8 +2,10 @@
 
 namespace App\UseCase\Csv\Import;
 
-use App\Enums\Csv\CsvImportAction;
-use App\Enums\Csv\CsvImportValueType;
+use App\Packages\Csv\Abstructs\ImportCsv;
+use App\Packages\Csv\Enums\ImportColumnActionEnum;
+use App\Packages\Csv\Enums\ImportValueTypeEnum;
+use App\Support\Config;
 
 /**---------------------------------------------
  * News CSVインポート
@@ -14,128 +16,95 @@ use App\Enums\Csv\CsvImportValueType;
  * ---------------------------------------------
  * ■ インポート実行方法
  * ---------------------------------------------
- * フォームアクション経由のURLアクセス: config/csv.phpへのクラス登録必須
- *
- *   <form method="post" enctype="multipart/form-data" action="?csv_import=news&dry_run=1">
- *       <input type="file" name="csv">
- *       <button type="submit">CSVインポート</button>
- *   </form>
- *
- *   ?csv_import=news         ← インポート実装
- *   ?csv_import=news?dry_run ← 結果ログのみデバッグ
- *
- * ※ config/csv.php の 'importer' に必ずクラス文字列を登録してください。
- *
- *   'importer' => [
- *       \App\UseCase\ImportNewsCsv::class,
- *   ]
- *
- * → importerに登録されたクラスの中から
- *   key() と一致するクラスの handle() が実行される
+ *   ?csv_import=news           ← インポート実行
+ *   ?csv_import=news&dry_run=1 ← 結果ログのみ（DB更新なし）
  *
  * ---------------------------------------------
- * ■ dryRun（検証モード）
+ * ■ オーバーライド可能なメソッド
  * ---------------------------------------------
- * URLにクエリを付与することでDB更新せず検証可能
- *
- *   ?csv_import=news&dry_run=1
- *
- * - 投稿は保存されない
- * - サムネ・タクソノミー・メタの変換結果を確認できる
- *
- * ---------------------------------------------
- * ■ 想定CSVフォーマット（自由に変更してください）
- * ---------------------------------------------
- * post_id,post_status,post_title,post_content,post_date,post_thumbnail,news_cat,acf_is_public,acf_price
- *
- * ---------------------------------------------
- * ■ 仕様
- * ---------------------------------------------
- * - post_id があれば更新、なければ新規作成
- * - post_thumbnail はURLからattachment_idを解決して設定
- * - news_cat はカンマ区切りで複数指定可能
- * - acf_is_public はBOOL変換
+ * - isAllowed()  … 実行権限（デフォルト: manage_options）
+ *      public static function isAllowed(): bool {}
  */
-final class ImportNewsCsv extends AbstractImportCsv
+final class ImportNewsCsv extends ImportCsv
 {
     /**
-     * 実行権限
+     * 実行を許可するユーザー権限、もしくは条件式
+     * 実行前に検証し、true の場合のみ実行可能
      *
-     * - 他ユーザー投稿を編集できるユーザーのみ許可
+     * - デフォルト: 管理者のみ
+     * - is_admin()等、権限以外でも指定可能
      */
-    protected function auth(): bool
+    public static function isAllowed(): bool
     {
         return current_user_can('edit_others_posts');
     }
 
     /**
-     * dryRunモード
+     * 投稿タイプのスラッグ
      *
-     * - ?dry_run=1 が付与されている場合は実行せずログ出力のみ
+     * - ?csv_import=news の "news" に対応する
      */
-    protected function dryRun(): bool
-    {
-        return isset($_REQUEST['dry_run']);
-    }
-
-    /**
-     * 投稿タイプ
-     *
-     * - ?csv_import=news の "news" に対応
-     */
-    protected function postType(): string
+    public static function postType(): string
     {
         return 'news';
     }
 
     /**
-     * CSVマッピング定義
+     * インポート後のリダイレクト先
+     */
+    public function redirectUrl(): string
+    {
+        return admin_url('admin.php?page=' . Config::get('cms.option_pages.csv-in-expoter.slug'));
+    }
+
+    /**
+     * ---------------------------------------------
+     * ■ CSVマッピング定義 のカラム定義
+     * ---------------------------------------------
+     * - action: ImportColumnActionEnum enum で処理種別を指定する
+     *      ImportColumnActionEnum::SavePost     … 投稿フィールドとして保存（post_title など）
+     *      ImportColumnActionEnum::UpdateMeta   … post_meta を更新
+     *      ImportColumnActionEnum::SetTerms     … タクソノミーのタームを設定
+     *      ImportColumnActionEnum::SetThumbnail … アイキャッチ画像を設定
+     *
+     * - type: ImportValueTypeEnum enum で値の変換方法を指定する（省略可）
+     *      ImportValueTypeEnum::Text            … そのまま（デフォルト）
+     *      ImportValueTypeEnum::Bool            … true_values に一致すれば 1、それ以外は 0
+     *      ImportValueTypeEnum::Array           … explode で配列化
+     *      ImportValueTypeEnum::Gallery         … explode してURLをattachment_idに変換した配列
      */
     protected function map(): array
     {
         return [
-            'post_id' => [
-                'action' => CsvImportAction::SAVE_POST,
-            ],
-            'post_status' => [
-                'action' => CsvImportAction::SAVE_POST,
-            ],
-            'post_title' => [
-                'action' => CsvImportAction::SAVE_POST,
-            ],
-            'post_content' => [
-                'action' => CsvImportAction::SAVE_POST,
-            ],
-            'post_date' => [
-                'action' => CsvImportAction::SAVE_POST,
-            ],
+            'post_id'        => ['action' => ImportColumnActionEnum::SavePost],
+            'post_status'    => ['action' => ImportColumnActionEnum::SavePost],
+            'post_title'     => ['action' => ImportColumnActionEnum::SavePost],
+            'post_content'   => ['action' => ImportColumnActionEnum::SavePost],
+            'post_date'      => ['action' => ImportColumnActionEnum::SavePost],
+
             'post_thumbnail' => [
-                'action' => CsvImportAction::SET_THUMBNAIL,
+                'action' => ImportColumnActionEnum::SetThumbnail,
             ],
-            'news_cat' => [
-                'action'   => CsvImportAction::SET_TERMS,
+
+            'news_cat'       => [
+                'action'   => ImportColumnActionEnum::SetTerms,
                 'taxonomy' => 'news_cat',
                 'explode'  => ',',
             ],
-            'acf_is_public' => [
-                'action'      => CsvImportAction::UPDATE_META,
-                'type'        => CsvImportValueType::BOOL,
+
+            'acf_is_public'  => [
+                'action'      => ImportColumnActionEnum::UpdateMeta,
+                'type'        => ImportValueTypeEnum::Bool,
                 'true_values' => ['公開', '1', true],
             ],
-            'acf_price' => [
-                'action' => CsvImportAction::UPDATE_META,
-                'type'   => CsvImportValueType::TEXT,
+            'acf_price'      => [
+                'action' => ImportColumnActionEnum::UpdateMeta,
+                'type'   => ImportValueTypeEnum::Text,
             ],
-            // 'acf_check' => [
-            //     'action'  => CsvImportAction::UPDATE_META,
-            //     'type'    => CsvImportValueType::ARRAY,
-            //     'explode' => ',',
-            // ],
-            // 'acf_gallery' => [
-            //     'action'  => CsvImportAction::UPDATE_META,
-            //     'type'    => CsvImportValueType::GALLERY,
-            //     'explode' => ',',
-            // ],
+            'acf_check'      => [
+                'action' => ImportColumnActionEnum::UpdateMeta,
+                'type'   => ImportValueTypeEnum::Array,
+            ],
         ];
     }
 }
