@@ -3,13 +3,13 @@
 namespace App\Packages\Csv\Actions;
 
 use App\Packages\Csv\Enums\ImportColumnActionEnum;
-use App\Support\Csv;
+use App\Packages\Csv\Infrastructure\CsvReader;
 use App\Support\Html;
 
 /**---------------------------------------------
  * CSVインポート オーケストレーター
  * ---------------------------------------------
- * AbstractImportCsv::handle() から呼び出される内部クラス。
+ * ImportCsv::handle() から呼び出される内部クラス。
  * 実装者（サブクラス）からは直接見えない。
  *
  * 責務:
@@ -19,14 +19,15 @@ use App\Support\Html;
  *
  * 投稿保存・アクション実行・型変換・添付解決は
  * それぞれ専用の invokable クラスに委譲する:
- *   CsvPostSaver          … SAVE_POST（投稿作成・更新）
- *   CsvColumnAction       … UPDATE_META / SET_TERMS / SET_THUMBNAIL
- *   CsvValueConverter     … BOOL / ARRAY / GALLERY / TEXT 型変換
- *   CsvAttachmentResolver … URL → attachment_id 解決
+ *   ImportPostSaveAction          … SavePost（投稿作成・更新）
+ *   ImportColumnAction            … UpdateMeta / SetTerms / SetThumbnail
+ *   ImportValueConvertAction      … Bool / Array / Gallery / Text 型変換
+ *   ImportAttachmentResolveAction … URL → attachment_id 解決
  */
 class ImportRunAction
 {
     public function __construct(
+        private readonly CsvReader $reader,
         private readonly string $postType,
         private readonly array  $map,
         private readonly bool   $isDryRun,
@@ -124,7 +125,7 @@ class ImportRunAction
             throw new \RuntimeException('CSVファイルを選択してください');
         }
 
-        return (new Csv(path: $path))->read();
+        return $this->reader->execute($path);
     }
 
     /**

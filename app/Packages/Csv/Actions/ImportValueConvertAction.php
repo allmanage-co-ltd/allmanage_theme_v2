@@ -10,10 +10,10 @@ use App\Packages\Csv\Enums\ImportValueTypeEnum;
  * map() で指定された type に応じて CSV の生値を変換する invokable クラス。
  *
  * 変換種別:
- *   TEXT    … trim のみ（デフォルト）
- *   BOOL    … true_values に一致すれば 1、それ以外は 0
- *   ARRAY   … explode で配列化（URLデコードも行う）
- *   GALLERY … explode してURLをattachment_idに変換した int[] を返す
+ *   Text    … trim のみ（デフォルト）
+ *   Bool    … true_values に一致すれば 1、それ以外は 0
+ *   Array   … explode で配列化（URLデコードも行う）
+ *   Gallery … explode してURLをattachment_idに変換した int[] を返す
  */
 class ImportValueConvertAction
 {
@@ -63,7 +63,7 @@ class ImportValueConvertAction
     /**
      * ギャラリー用にattachment_idの配列へ変換する
      *
-     * - explode で分割してURLを CsvAttachmentResolver で解決する
+     * - explode で分割してURLを ImportAttachmentResolveAction で解決する
      * - 解決できなかったURLはスキップする
      */
     private function toAttachmentIds(string $value, array $config): array

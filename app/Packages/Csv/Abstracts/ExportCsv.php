@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Packages\Csv\Abstructs;
+namespace App\Packages\Csv\Abstracts;
 
 use App\Packages\Csv\Actions\ExportGetTermSlugsAction;
-use App\Support\Csv;
+use App\Packages\Csv\Infrastructure\CsvWriter;
 use App\Support\Html;
 
 /**---------------------------------------------
@@ -117,7 +117,7 @@ abstract class ExportCsv
             header('Content-Type: text/csv; charset=UTF-8');
             header("Content-Disposition: attachment; filename={$filename}.csv");
 
-            (new Csv(withBom: true))->write(
+            (new CsvWriter(withBom: true))->execute(
                 (function () {
                     yield $this->header();
                     yield from $this->data();

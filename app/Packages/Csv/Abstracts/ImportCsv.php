@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Packages\Csv\Abstructs;
+namespace App\Packages\Csv\Abstracts;
 
+use App\Packages\Csv\Infrastructure\CsvReader;
 use App\Packages\Csv\Actions\ImportRunAction;
 
 /**---------------------------------------------
@@ -88,6 +89,7 @@ abstract class ImportCsv
     final public function handle(): void
     {
         (new ImportRunAction(
+            reader: new CsvReader(),
             postType: $this->postType(),
             map: $this->map(),
             isDryRun: isset($_REQUEST[$this->dryRunParam()]),

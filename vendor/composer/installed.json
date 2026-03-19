@@ -1220,6 +1220,61 @@
             "install-path": "../phar-io/version"
         },
         {
+            "name": "php-stubs/acf-pro-stubs",
+            "version": "v6.5.0",
+            "version_normalized": "6.5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/acf-pro-stubs.git",
+                "reference": "e54ba80a945fd1f6c9ebe761e3f19992fbaedb39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/acf-pro-stubs/zipball/e54ba80a945fd1f6c9ebe761e3f19992fbaedb39",
+                "reference": "e54ba80a945fd1f6c9ebe761e3f19992fbaedb39",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/wordpress-stubs": "^4.7 || ^5.0 || ^6.0"
+            },
+            "require-dev": {
+                "php": "~7.1 || ^8.0",
+                "php-stubs/generator": "^0.8",
+                "phpdocumentor/reflection-docblock": "^5.3"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "time": "2025-09-05T00:47:01+00:00",
+            "type": "library",
+            "extra": {
+                "installer-paths": {
+                    "source/{$name}/": [
+                        "type:wordpress-plugin"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Advanced Custom Fields PRO stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/acf-pro-stubs",
+            "keywords": [
+                "PHPStan",
+                "acf",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/acf-pro-stubs/issues",
+                "source": "https://github.com/php-stubs/acf-pro-stubs/tree/v6.5.0"
+            },
+            "install-path": "../php-stubs/acf-pro-stubs"
+        },
+        {
             "name": "php-stubs/wordpress-stubs",
             "version": "v6.9.1",
             "version_normalized": "6.9.1.0",
@@ -4370,6 +4425,7 @@
         "pestphp/pest-plugin-arch",
         "phar-io/manifest",
         "phar-io/version",
+        "php-stubs/acf-pro-stubs",
         "php-stubs/wordpress-stubs",
         "phpdocumentor/reflection-common",
         "phpdocumentor/reflection-docblock",

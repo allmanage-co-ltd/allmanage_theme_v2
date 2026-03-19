@@ -3,7 +3,7 @@
 namespace App\Packages\Csv\Hooks;
 
 use App\Packages\BootableInterface;
-use App\Packages\Csv\Abstructs\ImportCsv;
+use App\Packages\Csv\Abstracts\ImportCsv;
 use App\Support\Config;
 
 class ImportCsvHook implements BootableInterface
@@ -44,10 +44,10 @@ class ImportCsvHook implements BootableInterface
                 continue;
             }
 
-            $impoter = new $class();
-            $impoter->handle();
-
-            $redirect_url = $impoter->redirectUrl();
+            $importer = new $class();
+            $importer->handle();
+            
+            $redirect_url = $importer->redirectUrl();
             $redirect_url = add_query_arg($class::successParam(), 1, $redirect_url);
             wp_redirect($redirect_url);
 

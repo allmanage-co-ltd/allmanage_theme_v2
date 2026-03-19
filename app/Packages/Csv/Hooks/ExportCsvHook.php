@@ -3,7 +3,7 @@
 namespace App\Packages\Csv\Hooks;
 
 use App\Packages\BootableInterface;
-use App\Packages\Csv\Abstructs\ExportCsv;
+use App\Packages\Csv\Abstracts\ExportCsv;
 use App\Support\Config;
 
 class ExportCsvHook implements BootableInterface
@@ -39,8 +39,8 @@ class ExportCsvHook implements BootableInterface
                 continue;
             }
 
-            $expoter = new $class();
-            $expoter->handle();
+            $exporter = new $class();
+            $exporter->handle();
 
             return;
         }

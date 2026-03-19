@@ -6,8 +6,8 @@ namespace App\Packages\Csv\Actions;
  * 添付ファイルID解決
  * ---------------------------------------------
  * URLから WordPress の attachment_id を解決する invokable クラス。
- * CsvValueConverter（GALLERY型）・CsvColumnAction（SET_THUMBNAIL）・
- * CsvImportRunner（dryRunログ）から共用される。
+ * ImportValueConvertAction（Gallery型）・ImportColumnAction（SetThumbnail）・
+ * ImportRunAction（dryRunログ）から共用される。
  *
  * 解決優先順位:
  *   1. attachment_url_to_postid() による完全URL一致

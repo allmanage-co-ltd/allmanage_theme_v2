@@ -1,7 +1,7 @@
 <?php
 
-use App\Packages\Csv\Abstructs\ExportCsv;
-use App\Packages\Csv\Abstructs\ImportCsv;
+use App\Packages\Csv\Abstracts\ExportCsv;
+use App\Packages\Csv\Abstracts\ImportCsv;
 use App\Support\Config;
 
 $exporters = Config::get('packages.csv.exporter');

@@ -6,15 +6,12 @@ use App\Packages\BootableInterface;
 use App\Support\Config;
 
 /**---------------------------------------------
- * ライブラリ起動クラス
+ * パッケージ起動クラス
  * ---------------------------------------------
- * - app/Library/ 以下の BootableInterface 実装クラスを自動で boot する
- * - クラス発見は Composer の classmap を使用する（パス依存なし）
- *   → composer dump-autoload により vendor/composer/autoload_classmap.php が生成される
- *   → classmap に登録された全クラスを走査し BootableInterface 実装のみ起動する
- *
- * 新しい機能を追加する場合は app/Library/ 以下に BootableInterface を実装したクラスを置くだけでよい
- * 場所は問わない。WP 依存・フック登録の有無も問わない
+ * - config/packages.php の hook_providers に登録されたクラスを順に起動する。
+ * - 各クラスは BootableInterface を実装している必要がある
+ * - 主な用途は WordPress フックの登録など、起動時に一度だけ必要な初期化処理
+ * - クラスの自動探索は行わず、明示的な設定登録を唯一の起点とする
  */
 class Package extends Hook
 {

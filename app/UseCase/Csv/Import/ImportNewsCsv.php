@@ -2,7 +2,7 @@
 
 namespace App\UseCase\Csv\Import;
 
-use App\Packages\Csv\Abstructs\ImportCsv;
+use App\Packages\Csv\Abstracts\ImportCsv;
 use App\Packages\Csv\Enums\ImportColumnActionEnum;
 use App\Packages\Csv\Enums\ImportValueTypeEnum;
 use App\Support\Config;

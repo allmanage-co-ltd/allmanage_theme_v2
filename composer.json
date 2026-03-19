@@ -6,7 +6,8 @@
     "rector/rector": "^1.2",
     "kint-php/kint": "^5.0",
     "phpunit/phpunit": "^10",
-    "pestphp/pest": "^2.36"
+    "pestphp/pest": "^2.36",
+    "php-stubs/acf-pro-stubs": "^6.5"
   },
   "scripts": {
     "analyse": "vendor/bin/phpstan analyse > storage/framework/phpstan/phpstan.log || true",

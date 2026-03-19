@@ -14,7 +14,7 @@ use App\Packages\Csv\Enums\ImportColumnActionEnum;
  *   setTerms     … wp_set_object_terms でタクソノミーのタームを設定する
  *   setThumbnail … set_post_thumbnail でアイキャッチ画像を設定する
  *
- * savePost はこのクラスの対象外（CsvPostSaveAction が担う）。
+ * savePost はこのクラスの対象外（ImportPostSaveAction が担う）。
  * dryRun 時は何も実行しない。
  */
 class ImportColumnAction
@@ -89,7 +89,7 @@ class ImportColumnAction
      * アイキャッチ画像を設定する
      *
      * - value が空の場合は何もしない
-     * - CsvAttachmentResolver でURLから attachment_id を解決する
+     * - ImportAttachmentResolveAction でURLから attachment_id を解決する
      * - attachment_id が取得できない場合は何もしない
      */
     private function setThumbnail(int $post_id, mixed $value): void

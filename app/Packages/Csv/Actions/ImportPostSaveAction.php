@@ -31,7 +31,7 @@ class ImportPostSaveAction
     /**
      * 投稿を保存する
      *
-     * - map() の SAVE_POST カラムのみ対象とする
+     * - map() の SavePost カラムのみ対象とする
      * - post_id が空の場合は新規作成
      * - isDryRun が true の場合は何もせず 0 を返す
      */

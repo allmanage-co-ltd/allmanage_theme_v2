@@ -3,8 +3,7 @@
 namespace App\UseCase\Csv\Export;
 
 use App\CMS\Wrapper\MyWpQuery;
-use App\Packages\Csv\Abstructs\ExportCsv;
-use App\UseCase\GetAcfFields;
+use App\Packages\Csv\Abstracts\ExportCsv;
 
 /**---------------------------------------------
  * News CSVエクスポート
