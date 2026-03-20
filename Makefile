@@ -49,15 +49,15 @@ composer: ## Composerコマンドを実行する（例: make composer c="install
 
 .PHONY: stan
 stan: ## PHPStanで静的解析を実行
-	$(PHP) vendor/bin/phpstan analyse -c phpstan.neon > storage/framework/phpstan/phpstan.log || true
+	$(PHP) vendor/bin/phpstan analyse -c phpstan.neon > storage/logs/phpstan/phpstan.log || true
 
 .PHONY: rector
 rector: ## Rectorでリファクタリング候補を確認（変更は行わない）
-	$(PHP) vendor/bin/rector process --dry-run > storage/framework/rector/rector.log || true
+	$(PHP) vendor/bin/rector process --dry-run > storage/logs/rector/rector.log || true
 
 .PHONY: rector-fix
 rector-fix: ## Rectorでリファクタリングを実際に適用
-	$(PHP) vendor/bin/rector process > storage/framework/rector/rector-fix.log || true
+	$(PHP) vendor/bin/rector process > storage/logs/rector/rector-fix.log || true
 
 # ==================================
 # ヘルプ表示

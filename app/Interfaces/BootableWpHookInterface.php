@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Packages;
+namespace App\Interfaces;
 
 /**---------------------------------------------
  * パッケージ起動インターフェース
@@ -25,7 +25,7 @@ namespace App\Packages;
  * 2. config/packages.php の hook_providers にクラスを追加する
  * 3. Package Hook 経由で boot() が呼び出される
  */
-interface BootableInterface
+interface BootableWpHookInterface
 {
     public function boot(): void;
 }

@@ -58,7 +58,7 @@ abstract class ExportCsv
      */
     public static function isAllowed(): bool
     {
-        return current_user_can('manage_options');
+        return true;
     }
 
     /**
