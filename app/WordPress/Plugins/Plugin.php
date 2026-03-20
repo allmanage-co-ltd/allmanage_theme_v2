@@ -2,30 +2,23 @@
 
 namespace App\CMS\Plugins;
 
-/**---------------------------------------------
- * Pluginクラス
- * ---------------------------------------------
- * プラグインをごにょるクラスを集約します。
+use App\Interfaces\BootableThemeComponentInterface;
+
+/**
+ * プラグイン連携クラスの基底。
  *
- * プラグイン類は画面にも振るまいにも影響することが多く、
- * こいつらだけ特別にディレクトリ切っています。
- *
- * もうここは正直何してもいいです。
+ * WordPress プラグイン有無の判定や、
+ * プラグイン固有フックの登録を担当する。
  */
-abstract class Plugin
+abstract class Plugin implements BootableThemeComponentInterface
 {
-    /**
-     * プラグインの有効チェック必須
-     */
     public function __construct()
     {
-        //
+        // 継承先で必要なら有効判定などを行う。
     }
 
     /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
+     * プラグイン連携用のフック登録を行う。
      */
     abstract public function boot(): void;
 }

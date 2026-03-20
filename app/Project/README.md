@@ -1,57 +1,33 @@
-# UseCase ディレクトリガイド
+# Project ディレクトリガイド
 
-### **※案件ごとの専用クラスなので WP 依存、使い捨て OK です**
+`app/Project/` は、**外部メンバーが主に触る唯一の PHP ディレクトリ**として扱います。
+そのため、この中では過剰に階層を増やさず、案件別の処理を見つけやすく保ちます。
 
-`UseCase/` は、**案件ごとに内容が変わる処理の実装を置く層**です。
-大きく 2 つの用途で使います。
+## ここに置くもの
 
----
+- 案件固有のフック実装
+- 案件固有の CSV import / export 実装
+- 案件固有の使い捨てロジック
+- `Shared/` や `WordPress/` の基盤を使って仕上げる最終実装
 
-## 1. 基盤クラスの案件固有実装
+## 置かないもの
 
-`CMS/` や `Support/` で定義された抽象クラスを継承して、
-案件ごとに異なる部分（記録内容・対象投稿タイプ・カラム定義など）を実装します。
+- テーマ全体で再利用したい汎用基盤
+- WordPress 依存をまとめるべき共通フック
+- エラー処理の差し替え窓口
+- ルールそのものを決める共通インターフェース
 
-### 例
+それらはそれぞれ `Shared/` `WordPress/` `Errors/` `Interfaces/` に置きます。
 
-```php
-// App\CMS\Hooks\AccessLogAbstract を継承
-// 案件ごとに記録する内容・除外条件・フックを実装する
-final class RequestAccessLog extends AccessLogAbstract { ... }
+## 運用ルール
 
-// App\CMS\Admin\EditPostColumns を継承
-// 案件ごとに対象投稿タイプ・カラム定義・値の出力を実装する
-final class EditNewsPostColumnsAction extends EditPostColumns { ... }
-```
+- Project の中は細かく分けすぎない
+- 「案件専用」と分かる名前を優先する
+- 共通化できると判断したら `Shared/` や `WordPress/` へ戻す
+- `boot()` を持つ案件別クラスでも、契約はトップレベル Interface に合わせる
 
----
+## 目安
 
-## 2. 案件固有の使い捨て処理
-
-汎用化するほどでもない、案件特有のロジックをゴリっと書く場所です。
-設計より実装速度を優先して OK です。
-
-### 例
-
-```php
-// 畳の商品情報をCSVでダウンロードする
-final class ExportTatamiCsv {
-    public function __invoke(): void {
-        // ここに処理を書く
-    }
-}
-```
-
-- `ImportProductsCsv`
-- `ExportOrdersCsv`
-- `GenerateInvoicePdf`
-- `SendWebhookNotification`
-- `SyncExternalApi`
-
----
-
-## ルール
-
-- WP 依存・使い捨て OK
-- WP フックを継承する場合は`bootstrap/app.php` でインスタンス化して呼び出す
-- 汎用化できそうで頻出するだろう処理は`Support/` に切り出すことを検討する
+- この案件だけで終わる → `Project/`
+- 次案件でも使いそう → `Shared/` か `WordPress/`
+- テーマ全体のルールにしたい → `Interfaces/`

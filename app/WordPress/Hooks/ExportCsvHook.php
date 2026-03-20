@@ -2,11 +2,11 @@
 
 namespace App\Packages\Csv\Hooks;
 
-use App\Packages\BootableInterface;
+use App\Interfaces\BootableWpHookInterface;
 use App\Packages\Csv\Abstracts\ExportCsv;
 use App\Support\Config;
 
-class ExportCsvHook implements BootableInterface
+class ExportCsvHook implements BootableWpHookInterface
 {
     public function boot(): void
     {
@@ -14,13 +14,11 @@ class ExportCsvHook implements BootableInterface
     }
 
     /**
-     * CSVエクスポート処理のルーティング
-     *
-     * - exportParam() のクエリパラメータが存在し、値が postType() と一致するクラスの handle() を実行する
+     * CSVエクスポート処理のルーティング。
      */
     private function register(): void
     {
-        foreach (Config::get('packages.csv.exporter') as $class) {
+        foreach (Config::get('packages.csv.exporter', []) as $class) {
             if (!is_subclass_of($class, ExportCsv::class)) {
                 continue;
             }
@@ -39,9 +37,7 @@ class ExportCsvHook implements BootableInterface
                 continue;
             }
 
-            $exporter = new $class();
-            $exporter->handle();
-
+            (new $class())->handle();
             return;
         }
     }

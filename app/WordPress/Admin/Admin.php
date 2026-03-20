@@ -2,29 +2,18 @@
 
 namespace App\CMS\Admin;
 
-/**---------------------------------------------
- * 管理画面用 基底クラス
- * ---------------------------------------------
+use App\Interfaces\BootableThemeComponentInterface;
+
+/**
+ * WordPress 管理画面向けクラスの基底。
  *
- * 管理画面に関する処理をまとめるための抽象クラス
- *
- * Hook レイヤとの境界は厳密ではないが
- * ここでは以下のような「管理画面の構成や表示」に関わる処理に限定する
- *
- * - 管理画面メニューの制御
- * - カスタム投稿タイプの登録
- * - タクソノミーの登録
- * - オプションページの追加
- * - 管理画面 UI の表示／非表示制御
- *
- * 各クラスは boot() 内で WordPress のフックを登録する
+ * 管理画面の構成・UI・投稿タイプ登録など、
+ * admin 側に閉じた起動処理をここに集約する。
  */
-abstract class Admin
+abstract class Admin implements BootableThemeComponentInterface
 {
     /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
+     * 管理画面向けのフック登録を行う。
      */
     abstract public function boot(): void;
 }

@@ -2,26 +2,17 @@
 
 namespace App\CMS\Hooks;
 
-/**---------------------------------------------
- * Hookクラス
- * ---------------------------------------------
+use App\Interfaces\BootableThemeComponentInterface;
+
+/**
+ * WordPress フック登録クラスの基底。
  *
- * ここではどこのUIに影響しないワードプレスの振る舞いや、
- * 出力されるHTMLソースにのみ影響するフックを集約します。
- *
- * ソースのエンキュー
- * テーマサポート関連のアクションフック
- * wp_headへの書き込み
- * ショートコード登録
- * etc
- *
+ * UI ではなく、テーマ全体の挙動や出力に関わるフック登録を担当する。
  */
-abstract class Hook
+abstract class Hook implements BootableThemeComponentInterface
 {
     /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
+     * フック登録を行う。
      */
     abstract public function boot(): void;
 }

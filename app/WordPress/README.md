@@ -1,30 +1,33 @@
-# CMS ディレクトリガイド
+# WordPress ディレクトリガイド
 
-`CMS/` は、**WordPress 依存の処理をまとめる層**です。
-フック・管理画面・プラグイン連携・表示解決を主に担当します。
-この中でのみ Wordpress 関数の使用を許可しています。
+`app/WordPress/` は、**WordPress 依存を閉じ込めるためのディレクトリ**です。
+フック・管理画面・プラグイン連携・WP ラッパー・CSV パッケージをここに集めます。
 
-## サブディレクトリの責務
+## サブディレクトリの役割
 
 - `Hooks/`
-  - テーマ全体のフック登録（enqueue / shortcode / SEO / setup など）
+  - テーマ全体のフック登録
+  - enqueue / shortcode / setup / SEO / package boot など
 - `Admin/`
-  - 管理画面の構成・投稿タイプ・タクソノミー・オプションページ
+  - 管理画面メニュー、投稿タイプ、タクソノミー、オプションページ
 - `Plugins/`
-  - 特定プラグイン向け連携処理（ACF / Welcart / MW WP Form など）
+  - ACF / MW WP Form / Welcart などプラグイン依存処理
 - `Presenter/`
-  - 画面表示に近い補助（View 解決、Pagination、Breadcrumb など）
+  - View 解決、Breadcrumb、Pagination など表示補助
 - `Wrapper/`
-  - WP 標準クラスの薄いラッパー
+  - `WP_Query` や `$wpdb` まわりの薄いラッパー
+- `Csv/`
+  - WordPress 上で動く CSV import / export パッケージ本体
 
-## 書き方の目安
+## ルール
 
-- WP フック登録は `boot()` で見渡せる形にする
-- 条件分岐が多い処理は、意図（なぜこの順番か）をコメントで残す
-- プラグイン依存コードは Plugins に寄せ、影響範囲を閉じる
-- 管理画面向け処理とフロント向け処理を混ぜすぎない
+- WordPress 関数はまずこの配下に寄せる
+- `boot()` を持つ起動クラスは `app/Interfaces` のインターフェース契約に合わせる
+- 失敗時に処理を止めたい場合も `wp_die()` を直接書かず、`app/Errors` を経由する
+- 案件固有の最終調整は `Project/` から呼び出す形を優先する
 
-## ひとこと
+## 補足
 
-WordPress 都合で「きれいに分離しきれない」場面は普通にあります。
-その場合は、影響範囲が読める場所に集約できていれば十分です。
+namespace は歴史的に `App\CMS\...` や `App\Packages\Csv\...` を使っています。
+そのため、**WordPress ディレクトリ = namespace も WordPress** ではありません。
+ファイルの置き場所を基準に責務を判断してください。
