@@ -2,9 +2,9 @@
 
 namespace App\Project;
 
-use App\WordPress\Csv\Abstracts\ImportCsvAbstract;
-use App\WordPress\Csv\Enums\ImportColumnActionEnum;
-use App\WordPress\Csv\Enums\ImportValueTypeEnum;
+use App\WordPress\Features\Csv\ImportCsvAbstract;
+use App\Enums\CsvColumnActionEnum;
+use App\Enums\CsvValueTypeEnum;
 use App\Shared\Config;
 
 /**---------------------------------------------
@@ -61,49 +61,49 @@ final class ImportNewsCsv extends ImportCsvAbstract
      * ---------------------------------------------
      * ■ CSVマッピング定義 のカラム定義
      * ---------------------------------------------
-     * - action: ImportColumnActionEnum enum で処理種別を指定する
-     *      ImportColumnActionEnum::SavePost     … 投稿フィールドとして保存（post_title など）
-     *      ImportColumnActionEnum::UpdateMeta   … post_meta を更新
-     *      ImportColumnActionEnum::SetTerms     … タクソノミーのタームを設定
-     *      ImportColumnActionEnum::SetThumbnail … アイキャッチ画像を設定
+     * - action: CsvColumnActionEnum enum で処理種別を指定する
+     *      CsvColumnActionEnum::SavePost     … 投稿フィールドとして保存（post_title など）
+     *      CsvColumnActionEnum::UpdateMeta   … post_meta を更新
+     *      CsvColumnActionEnum::SetTerms     … タクソノミーのタームを設定
+     *      CsvColumnActionEnum::SetThumbnail … アイキャッチ画像を設定
      *
-     * - type: ImportValueTypeEnum enum で値の変換方法を指定する（省略可）
-     *      ImportValueTypeEnum::Text            … そのまま（デフォルト）
-     *      ImportValueTypeEnum::Bool            … true_values に一致すれば 1、それ以外は 0
-     *      ImportValueTypeEnum::Array           … explode で配列化
-     *      ImportValueTypeEnum::Gallery         … explode してURLをattachment_idに変換した配列
+     * - type: CsvValueTypeEnum enum で値の変換方法を指定する（省略可）
+     *      CsvValueTypeEnum::Text            … そのまま（デフォルト）
+     *      CsvValueTypeEnum::Bool            … true_values に一致すれば 1、それ以外は 0
+     *      CsvValueTypeEnum::Array           … explode で配列化
+     *      CsvValueTypeEnum::Gallery         … explode してURLをattachment_idに変換した配列
      */
     protected function map(): array
     {
         return [
-            'post_id'        => ['action' => ImportColumnActionEnum::SavePost],
-            'post_status'    => ['action' => ImportColumnActionEnum::SavePost],
-            'post_title'     => ['action' => ImportColumnActionEnum::SavePost],
-            'post_content'   => ['action' => ImportColumnActionEnum::SavePost],
-            'post_date'      => ['action' => ImportColumnActionEnum::SavePost],
+            'post_id'        => ['action' => CsvColumnActionEnum::SavePost],
+            'post_status'    => ['action' => CsvColumnActionEnum::SavePost],
+            'post_title'     => ['action' => CsvColumnActionEnum::SavePost],
+            'post_content'   => ['action' => CsvColumnActionEnum::SavePost],
+            'post_date'      => ['action' => CsvColumnActionEnum::SavePost],
 
             'post_thumbnail' => [
-                'action' => ImportColumnActionEnum::SetThumbnail,
+                'action' => CsvColumnActionEnum::SetThumbnail,
             ],
 
             'news_cat'       => [
-                'action'   => ImportColumnActionEnum::SetTerms,
+                'action'   => CsvColumnActionEnum::SetTerms,
                 'taxonomy' => 'news_cat',
                 'explode'  => ',',
             ],
 
             'acf_is_public'  => [
-                'action'      => ImportColumnActionEnum::UpdateMeta,
-                'type'        => ImportValueTypeEnum::Bool,
+                'action'      => CsvColumnActionEnum::UpdateMeta,
+                'type'        => CsvValueTypeEnum::Bool,
                 'true_values' => ['公開', '1', true],
             ],
             'acf_price'      => [
-                'action' => ImportColumnActionEnum::UpdateMeta,
-                'type'   => ImportValueTypeEnum::Text,
+                'action' => CsvColumnActionEnum::UpdateMeta,
+                'type'   => CsvValueTypeEnum::Text,
             ],
             'acf_check'      => [
-                'action' => ImportColumnActionEnum::UpdateMeta,
-                'type'   => ImportValueTypeEnum::Array,
+                'action' => CsvColumnActionEnum::UpdateMeta,
+                'type'   => CsvValueTypeEnum::Array,
             ],
         ];
     }

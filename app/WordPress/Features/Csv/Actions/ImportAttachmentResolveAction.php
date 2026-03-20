@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WordPress\Csv\Actions;
+namespace App\WordPress\Features\Csv\Actions;
 
 /**---------------------------------------------
  * 添付ファイルID解決

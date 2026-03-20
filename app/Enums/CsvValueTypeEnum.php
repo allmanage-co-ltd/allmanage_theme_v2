@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WordPress\Csv\Enums;
+namespace App\Enums;
 
-enum CsvImportValueTypeEnum: string
+enum CsvValueTypeEnum: string
 {
     case Text    = 'text';
     case Bool    = 'bool';

@@ -1,22 +1,20 @@
 <?php
 
+namespace App\Interfaces;
+
 interface CsvImporterInterface
 {
     public static function postType(): string;
 
-    public function getTermSlugs(int $postId, string $taxonomy): string;
-
-    public function header(): array;
-
-    public function data(): iterable;
+    public function redirectUrl(): string;
 
     public static function isAllowed(): bool;
 
-    public static function exportParam(): string;
+    public static function importParam(): string;
 
     public static function dryRunParam(): string;
 
-    public function toArray(): array;
+    public static function successParam(): string;
 
     public function handle(): void;
 }

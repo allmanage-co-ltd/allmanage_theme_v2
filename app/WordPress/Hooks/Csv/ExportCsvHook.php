@@ -1,15 +1,15 @@
 <?php
 
-namespace App\WordPress\Csv\Hooks;
+namespace App\WordPress\Hooks\Csv;
 
 use App\Interfaces\BootableWpHookInterface;
+use App\Interfaces\CsvExporterInterface;
 use App\Shared\Config;
-use App\WordPress\Csv\Abstracts\ExportCsvAbstract;
 
 /**
  * CSV エクスポートの入口。
  *
- * 設定に登録された exporter の中から、クエリに一致するものだけを実行する。
+ * 設定に登録された exporter を CsvExporterInterface で扱う。
  */
 class ExportCsvHook implements BootableWpHookInterface
 {
@@ -21,17 +21,13 @@ class ExportCsvHook implements BootableWpHookInterface
     private function register(): void
     {
         foreach (Config::get('csv.exporter', []) as $class) {
-            if (!is_subclass_of($class, ExportCsvAbstract::class)) {
+            if (!is_string($class) || !is_subclass_of($class, CsvExporterInterface::class)) {
                 continue;
             }
 
             $param = $class::exportParam();
 
-            if (!isset($_GET[$param])) {
-                continue;
-            }
-
-            if ($_GET[$param] !== $class::postType()) {
+            if (!isset($_GET[$param]) || $_GET[$param] !== $class::postType()) {
                 continue;
             }
 
@@ -39,7 +35,9 @@ class ExportCsvHook implements BootableWpHookInterface
                 continue;
             }
 
-            (new $class())->handle();
+            /** @var CsvExporterInterface $exporter */
+            $exporter = new $class();
+            $exporter->handle();
             return;
         }
     }

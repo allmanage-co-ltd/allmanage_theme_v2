@@ -14,8 +14,8 @@ use App\WordPress\Plugins\MwForm\MwForm;
 use App\WordPress\Plugins\Welcart\Welcart;
 use App\Project\RequestAccessLog;
 use App\Project\EditNewsPostColumns;
-use App\WordPress\Csv\Hooks\ExportCsvHook;
-use App\WordPress\Csv\Hooks\ImportCsvHook;
+use App\WordPress\Hooks\Csv\ExportCsvHook;
+use App\WordPress\Hooks\Csv\ImportCsvHook;
 
 /**---------------------------------------------
  * アプリケーション起動クラス

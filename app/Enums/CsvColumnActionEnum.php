@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WordPress\Csv\Enums;
+namespace App\Enums;
 
-enum CsvImportColumnActionEnum: string
+enum CsvColumnActionEnum: string
 {
     case SavePost     = 'save_post';
     case UpdateMeta   = 'update_meta';

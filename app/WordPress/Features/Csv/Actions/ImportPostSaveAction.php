@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WordPress\Csv\Actions;
+namespace App\WordPress\Features\Csv\Actions;
 
-use App\WordPress\Csv\Enums\ImportColumnActionEnum;
+use App\Enums\CsvColumnActionEnum;
 
 /**---------------------------------------------
  * 投稿の作成・更新
@@ -41,7 +41,7 @@ class ImportPostSaveAction
 
         foreach ($this->map as $key => $config) {
 
-            if (($config['action'] ?? null) !== ImportColumnActionEnum::SavePost) {
+            if (($config['action'] ?? null) !== CsvColumnActionEnum::SavePost) {
                 continue;
             }
 

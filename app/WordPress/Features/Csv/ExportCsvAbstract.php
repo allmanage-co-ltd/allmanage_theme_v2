@@ -1,18 +1,20 @@
 <?php
 
-namespace App\WordPress\Csv\Abstracts;
+namespace App\WordPress\Features\Csv;
 
 use App\Errors\AppError;
-use App\Shared\Html;
+use App\Interfaces\CsvExporterInterface;
 use App\Shared\CsvWriter;
-use App\WordPress\Csv\Actions\ExportGetTermSlugsAction;
+use App\Shared\Html;
+use App\WordPress\Features\Csv\Actions\ExportGetTermSlugsAction;
 
 /**
  * CSV エクスポートの共通処理。
  *
- * ファイル名や出力まわりの流れはここで揃え、案件ごとの差分だけを子クラスに残す。
+ * Hook からは CsvExporterInterface で扱い、
+ * 実装側だけがこの Abstract を継承する。
  */
-abstract class ExportCsvAbstract
+abstract class ExportCsvAbstract implements CsvExporterInterface
 {
     abstract public static function postType(): string;
 
@@ -47,7 +49,7 @@ abstract class ExportCsvAbstract
 
     final public function handle(): void
     {
-        if (isset($_GET[$this->dryRunParam()])) {
+        if (isset($_GET[static::dryRunParam()])) {
             Html::table($this->toArray());
             exit;
         }
@@ -57,7 +59,7 @@ abstract class ExportCsvAbstract
                 ob_end_clean();
             }
 
-            $filename = 'export_' . $this->postType() . '_' . date('YmdHis');
+            $filename = 'export_' . static::postType() . '_' . date('YmdHis');
 
             header('Content-Type: text/csv; charset=UTF-8');
             header("Content-Disposition: attachment; filename={$filename}.csv");

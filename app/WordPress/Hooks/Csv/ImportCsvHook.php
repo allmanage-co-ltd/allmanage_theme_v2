@@ -1,16 +1,16 @@
 <?php
 
-namespace App\WordPress\Csv\Hooks;
+namespace App\WordPress\Hooks\Csv;
 
 use App\Errors\AppError;
 use App\Interfaces\BootableWpHookInterface;
+use App\Interfaces\CsvImporterInterface;
 use App\Shared\Config;
-use App\WordPress\Csv\Abstracts\ImportCsvAbstract;
 
 /**
  * CSV インポートの入口。
  *
- * 実処理の例外はここでまとめて受け、画面終了は AppError::abort() に寄せる。
+ * 設定に登録された importer を CsvImporterInterface で扱う。
  */
 class ImportCsvHook implements BootableWpHookInterface
 {
@@ -26,17 +26,13 @@ class ImportCsvHook implements BootableWpHookInterface
         }
 
         foreach (Config::get('csv.importer', []) as $class) {
-            if (!is_subclass_of($class, ImportCsvAbstract::class)) {
+            if (!is_string($class) || !is_subclass_of($class, CsvImporterInterface::class)) {
                 continue;
             }
 
             $param = $class::importParam();
 
-            if (!isset($_POST[$param])) {
-                continue;
-            }
-
-            if ($_POST[$param] !== $class::postType()) {
+            if (!isset($_POST[$param]) || $_POST[$param] !== $class::postType()) {
                 continue;
             }
 
@@ -44,6 +40,7 @@ class ImportCsvHook implements BootableWpHookInterface
                 continue;
             }
 
+            /** @var CsvImporterInterface $importer */
             $importer = new $class();
 
             try {

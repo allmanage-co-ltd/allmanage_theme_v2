@@ -3,7 +3,7 @@
 namespace App\Project;
 
 use App\WordPress\Wrapper\MyWpQuery;
-use App\WordPress\Csv\Abstracts\ExportCsvAbstract;
+use App\WordPress\Features\Csv\ExportCsvAbstract;
 
 /**---------------------------------------------
  * News CSVエクスポート

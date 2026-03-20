@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WordPress\Csv\Actions;
+namespace App\WordPress\Features\Csv\Actions;
 
-use App\WordPress\Csv\Enums\ImportValueTypeEnum;
+use App\Enums\CsvValueTypeEnum;
 
 /**---------------------------------------------
  * CSV値の型変換
@@ -21,20 +21,20 @@ class ImportValueConvertAction
      * 値を変換して返す
      *
      * - type が指定されていない場合は TEXT として扱う
-     * - type が ImportValueTypeEnum 以外の場合も TEXT にフォールバックする
+     * - type が CsvValueTypeEnum 以外の場合も TEXT にフォールバックする
      */
     public function __invoke(string $value, array $config): mixed
     {
-        $type = $config['type'] ?? ImportValueTypeEnum::Text;
+        $type = $config['type'] ?? CsvValueTypeEnum::Text;
 
-        if (!$type instanceof ImportValueTypeEnum) {
-            $type = ImportValueTypeEnum::Text;
+        if (!$type instanceof CsvValueTypeEnum) {
+            $type = CsvValueTypeEnum::Text;
         }
 
         return match ($type) {
-            ImportValueTypeEnum::Bool    => in_array($value, $config['true_values'] ?? ['1', 'true'], true) ? 1 : 0,
-            ImportValueTypeEnum::Array   => $this->explode($value, $config),
-            ImportValueTypeEnum::Gallery => $this->toAttachmentIds($value, $config),
+            CsvValueTypeEnum::Bool    => in_array($value, $config['true_values'] ?? ['1', 'true'], true) ? 1 : 0,
+            CsvValueTypeEnum::Array   => $this->explode($value, $config),
+            CsvValueTypeEnum::Gallery => $this->toAttachmentIds($value, $config),
             default                      => trim($value),
         };
     }

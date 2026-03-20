@@ -1,6 +1,6 @@
 <?php
 
-namespace App\WordPress\Csv\Actions;
+namespace App\WordPress\Features\Csv\Actions;
 
 /**---------------------------------------------
  * 投稿に紐づくタームスラッグ取得

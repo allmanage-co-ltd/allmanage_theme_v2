@@ -1,8 +1,8 @@
 <?php
 
-namespace App\WordPress\Csv\Actions;
+namespace App\WordPress\Features\Csv\Actions;
 
-use App\WordPress\Csv\Enums\ImportColumnActionEnum;
+use App\Enums\CsvColumnActionEnum;
 
 /**---------------------------------------------
  * カラム単位のアクション実行
@@ -29,7 +29,7 @@ class ImportColumnAction
      * アクションを実行する
      *
      * - isDryRun が true の場合は何もしない
-     * - action が ImportColumnActionEnum でない場合は何もしない
+     * - action が CsvColumnActionEnum でない場合は何もしない
      */
     public function __invoke(int $post_id, string $key, mixed $value, array $config): void
     {
@@ -39,14 +39,14 @@ class ImportColumnAction
 
         $action = $config['action'] ?? null;
 
-        if (!$action instanceof ImportColumnActionEnum) {
+        if (!$action instanceof CsvColumnActionEnum) {
             return;
         }
 
         match ($action) {
-            ImportColumnActionEnum::UpdateMeta   => update_post_meta($post_id, $key, $value),
-            ImportColumnActionEnum::SetTerms     => $this->setTerms($post_id, $value, $config),
-            ImportColumnActionEnum::SetThumbnail => $this->setThumbnail($post_id, $value),
+            CsvColumnActionEnum::UpdateMeta   => update_post_meta($post_id, $key, $value),
+            CsvColumnActionEnum::SetTerms     => $this->setTerms($post_id, $value, $config),
+            CsvColumnActionEnum::SetThumbnail => $this->setThumbnail($post_id, $value),
             default                              => null,
         };
     }
