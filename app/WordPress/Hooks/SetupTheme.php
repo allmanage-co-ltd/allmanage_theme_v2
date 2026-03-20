@@ -2,8 +2,9 @@
 
 namespace App\WordPress\Hooks;
 
-use App\Support\Session;
-use App\Support\Config;
+use App\Interfaces\BootableWpHookInterface;
+use App\Shared\Session;
+use App\Shared\Config;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス
@@ -12,12 +13,11 @@ use App\Support\Config;
  * - WordPress 標準機能の有効／無効を制御する
  * - テーマサポート・セッション・抜粋設定などを集中管理
  */
-class SetupTheme extends Hook
+class SetupTheme implements BootableWpHookInterface
 {
     /**
      * フック登録
      */
-    #[\Override]
     public function boot(): void
     {
         add_action('plugins_loaded', $this->sessionStart(...), 0);

@@ -6,7 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src', $vendorDir . '/phpdocumentor/reflection-common/src'),
+    'phpDocumentor\\Reflection\\' => array($vendorDir . '/phpdocumentor/reflection-common/src', $vendorDir . '/phpdocumentor/reflection-docblock/src', $vendorDir . '/phpdocumentor/type-resolver/src'),
     'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Termwind\\' => array($vendorDir . '/nunomaduro/termwind/src'),
@@ -37,9 +37,5 @@ return array(
     'Fidry\\CpuCoreCounter\\' => array($vendorDir . '/fidry/cpu-core-counter/src'),
     'Doctrine\\Deprecations\\' => array($vendorDir . '/doctrine/deprecations/src'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'App\\WordPress\\' => array($baseDir . '/app/WordPress'),
-    'App\\UseCase\\' => array($baseDir . '/app/Project'),
-    'App\\Support\\' => array($baseDir . '/app/Shared'),
-    'App\\Interfaces\\' => array($baseDir . '/app/Interfaces'),
-    'App\\Errors\\' => array($baseDir . '/app/Errors'),
+    'App\\' => array($baseDir . '/app'),
 );

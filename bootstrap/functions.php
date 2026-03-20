@@ -30,9 +30,9 @@
  * カスタムフィールドが集約した配列が返ります。
  * 配列のキーはそのままカスタムフィールドのキーです。
  */
-function get_acf(int $post_id): \App\UseCase\GetAcfFields
+function get_acf(int $post_id): \App\Project\GetAcfFields
 {
-    return new \App\UseCase\GetAcfFields($post_id);
+    return new \App\Project\GetAcfFields($post_id);
 }
 
 /**---------------------------------------------
@@ -97,7 +97,7 @@ function wpquery(): \App\WordPress\Wrapper\MyWpQuery
  */
 function config(string $key, $default = null)
 {
-    return \App\Support\Config::get($key, $default);
+    return \App\Shared\Config::get($key, $default);
 }
 
 /**
@@ -108,7 +108,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Support\Config::get("permalink.{$slug}", '/');
+    return \App\Shared\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -149,7 +149,7 @@ function datepicker(array $options = []): void
  */
 function slog()
 {
-    return \App\Support\Logger::app();
+    return \App\Shared\Logger::app();
 }
 
 /**
@@ -162,9 +162,9 @@ function slog()
  *   sess()->flash('message', '送信しました');
  *   $message = sess()->pull('message');
  */
-function sess(): \App\Support\Session
+function sess(): \App\Shared\Session
 {
-    return new \App\Support\Session();
+    return new \App\Shared\Session();
 }
 
 /**
@@ -176,9 +176,9 @@ function sess(): \App\Support\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method, string $url, array $options = []): \App\Support\Curl
+function curl(string $method, string $url, array $options = []): \App\Shared\Curl
 {
-    return \App\Support\Curl::request($method, $url, $options);
+    return \App\Shared\Curl::request($method, $url, $options);
 }
 
 /**
@@ -189,7 +189,7 @@ function curl(string $method, string $url, array $options = []): \App\Support\Cu
  */
 function is_local(): bool
 {
-    return \App\Support\Runtime::isLocal();
+    return \App\Shared\Runtime::isLocal();
 }
 
 /**
@@ -200,7 +200,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Support\Runtime::isMobile();
+    return \App\Shared\Runtime::isMobile();
 }
 
 /**
@@ -211,7 +211,7 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Support\Runtime::isBot();
+    return \App\Shared\Runtime::isBot();
 }
 
 /**

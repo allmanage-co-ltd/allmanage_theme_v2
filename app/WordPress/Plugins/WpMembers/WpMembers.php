@@ -2,11 +2,13 @@
 
 namespace App\WordPress\Plugins;
 
+use App\Interfaces\BootableWpHookInterface;
+
 /**---------------------------------------------
  * Wp Members 連携クラス
  * ---------------------------------------------
  */
-class WpMembers extends Plugin
+class WpMembers implements BootableWpHookInterface
 {
     public function __construct()
     {
@@ -16,7 +18,6 @@ class WpMembers extends Plugin
     /**
      * 初期化処理
      */
-    #[\Override]
     public function boot(): void
     {
         //

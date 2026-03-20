@@ -1,11 +1,11 @@
 <?php
 
-namespace App\UseCase\Csv\Import;
+namespace App\Project;
 
-use App\WordPress\Csv\Abstracts\ImportCsv;
+use App\WordPress\Csv\Abstracts\ImportCsvAbstract;
 use App\WordPress\Csv\Enums\ImportColumnActionEnum;
 use App\WordPress\Csv\Enums\ImportValueTypeEnum;
-use App\Support\Config;
+use App\Shared\Config;
 
 /**---------------------------------------------
  * News CSVインポート
@@ -25,7 +25,7 @@ use App\Support\Config;
  * - isAllowed()  … 実行権限（デフォルト: manage_options）
  *      public static function isAllowed(): bool {}
  */
-final class ImportNewsCsv extends ImportCsv
+final class ImportNewsCsv extends ImportCsvAbstract
 {
     /**
      * 実行を許可するユーザー権限、もしくは条件式

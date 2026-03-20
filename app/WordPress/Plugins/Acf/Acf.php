@@ -1,13 +1,15 @@
 <?php
 
-namespace App\WordPress\Plugins;
+namespace App\WordPress\Plugins\Acf;
+
+use App\Interfaces\BootableWpHookInterface;
 
 /**---------------------------------------------
  * Advanced Custom Fields 連携クラス
  * ---------------------------------------------
  *
  */
-class Acf extends Plugin
+class Acf implements BootableWpHookInterface
 {
     public function __construct()
     {
@@ -19,7 +21,6 @@ class Acf extends Plugin
     /**
      * 初期化処理
      */
-    #[\Override]
     public function boot(): void
     {
         // add_action('acf/init', [$this, 'registerOptionPage']);

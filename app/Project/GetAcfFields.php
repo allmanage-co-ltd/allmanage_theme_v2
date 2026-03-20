@@ -1,8 +1,8 @@
 <?php
 
-namespace App\UseCase;
+namespace App\Project;
 
-use App\WordPress\Plugins\Acf;
+use App\WordPress\Plugins\Acf\Acf;
 
 /**---------------------------------------------
  * ACFのカスタムフィールドを一括取得

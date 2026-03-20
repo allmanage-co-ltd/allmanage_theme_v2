@@ -1,11 +1,11 @@
 <?php
 
-use App\WordPress\Csv\Abstracts\ExportCsv;
-use App\WordPress\Csv\Abstracts\ImportCsv;
-use App\Support\Config;
+use App\WordPress\Csv\Abstracts\ExportCsvAbstract;
+use App\WordPress\Csv\Abstracts\ImportCsvAbstract;
+use App\Shared\Config;
 
-$exporters = Config::get('packages.csv.exporter');
-$importers  = Config::get('packages.csv.importer');
+$exporters = Config::get('csv.exporter');
+$importers  = Config::get('csv.importer');
 ?>
 
 <div class="wrap">
@@ -13,13 +13,13 @@ $importers  = Config::get('packages.csv.importer');
 
         <h1>CSVインポート / エクスポート</h1>
 
-        <?php if (isset($_GET[ImportCsv::successParam()])): ?>
+        <?php if (isset($_GET[ImportCsvAbstract::successParam()])): ?>
             <div class="csv-success">インポート完了</div>
 
             <script>
                 if (window.history.replaceState) {
                     const url = new URL(window.location);
-                    url.searchParams.delete('<?= ImportCsv::successParam() ?>');
+                    url.searchParams.delete('<?= ImportCsvAbstract::successParam() ?>');
                     window.history.replaceState({}, document.title, url.pathname + url.search);
                 }
             </script>
@@ -35,7 +35,7 @@ $importers  = Config::get('packages.csv.importer');
 
                         <div class="csv-field">
                             <label>投稿タイプ</label>
-                            <select name="<?= ImportCsv::importParam() ?>">
+                            <select name="<?= ImportCsvAbstract::importParam() ?>">
                                 <?php foreach ($importers as $class): ?>
                                     <option value="<?= $class::postType() ?>">
                                         <?= $class::postType() ?>
@@ -51,7 +51,7 @@ $importers  = Config::get('packages.csv.importer');
 
                         <div class="csv-field">
                             <label>
-                                <input type="checkbox" name="<?= ImportCsv::dryRunParam() ?>" value="1">
+                                <input type="checkbox" name="<?= ImportCsvAbstract::dryRunParam() ?>" value="1">
                                 dry run（実行結果ログのみ表示）
                             </label>
                         </div>
@@ -71,7 +71,7 @@ $importers  = Config::get('packages.csv.importer');
 
                         <div class="csv-field">
                             <label>投稿タイプ</label>
-                            <select name="<?= ExportCsv::exportParam() ?>">
+                            <select name="<?= ExportCsvAbstract::exportParam() ?>">
                                 <?php foreach ($exporters as $class): ?>
                                     <option value="<?= $class::postType() ?>">
                                         <?= $class::postType() ?>
@@ -82,7 +82,7 @@ $importers  = Config::get('packages.csv.importer');
 
                         <div class="csv-field">
                             <label>
-                                <input type="checkbox" name="<?= ExportCsv::dryRunParam() ?>" value="1">
+                                <input type="checkbox" name="<?= ExportCsvAbstract::dryRunParam() ?>" value="1">
                                 dry run（実行結果ログのみ表示）
                             </label>
                         </div>

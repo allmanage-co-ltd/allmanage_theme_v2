@@ -2,7 +2,7 @@
 
 namespace App\WordPress\Presenter;
 
-use App\Support\Fmt;
+use App\Shared\Fmt;
 
 /**---------------------------------------------
  * Cookieポップアップ生成クラス
@@ -14,9 +14,7 @@ use App\Support\Fmt;
  */
 class Cookie
 {
-    public function __construct(private $days = 365, private $link = '/privacy')
-    {
-    }
+    public function __construct(private $days = 365, private $link = '/privacy') {}
 
     /**
      * Cookie同意UIを生成する

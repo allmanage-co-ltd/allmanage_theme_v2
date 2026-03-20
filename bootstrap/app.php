@@ -1,7 +1,6 @@
 <?php
 
 use App\WordPress\Hooks\Enqueue;
-use App\WordPress\Hooks\Package;
 use App\WordPress\Hooks\SetupTheme;
 use App\WordPress\Hooks\Shortcode;
 use App\WordPress\Hooks\Seo;
@@ -10,13 +9,13 @@ use App\WordPress\Admin\EditMenuClient;
 use App\WordPress\Admin\RegisterOptionPage;
 use App\WordPress\Admin\RegisterPostType;
 use App\WordPress\Admin\RegisterTaxonomy;
-use App\WordPress\Plugins\Acf;
-use App\WordPress\Plugins\MwWpForm;
-use App\WordPress\Plugins\Welcart;
-use App\UseCase\RequestAccessLog;
-use App\UseCase\EditNewsPostColumns;
-
-// use App\WordPress\Plugins\WpMembers;
+use App\WordPress\Plugins\Acf\Acf;
+use App\WordPress\Plugins\MwForm\MwForm;
+use App\WordPress\Plugins\Welcart\Welcart;
+use App\Project\RequestAccessLog;
+use App\Project\EditNewsPostColumns;
+use App\WordPress\Csv\Hooks\ExportCsvHook;
+use App\WordPress\Csv\Hooks\ImportCsvHook;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
@@ -44,11 +43,11 @@ class App
         (new EditMenuAdmin())->boot();
         (new EditMenuClient())->boot();
         (new Acf())->boot();
-        (new MwWpForm())->boot();
+        (new MwForm())->boot();
         (new Welcart())->boot();
-        // (new WpMembers())->boot();
 
-        (new Package())->boot();
+        (new ExportCsvHook())->boot();
+        (new ImportCsvHook())->boot();
 
         (new RequestAccessLog())->boot();
         (new EditNewsPostColumns())->boot();

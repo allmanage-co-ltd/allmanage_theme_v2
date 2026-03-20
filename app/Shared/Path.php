@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Shared;
 
 /**---------------------------------------------
  * パス取得ヘルパー
@@ -54,5 +54,4 @@ class Path
                 $parts
             ));
     }
-
 }

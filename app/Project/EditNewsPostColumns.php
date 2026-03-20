@@ -1,8 +1,8 @@
 <?php
 
-namespace App\UseCase;
+namespace App\Project;
 
-use App\WordPress\Admin\Abstracts\AbstractEditPostColumns;
+use App\WordPress\Admin\Abstracts\EditPostColumnsAbstract;
 
 /**---------------------------------------------
  * 管理画面 News投稿一覧カラム編集
@@ -17,7 +17,7 @@ use App\WordPress\Admin\Abstracts\AbstractEditPostColumns;
  *
  *   (new \App\UseCase\Edit{投稿タイプ名}PostColumns())->boot();
  */
-final class EditNewsPostColumns extends AbstractEditPostColumns
+final class EditNewsPostColumns extends EditPostColumnsAbstract
 {
     /**
      * 対象の投稿タイプスラッグ
@@ -46,12 +46,6 @@ final class EditNewsPostColumns extends AbstractEditPostColumns
      * - ['field_key' => '表示ラベル'] の連想配列で返す
      * - field_key は edit() の $column と対応させること
      * - 複数カラムを追加する場合は配列に追加する
-     *
-     * 例:
-     *   return [
-     *       'acf_is_public' => '公開状況',
-     *       '...'           => '...',
-     *   ];
      */
     protected function columns(): array
     {
@@ -65,7 +59,6 @@ final class EditNewsPostColumns extends AbstractEditPostColumns
      *
      * - $column が対象の field_key と一致する場合に値を出力する
      * - columns() で定義した field_key の数だけ if/match で処理を追加する
-     * - ACFフィールドは get_field(field_key, post_id) で取得する
      */
     public function edit($column, $post_id): void
     {

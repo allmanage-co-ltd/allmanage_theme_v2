@@ -2,7 +2,7 @@
 
 namespace App\WordPress\Wrapper;
 
-use App\Support\Fmt;
+use App\Shared\Fmt;
 use wpdb;
 
 /**---------------------------------------------
@@ -19,9 +19,7 @@ class MyWpDb
     private ?string $sql = null;
     private array $params = [];
 
-    public function __construct(private readonly wpdb $wpdb)
-    {
-    }
+    public function __construct(private readonly wpdb $wpdb) {}
 
     /**
      * ファクトリ関数

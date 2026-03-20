@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UseCase\Csv\Export;
+namespace App\Project;
 
 use App\WordPress\Wrapper\MyWpQuery;
-use App\WordPress\Csv\Abstracts\ExportCsv;
+use App\WordPress\Csv\Abstracts\ExportCsvAbstract;
 
 /**---------------------------------------------
  * News CSVエクスポート
@@ -24,7 +24,7 @@ use App\WordPress\Csv\Abstracts\ExportCsv;
  *   $exporter->handle();   // CSVダウンロード実行
  *   $exporter->toArray();  // 配列でデータ取得
  */
-final class ExportNewsCsv extends ExportCsv
+final class ExportNewsCsv extends ExportCsvAbstract
 {
     /**
      * 実行を許可するユーザー権限、もしくは条件式

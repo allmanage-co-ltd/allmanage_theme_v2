@@ -17,11 +17,7 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\Errors\\": "app/Errors/",
-      "App\\Interfaces\\": "app/Interfaces/",
-      "App\\Support\\": "app/Shared/",
-      "App\\UseCase\\": "app/Project/",
-      "App\\WordPress\\": "app/WordPress/"
+      "App\\": "app/"
     },
     "files": [
       "bootstrap/functions.php"

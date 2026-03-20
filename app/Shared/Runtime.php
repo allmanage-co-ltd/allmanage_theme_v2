@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Shared;
 
 /**---------------------------------------------
  * 実行環境判定サービス

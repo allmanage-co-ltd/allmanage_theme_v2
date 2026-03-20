@@ -1,9 +1,9 @@
 <?php
 
-namespace App\UseCase;
+namespace App\Project;
 
-use App\WordPress\Hooks\Abstracts\AbstractAccessLog;
-use App\Support\Runtime;
+use App\WordPress\Hooks\Abstracts\AccessLogAbstract;
+use App\Shared\Runtime;
 
 /**---------------------------------------------
  * アクセスログ
@@ -11,7 +11,7 @@ use App\Support\Runtime;
  * - フロント・管理画面両方のアクセスを記録する
  * - 案件や環境に応じて各メソッドを自由に変更してください
  */
-final class RequestAccessLog extends AbstractAccessLog
+final class RequestAccessLog extends AccessLogAbstract
 {
     /**
      * ログを無効にするランタイム条件

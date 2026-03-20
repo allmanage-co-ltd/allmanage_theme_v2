@@ -2,7 +2,7 @@
 
 namespace App\WordPress\Presenter;
 
-use App\Support\Config;
+use App\Shared\Config;
 
 /**---------------------------------------------
  * メタ情報管理サービス

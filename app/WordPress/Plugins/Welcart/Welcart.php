@@ -1,6 +1,8 @@
 <?php
 
-namespace App\WordPress\Plugins;
+namespace App\WordPress\Plugins\Welcart;
+
+use App\Interfaces\BootableWpHookInterface;
 
 /**---------------------------------------------
  * Welcart 連携クラス
@@ -8,7 +10,7 @@ namespace App\WordPress\Plugins;
  * - Welcart（USCES）専用の拡張処理をまとめる
  * - 商品検索・管理画面・カート表示などのカスタマイズを担当
  */
-class Welcart extends Plugin
+class Welcart implements BootableWpHookInterface
 {
     public function __construct()
     {
@@ -20,7 +22,6 @@ class Welcart extends Plugin
     /**
      * フック登録
      */
-    #[\Override]
     public function boot(): void
     {
         // add_filter('posts_search', $this->searchInItemCode(...), 10, 2);

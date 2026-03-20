@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Shared;
 
 /**---------------------------------------------
  * フォーマット系のヘルパー
@@ -55,5 +55,4 @@ class Fmt
     {
         return mb_strimwidth($s, 0, $len, '…', 'UTF-8');
     }
-
 }
