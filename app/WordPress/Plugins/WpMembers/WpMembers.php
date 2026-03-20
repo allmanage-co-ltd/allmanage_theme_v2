@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Plugins;
+namespace App\WordPress\Plugins;
 
 /**---------------------------------------------
  * Wp Members 連携クラス

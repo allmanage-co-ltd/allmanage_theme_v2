@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Wrapper;
+namespace App\WordPress\Wrapper;
 
 use App\Support\Fmt;
 use wpdb;
@@ -25,8 +25,8 @@ class MyWpDb
 
     /**
      * ファクトリ関数
-     * \App\CMS\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->debug();
-     * \App\CMS\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->get();
+     * \App\WordPress\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->debug();
+     * \App\WordPress\Wrapper\MyWpDb::new()->stmt('....', ['arg'])->get();
      */
     public static function new(): self
     {

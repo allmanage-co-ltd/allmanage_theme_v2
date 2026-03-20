@@ -1,7 +1,7 @@
 <?php
 
-use App\Packages\Csv\Abstracts\ExportCsv;
-use App\Packages\Csv\Abstracts\ImportCsv;
+use App\WordPress\Csv\Abstracts\ExportCsv;
+use App\WordPress\Csv\Abstracts\ImportCsv;
 use App\Support\Config;
 
 $exporters = Config::get('packages.csv.exporter');

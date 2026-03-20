@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Packages\Csv\Actions;
+namespace App\WordPress\Csv\Actions;
 
-use App\Packages\Csv\Enums\ImportColumnActionEnum;
+use App\WordPress\Csv\Enums\ImportColumnActionEnum;
 
 /**---------------------------------------------
  * カラム単位のアクション実行

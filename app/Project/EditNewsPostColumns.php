@@ -2,7 +2,7 @@
 
 namespace App\UseCase;
 
-use App\CMS\Admin\AbstractEditPostColumns;
+use App\WordPress\Admin\Abstracts\AbstractEditPostColumns;
 
 /**---------------------------------------------
  * 管理画面 News投稿一覧カラム編集

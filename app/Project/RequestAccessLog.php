@@ -2,7 +2,7 @@
 
 namespace App\UseCase;
 
-use App\CMS\Hooks\AbstractAccessLog;
+use App\WordPress\Hooks\Abstracts\AbstractAccessLog;
 use App\Support\Runtime;
 
 /**---------------------------------------------

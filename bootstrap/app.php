@@ -1,22 +1,22 @@
 <?php
 
-use App\CMS\Hooks\Enqueue;
-use App\CMS\Hooks\Package;
-use App\CMS\Hooks\SetupTheme;
-use App\CMS\Hooks\Shortcode;
-use App\CMS\Hooks\Seo;
-use App\CMS\Admin\EditMenuAdmin;
-use App\CMS\Admin\EditMenuClient;
-use App\CMS\Admin\RegisterOptionPage;
-use App\CMS\Admin\RegisterPostType;
-use App\CMS\Admin\RegisterTaxonomy;
-use App\CMS\Plugins\Acf;
-use App\CMS\Plugins\MwWpForm;
-use App\CMS\Plugins\Welcart;
+use App\WordPress\Hooks\Enqueue;
+use App\WordPress\Hooks\Package;
+use App\WordPress\Hooks\SetupTheme;
+use App\WordPress\Hooks\Shortcode;
+use App\WordPress\Hooks\Seo;
+use App\WordPress\Admin\EditMenuAdmin;
+use App\WordPress\Admin\EditMenuClient;
+use App\WordPress\Admin\RegisterOptionPage;
+use App\WordPress\Admin\RegisterPostType;
+use App\WordPress\Admin\RegisterTaxonomy;
+use App\WordPress\Plugins\Acf;
+use App\WordPress\Plugins\MwWpForm;
+use App\WordPress\Plugins\Welcart;
 use App\UseCase\RequestAccessLog;
 use App\UseCase\EditNewsPostColumns;
 
-// use App\CMS\Plugins\WpMembers;
+// use App\WordPress\Plugins\WpMembers;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
@@ -30,7 +30,7 @@ use App\UseCase\EditNewsPostColumns;
 class App
 {
     /**
-     * 各CMSフッククラスを初期化
+     * 各 WordPress 起動クラスを初期化
      */
     public function boot(): void
     {

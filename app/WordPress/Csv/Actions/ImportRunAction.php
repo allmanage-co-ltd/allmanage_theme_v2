@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Packages\Csv\Actions;
+namespace App\WordPress\Csv\Actions;
 
-use App\Packages\Csv\Enums\ImportColumnActionEnum;
-use App\Packages\Csv\Infrastructure\CsvReader;
+use App\WordPress\Csv\Enums\ImportColumnActionEnum;
+use App\WordPress\Csv\Infrastructure\CsvReader;
 use App\Support\Html;
 
 /**---------------------------------------------

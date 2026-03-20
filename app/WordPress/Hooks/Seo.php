@@ -1,9 +1,9 @@
 <?php
 
-namespace App\CMS\Hooks;
+namespace App\WordPress\Hooks;
 
 use App\Support\Runtime;
-use App\CMS\Presenter\Metadata;
+use App\WordPress\Presenter\Metadata;
 use App\Support\Config;
 
 /**---------------------------------------------

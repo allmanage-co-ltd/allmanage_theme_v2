@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Presenter;
+namespace App\WordPress\Presenter;
 
 /**---------------------------------------------
  * ビュー描画クラス

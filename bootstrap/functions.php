@@ -84,9 +84,9 @@ function img_uri(): string
  *   wpquery()->setPostType(...)->setPerPage(...)->build();
  *   wpquery()->setPostType(...)->setPerPage(...)->debug();
  */
-function wpquery(): \App\CMS\Wrapper\MyWpQuery
+function wpquery(): \App\WordPress\Wrapper\MyWpQuery
 {
-    return \App\CMS\Wrapper\MyWpQuery::new();
+    return \App\WordPress\Wrapper\MyWpQuery::new();
 }
 
 /**
@@ -122,9 +122,9 @@ function url(string $slug): string
  *   db()->stmt('...', [arg])->select();
  *   db()->stmt('...', [arg])->execute();
  */
-function db(): \App\CMS\Wrapper\MyWpDb
+function db(): \App\WordPress\Wrapper\MyWpDb
 {
-    return \App\CMS\Wrapper\MyWpDb::new();
+    return \App\WordPress\Wrapper\MyWpDb::new();
 }
 
 /**
@@ -138,7 +138,7 @@ function db(): \App\CMS\Wrapper\MyWpDb
  */
 function datepicker(array $options = []): void
 {
-    (new \App\CMS\Presenter\Datepicker($options))->boot();
+    (new \App\WordPress\Presenter\Datepicker($options))->boot();
 }
 
 /**
@@ -219,14 +219,14 @@ function is_bot(): bool
  *
  * header + view + footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\CMS\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
+ * App\WordPress\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
  *
  * 使用例（テンプレートページで）:
  *   the_view();
  */
 function the_view(): void
 {
-    \App\CMS\Presenter\View::pages();
+    \App\WordPress\Presenter\View::pages();
 }
 
 /**
@@ -237,7 +237,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-    \App\CMS\Presenter\View::layout($name);
+    \App\WordPress\Presenter\View::layout($name);
 }
 
 /**
@@ -251,7 +251,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-    \App\CMS\Presenter\View::component($name, $data);
+    \App\WordPress\Presenter\View::component($name, $data);
 }
 
 /**
@@ -271,7 +271,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-    (new \App\CMS\Presenter\Breadcrumb)->render();
+    (new \App\WordPress\Presenter\Breadcrumb)->render();
 }
 
 /**
@@ -297,7 +297,7 @@ function the_breadcrumb(): void
  */
 function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
 {
-    (new \App\CMS\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
+    (new \App\WordPress\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
 }
 
 /**
@@ -325,7 +325,7 @@ function the_postnavi(
     string $prev_text = '← 前へ',
     string $next_text = '次へ →',
 ): void {
-    (new \App\CMS\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\WordPress\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -336,5 +336,5 @@ function the_postnavi(
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\CMS\Presenter\Cookie($days, $link))->render();
+    (new \App\WordPress\Presenter\Cookie($days, $link))->render();
 }

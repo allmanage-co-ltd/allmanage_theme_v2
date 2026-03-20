@@ -1,7 +1,7 @@
 <?php
 
-use App\Packages\Csv\Infrastructure\CsvReader;
-use App\Packages\Csv\Infrastructure\CsvWriter;
+use App\WordPress\Csv\Infrastructure\CsvReader;
+use App\WordPress\Csv\Infrastructure\CsvWriter;
 
 test('CsvWriterで書き込んだ内容をCsvReaderで読み込める', function () {
     $path = tempnam(sys_get_temp_dir(), 'csv_rw_');

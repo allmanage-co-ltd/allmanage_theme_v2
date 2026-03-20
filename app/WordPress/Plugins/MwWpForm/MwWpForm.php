@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Plugins;
+namespace App\WordPress\Plugins;
 
 /**---------------------------------------------
  * MW WP Form 連携クラス

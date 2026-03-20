@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Packages\Csv\Abstracts;
+namespace App\WordPress\Csv\Abstracts;
 
-use App\Packages\Csv\Infrastructure\CsvReader;
-use App\Packages\Csv\Actions\ImportRunAction;
+use App\WordPress\Csv\Infrastructure\CsvReader;
+use App\WordPress\Csv\Actions\ImportRunAction;
 
 /**---------------------------------------------
  * CSVインポート 基底クラス

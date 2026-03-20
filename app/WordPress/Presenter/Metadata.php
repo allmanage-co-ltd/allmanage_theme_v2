@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Presenter;
+namespace App\WordPress\Presenter;
 
 use App\Support\Config;
 
@@ -10,7 +10,7 @@ use App\Support\Config;
  * - title / description / OGP / canonical などを一元生成
  * - head 内に出力する情報をまとめて管理
  *
- * 全てのメソッドは\App\CMS\Hooks\Seo()->addMetadata()で出力
+ * 全てのメソッドは\App\WordPress\Hooks\Seo()->addMetadata()で出力
  */
 class Metadata
 {

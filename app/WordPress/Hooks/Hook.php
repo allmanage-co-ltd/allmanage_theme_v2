@@ -1,27 +1,15 @@
 <?php
 
-namespace App\CMS\Hooks;
+namespace App\WordPress\Hooks;
 
-/**---------------------------------------------
- * Hookクラス
- * ---------------------------------------------
+use App\Interfaces\BootableWpHookInterface;
+
+/**
+ * テーマ全体の WordPress フックをまとめる基底クラス。
  *
- * ここではどこのUIに影響しないワードプレスの振る舞いや、
- * 出力されるHTMLソースにのみ影響するフックを集約します。
- *
- * ソースのエンキュー
- * テーマサポート関連のアクションフック
- * wp_headへの書き込み
- * ショートコード登録
- * etc
- *
+ * 画面固有ではなく、テーマの挙動そのものに関わる初期化をここに置く。
  */
-abstract class Hook
+abstract class Hook implements BootableWpHookInterface
 {
-    /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
-     */
     abstract public function boot(): void;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Admin;
+namespace App\WordPress\Admin;
 
 use App\Support\Config;
 

@@ -1,6 +1,6 @@
 <?php
 
-use App\Packages\Csv\Actions\ExportGetTermSlugsAction;
+use App\WordPress\Csv\Actions\ExportGetTermSlugsAction;
 
 class FakeWpError {}
 

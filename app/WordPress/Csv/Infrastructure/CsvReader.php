@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Packages\Csv\Infrastructure;
+namespace App\WordPress\Csv\Infrastructure;
 
 /**---------------------------------------------
  * CSV読み込みクラス

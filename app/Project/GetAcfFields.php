@@ -2,7 +2,7 @@
 
 namespace App\UseCase;
 
-use App\CMS\Plugins\Acf;
+use App\WordPress\Plugins\Acf;
 
 /**---------------------------------------------
  * ACFのカスタムフィールドを一括取得

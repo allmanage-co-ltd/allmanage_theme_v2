@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Packages\Csv\Enums;
+namespace App\WordPress\Csv\Enums;
 
 enum ImportColumnActionEnum: string
 {

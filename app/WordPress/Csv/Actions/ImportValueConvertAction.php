@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Packages\Csv\Actions;
+namespace App\WordPress\Csv\Actions;
 
-use App\Packages\Csv\Enums\ImportValueTypeEnum;
+use App\WordPress\Csv\Enums\ImportValueTypeEnum;
 
 /**---------------------------------------------
  * CSV値の型変換

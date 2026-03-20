@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CMS\Hooks;
+namespace App\WordPress\Hooks;
 
 use App\Support\Session;
 use App\Support\Config;

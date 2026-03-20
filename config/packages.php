@@ -2,35 +2,22 @@
 
 return [
     /**
-     * CMSフック登録クラス一覧
+     * テーマ起動時に boot() するクラス一覧。
      *
-     * - WordPressへフックを登録したいクラスを列挙する
-     * - 各クラスは BootableInterface を継承し boot() を実装すること
-     *
-     * ■ 注意
-     * - ここに登録していないPackages内のフック処理は一切動かない
+     * 起動対象を設定に明示して、初期化の入口を追いやすくする。
      */
     'hook_providers' => [
-        \App\Packages\Csv\Hooks\ExportCsvHook::class,
-        \App\Packages\Csv\Hooks\ImportCsvHook::class,
+        \App\WordPress\Csv\Hooks\ExportCsvHook::class,
+        \App\WordPress\Csv\Hooks\ImportCsvHook::class,
     ],
 
     /**
-     * CSVインエクスポーターパッケージの設定
+     * CSV パッケージ設定。
      */
     'csv' => [
-        /**
-         * CSVダウンロード処理を行うUseCaseクラスを登録
-         * 各クラスは ExportCsv を継承すること
-         */
         'exporter' => [
             \App\UseCase\Csv\Export\ExportNewsCsv::class,
         ],
-
-        /**
-         * CSVアップロード処理を行うUseCaseクラスを登録
-         * 各クラスは ImportCsv を継承すること
-         */
         'importer' => [
             \App\UseCase\Csv\Import\ImportNewsCsv::class,
         ],

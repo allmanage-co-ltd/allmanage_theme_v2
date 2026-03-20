@@ -1,31 +1,20 @@
 <?php
 
-namespace App\CMS\Plugins;
+namespace App\WordPress\Plugins;
 
-/**---------------------------------------------
- * Pluginクラス
- * ---------------------------------------------
- * プラグインをごにょるクラスを集約します。
+use App\Interfaces\BootableWpHookInterface;
+
+/**
+ * プラグイン連携用の基底クラス。
  *
- * プラグイン類は画面にも振るまいにも影響することが多く、
- * こいつらだけ特別にディレクトリ切っています。
- *
- * もうここは正直何してもいいです。
+ * プラグイン有効判定や、そのプラグイン専用のフック登録をここにまとめる。
  */
-abstract class Plugin
+abstract class Plugin implements BootableWpHookInterface
 {
-    /**
-     * プラグインの有効チェック必須
-     */
     public function __construct()
     {
-        //
+        // 継承先で必要なら初期判定を行う。
     }
 
-    /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
-     */
     abstract public function boot(): void;
 }

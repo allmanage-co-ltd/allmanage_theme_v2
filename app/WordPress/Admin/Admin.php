@@ -1,30 +1,15 @@
 <?php
 
-namespace App\CMS\Admin;
+namespace App\WordPress\Admin;
 
-/**---------------------------------------------
- * 管理画面用 基底クラス
- * ---------------------------------------------
+use App\Interfaces\BootableWpHookInterface;
+
+/**
+ * 管理画面まわりの初期化をまとめる基底クラス。
  *
- * 管理画面に関する処理をまとめるための抽象クラス
- *
- * Hook レイヤとの境界は厳密ではないが
- * ここでは以下のような「管理画面の構成や表示」に関わる処理に限定する
- *
- * - 管理画面メニューの制御
- * - カスタム投稿タイプの登録
- * - タクソノミーの登録
- * - オプションページの追加
- * - 管理画面 UI の表示／非表示制御
- *
- * 各クラスは boot() 内で WordPress のフックを登録する
+ * 投稿タイプ登録や管理画面 UI 調整など、admin 側だけの処理をここに寄せる。
  */
-abstract class Admin
+abstract class Admin implements BootableWpHookInterface
 {
-    /**
-     * 初期化処理
-     *
-     * 必ず実装しフック登録を行う
-     */
     abstract public function boot(): void;
 }
