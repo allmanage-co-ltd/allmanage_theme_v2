@@ -1,22 +1,60 @@
 <?php
 
+use App\Enums\LogFieeldEnum;
+
 return [
     /**
-     * ログ設定
      *
-     * - use_xxx_log: ログの有効/無効
-     * - xxx_log_dir: ログファイルの出力先（テーマルートからの相対パス）
-     **/
+     */
+    'app'    => [
+        'use' => true,
+        'dir' => '/storage/logs/app/',
+    ],
 
-    // アプリログ
-    'use_app_log'    => true,
-    'app_log_dir'    => '/storage/logs/',
+    /**
+     *
+     */
+    'access' => [
+        'use'     => true,
+        'dir'     => '/storage/logs/access/',
+        'channel' => 'access',
+        'hooks'   => [
+            'template_redirect',
+            'admin_init',
+        ],
+        'content' => [
+            LogFieeldEnum::requestId,
+            LogFieeldEnum::ip,
+            LogFieeldEnum::xff,
+            LogFieeldEnum::method,
+            LogFieeldEnum::uri,
+            LogFieeldEnum::query,
+            LogFieeldEnum::referer,
+            LogFieeldEnum::ua,
+            LogFieeldEnum::userId,
+            LogFieeldEnum::postId,
+            LogFieeldEnum::postType,
+            LogFieeldEnum::status,
+            LogFieeldEnum::is404,
+        ],
+    ],
 
-    // アクセスログ
-    'use_access_log' => true,
-    'access_log_dir' => '/storage/logs/access/',
-
-    // エラーログ（不要？）
-    // 'use_error_log'  => false,
-    // 'error_log_dir'  => '/storage/logs/errors/',
+    /**
+     *
+     */
+    'error'  => [
+        'use'     => true,
+        'dir'     => '/storage/logs/errors/',
+        'content' => [
+            LogFieeldEnum::requestId,
+            LogFieeldEnum::ip,
+            LogFieeldEnum::ua,
+            LogFieeldEnum::xff,
+            LogFieeldEnum::status,
+            LogFieeldEnum::method,
+            LogFieeldEnum::uri,
+            LogFieeldEnum::query,
+            LogFieeldEnum::referer,
+        ],
+    ],
 ];

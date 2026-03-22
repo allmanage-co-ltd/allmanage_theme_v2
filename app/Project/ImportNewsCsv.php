@@ -2,10 +2,10 @@
 
 namespace App\Project;
 
-use App\WordPress\Features\Csv\ImportCsvAbstract;
+use App\Support\Abstracts\ImportCsvAbstract;
 use App\Enums\CsvColumnActionEnum;
 use App\Enums\CsvValueTypeEnum;
-use App\Shared\Config;
+use App\Support\Config;
 
 /**---------------------------------------------
  * News CSVインポート
@@ -52,7 +52,7 @@ final class ImportNewsCsv extends ImportCsvAbstract
     /**
      * インポート後のリダイレクト先
      */
-    public function redirectUrl(): string
+    public static function redirectUrl(): string
     {
         return admin_url('admin.php?page=' . Config::get('cms.option_pages.csv-in-expoter.slug'));
     }

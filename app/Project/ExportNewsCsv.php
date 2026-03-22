@@ -2,8 +2,8 @@
 
 namespace App\Project;
 
-use App\WordPress\Wrapper\MyWpQuery;
-use App\WordPress\Features\Csv\ExportCsvAbstract;
+use App\Wrapper\MyWpQuery;
+use App\Support\Abstracts\ExportCsvAbstract;
 
 /**---------------------------------------------
  * News CSVエクスポート

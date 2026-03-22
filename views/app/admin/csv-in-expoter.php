@@ -1,11 +1,11 @@
 <?php
 
-use App\WordPress\Features\Csv\ExportCsvAbstract;
-use App\WordPress\Features\Csv\ImportCsvAbstract;
-use App\Shared\Config;
+use App\Support\Abstracts\ExportCsvAbstract;
+use App\Support\Abstracts\ImportCsvAbstract;
+use App\Support\Config;
 
-$exporters = Config::get('csv.exporter');
-$importers  = Config::get('csv.importer');
+$exporters = Config::get('option_pages.csv-in-expoter.exporter');
+$importers  = Config::get('option_pages.csv-in-expoter.importer');
 ?>
 
 <div class="wrap">

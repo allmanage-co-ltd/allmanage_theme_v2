@@ -1,21 +1,6 @@
 <?php
 
-use App\WordPress\Hooks\Enqueue;
-use App\WordPress\Hooks\SetupTheme;
-use App\WordPress\Hooks\Shortcode;
-use App\WordPress\Hooks\Seo;
-use App\WordPress\Admin\EditMenuAdmin;
-use App\WordPress\Admin\EditMenuClient;
-use App\WordPress\Admin\RegisterOptionPage;
-use App\WordPress\Admin\RegisterPostType;
-use App\WordPress\Admin\RegisterTaxonomy;
-use App\WordPress\Plugins\Acf\Acf;
-use App\WordPress\Plugins\MwForm\MwForm;
-use App\WordPress\Plugins\Welcart\Welcart;
-use App\Project\RequestAccessLog;
-use App\Project\EditNewsPostColumns;
-use App\WordPress\Hooks\Csv\ExportCsvHook;
-use App\WordPress\Hooks\Csv\ImportCsvHook;
+use App\Actions\Hook\HooksAutoLoader;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
@@ -33,23 +18,6 @@ class App
      */
     public function boot(): void
     {
-        (new SetupTheme())->boot();
-        (new Shortcode())->boot();
-        (new Enqueue())->boot();
-        (new Seo())->boot();
-        (new RegisterPostType())->boot();
-        (new RegisterTaxonomy())->boot();
-        (new RegisterOptionPage)->boot();
-        (new EditMenuAdmin())->boot();
-        (new EditMenuClient())->boot();
-        (new Acf())->boot();
-        (new MwForm())->boot();
-        (new Welcart())->boot();
-
-        (new ExportCsvHook())->boot();
-        (new ImportCsvHook())->boot();
-
-        (new RequestAccessLog())->boot();
-        (new EditNewsPostColumns())->boot();
+        (new HooksAutoLoader)->handle();
     }
 }

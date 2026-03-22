@@ -49,6 +49,14 @@ return [
             'capability' => 'manage_options',
             'slug'       => 'csv-in-expoter',
             'view'       => 'csv-in-expoter.php',
+            'exporter'   => [
+                \App\Project\ExportNewsCsv::class,
+                // \App\Project\ExportWorksCsv::class,
+            ],
+            'importer'   => [
+                \App\Project\ImportNewsCsv::class,
+                // \App\Project\ImportWorksCsv::class,
+            ],
         ],
     ],
 ];

@@ -2,7 +2,7 @@
 
 namespace App\Project;
 
-use App\WordPress\Admin\Abstracts\EditPostColumnsAbstract;
+use App\Hooks\Abstracts\EditPostColumnsAbstract;
 
 /**---------------------------------------------
  * 管理画面 News投稿一覧カラム編集

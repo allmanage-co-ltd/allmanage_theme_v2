@@ -29,7 +29,7 @@ return RectorConfig::configure()
     ->withPHPStanConfigs([
         __DIR__ . '/phpstan.neon',
     ])
-    ->withCache(__DIR__ . '/storage/cache/rector')
+    ->withCache(__DIR__ . '/storage/cache/rector/cache')
     ->withTypeCoverageLevel(0)
     ->withDeadCodeLevel(0)
     ->withCodeQualityLevel(0);

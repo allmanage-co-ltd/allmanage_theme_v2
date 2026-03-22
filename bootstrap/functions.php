@@ -30,9 +30,9 @@
  * カスタムフィールドが集約した配列が返ります。
  * 配列のキーはそのままカスタムフィールドのキーです。
  */
-function get_acf(int $post_id): \App\Project\GetAcfFields
+function get_acf(int $post_id, array $keys): array
 {
-    return new \App\Project\GetAcfFields($post_id);
+    return \App\Plugins\Acf\Acf::getByKeys($post_id, $keys);
 }
 
 /**---------------------------------------------
@@ -84,9 +84,9 @@ function img_uri(): string
  *   wpquery()->setPostType(...)->setPerPage(...)->build();
  *   wpquery()->setPostType(...)->setPerPage(...)->debug();
  */
-function wpquery(): \App\WordPress\Wrapper\MyWpQuery
+function wpquery(): \App\Wrapper\MyWpQuery
 {
-    return \App\WordPress\Wrapper\MyWpQuery::new();
+    return \App\Wrapper\MyWpQuery::new();
 }
 
 /**
@@ -97,7 +97,7 @@ function wpquery(): \App\WordPress\Wrapper\MyWpQuery
  */
 function config(string $key, $default = null)
 {
-    return \App\Shared\Config::get($key, $default);
+    return \App\Support\Config::get($key, $default);
 }
 
 /**
@@ -108,23 +108,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Shared\Config::get("permalink.{$slug}", '/');
-}
-
-/**
- * wpdbのラッパー
- *
- * WPテーマではあまり使わなそう
- *
- * 使用例:
- *   db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
- *   db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
- *   db()->stmt('...', [arg])->select();
- *   db()->stmt('...', [arg])->execute();
- */
-function db(): \App\WordPress\Wrapper\MyWpDb
-{
-    return \App\WordPress\Wrapper\MyWpDb::new();
+    return \App\Support\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -138,7 +122,7 @@ function db(): \App\WordPress\Wrapper\MyWpDb
  */
 function datepicker(array $options = []): void
 {
-    (new \App\WordPress\Presenter\Datepicker($options))->boot();
+    (new \App\Presenter\Datepicker($options))->boot();
 }
 
 /**
@@ -149,7 +133,7 @@ function datepicker(array $options = []): void
  */
 function slog()
 {
-    return \App\Shared\Logger::app();
+    return \App\Support\Logger::app();
 }
 
 /**
@@ -162,9 +146,9 @@ function slog()
  *   sess()->flash('message', '送信しました');
  *   $message = sess()->pull('message');
  */
-function sess(): \App\Shared\Session
+function sess(): \App\Support\Session
 {
-    return new \App\Shared\Session();
+    return new \App\Support\Session();
 }
 
 /**
@@ -176,9 +160,9 @@ function sess(): \App\Shared\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method, string $url, array $options = []): \App\Shared\Curl
+function curl(string $method, string $url, array $options = []): \App\Support\Curl
 {
-    return \App\Shared\Curl::request($method, $url, $options);
+    return \App\Support\Curl::request($method, $url, $options);
 }
 
 /**
@@ -189,7 +173,7 @@ function curl(string $method, string $url, array $options = []): \App\Shared\Cur
  */
 function is_local(): bool
 {
-    return \App\Shared\Runtime::isLocal();
+    return \App\Support\Runtime::isLocal();
 }
 
 /**
@@ -200,7 +184,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Shared\Runtime::isMobile();
+    return \App\Support\Runtime::isMobile();
 }
 
 /**
@@ -211,7 +195,7 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Shared\Runtime::isBot();
+    return \App\Support\Runtime::isBot();
 }
 
 /**
@@ -219,14 +203,14 @@ function is_bot(): bool
  *
  * header + view + footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\WordPress\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
+ * App\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
  *
  * 使用例（テンプレートページで）:
  *   the_view();
  */
 function the_view(): void
 {
-    \App\WordPress\Presenter\View::pages();
+    \App\Presenter\View::pages();
 }
 
 /**
@@ -237,7 +221,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-    \App\WordPress\Presenter\View::layout($name);
+    \App\Presenter\View::layout($name);
 }
 
 /**
@@ -251,7 +235,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-    \App\WordPress\Presenter\View::component($name, $data);
+    \App\Presenter\View::component($name, $data);
 }
 
 /**
@@ -271,7 +255,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-    (new \App\WordPress\Presenter\Breadcrumb)->render();
+    (new \App\Presenter\Breadcrumb)->render();
 }
 
 /**
@@ -297,7 +281,7 @@ function the_breadcrumb(): void
  */
 function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
 {
-    (new \App\WordPress\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
+    (new \App\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
 }
 
 /**
@@ -325,7 +309,7 @@ function the_postnavi(
     string $prev_text = '← 前へ',
     string $next_text = '次へ →',
 ): void {
-    (new \App\WordPress\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -336,5 +320,5 @@ function the_postnavi(
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\WordPress\Presenter\Cookie($days, $link))->render();
+    (new \App\Presenter\Cookie($days, $link))->render();
 }

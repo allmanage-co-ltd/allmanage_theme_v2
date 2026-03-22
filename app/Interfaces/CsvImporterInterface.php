@@ -6,7 +6,7 @@ interface CsvImporterInterface
 {
     public static function postType(): string;
 
-    public function redirectUrl(): string;
+    public static function redirectUrl(): string;
 
     public static function isAllowed(): bool;
 
