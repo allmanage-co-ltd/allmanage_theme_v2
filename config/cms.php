@@ -2,10 +2,23 @@
 
 return [
     /**
+     * フックの自動読み込みの設定
+     *
+     * - BootableWpHookInterface を実装したクラをスキャンして自動登録する
+     *
+     * cache: true にするとキャッシュを有効にする
+     * cache_path: キャッシュファイルの保存先
+     */
+    'hooks_auto_loader' => [
+        'cache'       => true,
+        'cache_path'  => \App\Support\Path::storage() . '/cache/app/hooks.php',
+    ],
+
+    /**
      * カスタム投稿タイプの設定
      */
-    'post_types'   => [
-        // お知らせ
+    'post_types'      => [
+
         'news' => [
             'labels'        => [
                 'name'          => 'NEWS',
@@ -28,7 +41,8 @@ return [
     /**
      * カスタムタクソノミーの設定
      */
-    'taxonomies'   => [
+    'taxonomies'      => [
+
         'news_cat' => [
             'post_type'    => 'news',
             'label'        => 'カテゴリー',
@@ -41,7 +55,10 @@ return [
     /**
      * オプションページの設定
      */
-    'option_pages' => [
+    'option_view_dir' => \App\Support\Path::views() . '/app/admin',
+
+    'option_pages'    => [
+
         'csv-in-expoter' => [
             'show'       => true,
             'page_title' => 'CSV',
@@ -49,6 +66,13 @@ return [
             'capability' => 'manage_options',
             'slug'       => 'csv-in-expoter',
             'view'       => 'csv-in-expoter.php',
+
+            /**
+             * CSVエクスポートクラス（csv-in-expoter独自定義）
+             *
+             * - CsvExporterInterface を実装したクラス
+             * - Hookとオプションページでから参照される
+             */
             'exporter'   => [
                 \App\Project\ExportNewsCsv::class,
                 // \App\Project\ExportWorksCsv::class,
@@ -59,4 +83,5 @@ return [
             ],
         ],
     ],
+
 ];

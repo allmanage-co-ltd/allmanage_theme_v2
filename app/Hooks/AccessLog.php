@@ -2,7 +2,7 @@
 
 namespace App\Hooks;
 
-use App\Actions\Logger\ResolveLogFieldAction;
+use App\Actions\Logger\LogFieldResolver;
 use App\Interfaces\BootableWpHookInterface;
 use App\Support\Config;
 use App\Support\Logger;
@@ -30,7 +30,7 @@ class AccessLog implements BootableWpHookInterface
         }
 
         $config  = $this->config();
-        $content = ResolveLogFieldAction::handle($config['content']);
+        $content = LogFieldResolver::handle($config['content']);
 
         Logger::access()->info($config['channel'], $content);
     }

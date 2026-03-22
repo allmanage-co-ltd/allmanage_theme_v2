@@ -3,6 +3,8 @@
 return [
     /**
      * ページURLの一覧
+     *
+     * echo url('home');
      */
     'home'      => home() . '/',
     'company'   => home() . '/company',

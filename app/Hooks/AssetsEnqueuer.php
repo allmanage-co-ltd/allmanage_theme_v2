@@ -84,7 +84,7 @@ class AssetsEnqueuer implements BootableWpHookInterface
 
         foreach ($styles as $handle => $src) {
             wp_enqueue_style(
-                is_string($handle) ? $handle : md5((string) $src),
+                \is_string($handle) ? $handle : \md5((string) $src),
                 $src,
                 [],
                 $this->version
@@ -103,7 +103,7 @@ class AssetsEnqueuer implements BootableWpHookInterface
 
         foreach ($scripts as $handle => $src) {
             wp_enqueue_script(
-                is_string($handle) ? $handle : md5((string) $src),
+                \is_string($handle) ? $handle : \md5((string) $src),
                 $src,
                 ['jquery'],
                 $this->version,

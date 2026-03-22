@@ -110,9 +110,9 @@ class SetupTheme implements BootableWpHookInterface
         }
 
         // 対象のカスタム投稿タイプのみ
-        $target_post_types = array_keys(Config::get('cms.post_types'));
+        $target_post_types = \array_keys(Config::get('cms.post_types'));
 
-        if (!in_array($post->post_type, $target_post_types, true)) {
+        if (!\in_array($post->post_type, $target_post_types, true)) {
             return;
         }
 

@@ -24,13 +24,14 @@
  * 使用する際は定義元のクラスメソッドをカスタムしてください。
  *
  * 使用例:
- *   $sample = get_acf( get_the_ID() )->handle();
- *   $sampe['acf_is_public'];
+ *   // $sample = get_acf_fields( get_the_ID(), ['acf_is_public', 'acf_check', 'acf_price'] );
+ *   $sample = get_acf_fields( get_the_ID(), config('acf.news') );
+ *   echo $sampe['acf_price'];
  *
  * カスタムフィールドが集約した配列が返ります。
  * 配列のキーはそのままカスタムフィールドのキーです。
  */
-function get_acf(int $post_id, array $keys): array
+function get_acf_fields(int $post_id, array $keys): array
 {
     return \App\Plugins\Acf\Acf::getByKeys($post_id, $keys);
 }

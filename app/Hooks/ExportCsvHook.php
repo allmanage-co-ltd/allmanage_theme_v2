@@ -20,8 +20,8 @@ class ExportCsvHook implements BootableWpHookInterface
 
     private function register(): void
     {
-        foreach (Config::get('csv.exporter', []) as $class) {
-            if (!is_string($class) || !is_subclass_of($class, CsvExporterInterface::class)) {
+        foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
+            if (!\is_string($class) || !\is_subclass_of($class, CsvExporterInterface::class)) {
                 continue;
             }
 

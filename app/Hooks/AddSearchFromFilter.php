@@ -13,6 +13,8 @@ class AddSearchFromFilter implements BootableWpHookInterface
 {
     public function boot(): void
     {
+        if (!config('searchform.use_add_filter')) return;
+
         add_filter('posts_where', $this->filter(...), 10, 2);
     }
 
@@ -23,12 +25,12 @@ class AddSearchFromFilter implements BootableWpHookInterface
     {
         if (is_admin()) return $where;
 
-        $config = config('searchfilter');
+        $config = config('searchform.filter');
 
         $postType = $query->get('post_type');
 
         // post_typeが配列対応（念のため）
-        if (is_array($postType)) {
+        if (\is_array($postType)) {
             $postType = $postType[0] ?? null;
         }
 
@@ -64,7 +66,7 @@ class AddSearchFromFilter implements BootableWpHookInterface
         }
 
         if ($metaConditions) {
-            $where .= " AND (" . implode(' OR ', $metaConditions) . ")";
+            $where .= " AND (" . \implode(' OR ', $metaConditions) . ")";
         }
 
         // タクソノミー検索

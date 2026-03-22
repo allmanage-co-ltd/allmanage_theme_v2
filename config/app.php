@@ -7,14 +7,6 @@ return [
     'root'    => __DIR__ . '/..',
 
     /**
-     *
-     */
-    'hooks_auto_loader' => [
-        'cache'       => true,
-        'cache_path'  => \App\Support\Path::storage() . '/framework/cache/hooks.php',
-    ],
-
-    /**
      * 実行環境判定
      */
     'runtime' => [

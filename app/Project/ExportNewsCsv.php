@@ -2,6 +2,7 @@
 
 namespace App\Project;
 
+use App\Enums\CsvColumnEnum;
 use App\Wrapper\MyWpQuery;
 use App\Support\Abstracts\ExportCsvAbstract;
 
@@ -56,12 +57,12 @@ final class ExportNewsCsv extends ExportCsvAbstract
     protected function header(): array
     {
         return [
-            'post_id',
-            'post_status',
-            'post_title',
-            'post_content',
-            'post_date',
-            'post_thumbnail',
+            CsvColumnEnum::PostId->value,
+            CsvColumnEnum::PostStatus->value,
+            CsvColumnEnum::PostTitle->value,
+            CsvColumnEnum::PostContent->value,
+            CsvColumnEnum::PostDate->value,
+            CsvColumnEnum::PostThumbnail->value,
             'news_cat',
             'acf_is_public',
             'acf_price',

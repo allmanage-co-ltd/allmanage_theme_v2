@@ -78,11 +78,11 @@ class EditClientMenu implements BootableWpHookInterface
 
         foreach ($menu as $value) {
             $menu_slug = $value[2];
-            $keep      = in_array($menu_slug, $keep_menus);
+            $keep      = \in_array($menu_slug, $keep_menus);
 
             if (!$keep && !empty($GLOBALS['submenu'][$menu_slug])) {
                 foreach ($GLOBALS['submenu'][$menu_slug] as $submenu_item) {
-                    if (in_array($submenu_item[2], $keep_menus)) {
+                    if (\in_array($submenu_item[2], $keep_menus)) {
                         $keep = true;
                         break;
                     }
