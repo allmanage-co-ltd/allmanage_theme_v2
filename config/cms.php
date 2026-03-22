@@ -41,14 +41,14 @@ return [
     /**
      * オプションページの設定
      */
-    'option_pages' => [
-        'csv-in-expoter' => [
-            'show'       => true,
-            'page_title' => 'CSV',
-            'menu_title' => 'CSV',
-            'capability' => 'manage_options',
-            'slug'       => 'csv-in-expoter',
-            'view'       => 'csv-in-expoter.php',
-        ],
-    ],
+    // 'option_pages' => [
+    //     'csv-in-expoter' => [
+    //         'show'       => true,
+    //         'page_title' => 'CSV',
+    //         'menu_title' => 'CSV',
+    //         'capability' => 'manage_options',
+    //         'slug'       => 'csv-in-expoter',
+    //         'view'       => 'csv-in-expoter.php',
+    //     ],
+    // ],
 ];
