@@ -7,7 +7,7 @@ use App\Interfaces\BootableWpHookInterface;
 /**---------------------------------------------
  * Advanced Custom Fields 連携クラス
  * ---------------------------------------------
- *
+ * - Acf専用のフックをまとめる
  */
 class AcfHook implements BootableWpHookInterface
 {

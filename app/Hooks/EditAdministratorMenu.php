@@ -13,9 +13,6 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class EditAdministratorMenu implements BootableWpHookInterface
 {
-    /**
-     * 初期化処理
-     */
     public function boot(): void
     {
         if (!$this->role()) {

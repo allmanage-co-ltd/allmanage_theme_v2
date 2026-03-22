@@ -13,9 +13,6 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class AddShortcode implements BootableWpHookInterface
 {
-    /**
-     * フック登録
-     */
     public function boot(): void
     {
         add_shortcode('home', 'home');

@@ -49,38 +49,39 @@ class AddSearchFromFilter implements BootableWpHookInterface
 
         $like = '%' . $wpdb->esc_like($search) . '%';
 
-        $metaConditions = [];
+        $conditions = [];
 
         // meta検索
         foreach (($setting['add_meta_keys'] ?? []) as $key) {
-            $metaConditions[] = $wpdb->prepare(
+            $conditions[] = $wpdb->prepare(
                 "EXISTS (
-                    SELECT 1 FROM {$wpdb->postmeta} pm
-                    WHERE pm.post_id = {$wpdb->posts}.ID
-                    AND pm.meta_key = %s
-                    AND pm.meta_value LIKE %s
-                )",
+            SELECT 1 FROM {$wpdb->postmeta} pm
+            WHERE pm.post_id = {$wpdb->posts}.ID
+            AND pm.meta_key = %s
+            AND pm.meta_value LIKE %s
+        )",
                 $key,
                 $like
             );
         }
 
-        if ($metaConditions) {
-            $where .= " AND (" . \implode(' OR ', $metaConditions) . ")";
-        }
-
         // タクソノミー検索
         if (!empty($setting['add_taxonomies'])) {
-            $where .= $wpdb->prepare(
-                " OR EXISTS (
-                    SELECT 1 FROM {$wpdb->term_relationships} tr
-                    INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-                    INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
-                    WHERE tr.object_id = {$wpdb->posts}.ID
-                    AND t.name LIKE %s
-                )",
+            $conditions[] = $wpdb->prepare(
+                "EXISTS (
+            SELECT 1 FROM {$wpdb->term_relationships} tr
+            INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+            INNER JOIN {$wpdb->terms} t ON tt.term_id = t.term_id
+            WHERE tr.object_id = {$wpdb->posts}.ID
+            AND t.name LIKE %s
+        )",
                 $like
             );
+        }
+
+        // まとめてAND
+        if ($conditions) {
+            $where .= " AND (" . implode(' OR ', $conditions) . ")";
         }
 
         return $where;

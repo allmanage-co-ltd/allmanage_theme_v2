@@ -7,8 +7,7 @@ use App\Interfaces\BootableWpHookInterface;
 /**---------------------------------------------
  * Welcart 連携クラス
  * ---------------------------------------------
- * - Welcart（USCES）専用の拡張処理をまとめる
- * - 商品検索・管理画面・カート表示などのカスタマイズを担当
+ * - Welcart専用のフックをまとめる
  */
 class WelcartHook implements BootableWpHookInterface
 {

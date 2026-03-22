@@ -13,7 +13,7 @@ class Fmt
      */
     public static function h(string $s, $enc = 'UTF-8'): string
     {
-        return htmlspecialchars($s, ENT_QUOTES, $enc, false);
+        return \htmlspecialchars($s, ENT_QUOTES, $enc, false);
     }
 
     /**
@@ -21,7 +21,7 @@ class Fmt
      */
     public static function nl2br(string $s): string
     {
-        return nl2br(self::h($s));
+        return \nl2br(self::h($s));
     }
 
     /**
@@ -29,7 +29,7 @@ class Fmt
      */
     public static function number(int|float $n): string
     {
-        return number_format($n);
+        return \number_format($n);
     }
 
     /**
@@ -37,7 +37,7 @@ class Fmt
      */
     public static function date(string $date): string
     {
-        return date('Y年n月j日', strtotime($date));
+        return \date('Y年n月j日', \strtotime($date));
     }
 
     /**
@@ -45,7 +45,7 @@ class Fmt
      */
     public static function joinstr(array $values, string $sep = '、'): string
     {
-        return implode($sep, $values);
+        return \implode($sep, $values);
     }
 
     /**
@@ -53,6 +53,6 @@ class Fmt
      */
     public static function truncate(string $s, int $len): string
     {
-        return mb_strimwidth($s, 0, $len, '…', 'UTF-8');
+        return \mb_strimwidth($s, 0, $len, '…', 'UTF-8');
     }
 }

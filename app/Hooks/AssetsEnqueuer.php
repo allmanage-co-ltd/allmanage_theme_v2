@@ -21,9 +21,6 @@ class AssetsEnqueuer implements BootableWpHookInterface
         $this->version = (string) Config::get('assets.version', '1.0.0');
     }
 
-    /**
-     * フック登録
-     */
     public function boot(): void
     {
         add_action('wp_enqueue_scripts', $this->enqueueFront(...));

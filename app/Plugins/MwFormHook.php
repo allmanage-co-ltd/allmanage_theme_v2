@@ -7,9 +7,7 @@ use App\Interfaces\BootableWpHookInterface;
 /**---------------------------------------------
  * MW WP Form 連携クラス
  * ---------------------------------------------
- * - MW WP Form プラグイン専用の拡張処理をまとめる
- * - フォームの挙動・メール・初期設定・表示調整を一元管理
- * - テーマやテンプレートに MW WP Form のロジックを漏らさない
+ * - MW WP Form 専用のフックをまとめる
  */
 class MwFormHook implements BootableWpHookInterface
 {

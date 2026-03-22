@@ -5,6 +5,7 @@ namespace App\Hooks;
 use App\Interfaces\BootableWpHookInterface;
 use App\Services\Http\Session;
 use App\Services\Config;
+use ftp;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス
@@ -15,9 +16,6 @@ use App\Services\Config;
  */
 class SetupTheme implements BootableWpHookInterface
 {
-    /**
-     * フック登録
-     */
     public function boot(): void
     {
         add_action('plugins_loaded', $this->sessionStart(...), 0);
@@ -26,8 +24,9 @@ class SetupTheme implements BootableWpHookInterface
         add_action('init', $this->trashDefaultPosts(...));
         add_filter('excerpt_length', $this->customExcerptLength(...), 999);
         add_action('after_setup_theme', $this->themeSupportAdd(...));
-        add_action('save_post', $this->save_custom_post_slug(...), 10, 3);
-        add_action('after_switch_theme', $this->default_permalink_slug(...));
+        add_action('save_post', $this->saveCustomPostSlug(...), 10, 3);
+        add_action('after_switch_theme', $this->defaultPermalinkSlug(...));
+        add_action('option_posts_per_page', $this->defaultPostsPerPage(...), 10, 1);
     }
 
     /**
@@ -89,9 +88,17 @@ class SetupTheme implements BootableWpHookInterface
     }
 
     /**
+     * デフォルトの投稿数を1にする
+     */
+    public function defaultPostsPerPage($value)
+    {
+        return 1;
+    }
+
+    /**
      * デフォルトのパーマリンク構造をpost_idに設定
      */
-    public function default_permalink_slug()
+    public function defaultPermalinkSlug()
     {
         global $wp_rewrite;
 
@@ -102,7 +109,7 @@ class SetupTheme implements BootableWpHookInterface
     /**
      * カスタム投稿タイプのスラッグをpost_idに固定
      */
-    public function save_custom_post_slug($post_id, $post, $update)
+    public function saveCustomPostSlug($post_id, $post, $update)
     {
         // 自動保存・リビジョンは除外
         if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {

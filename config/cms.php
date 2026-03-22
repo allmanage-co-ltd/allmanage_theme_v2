@@ -2,22 +2,25 @@
 
 return [
     /**
-     * フックの自動読み込みの設定
+     * app/Hooks/Core/HooksAutoLoader.phpで参照
      *
+     * フックの自動読み込みの設定
      * - BootableWpHookInterface を実装したクラをスキャンして自動登録する
      *
      * cache: true にするとキャッシュを有効にする
      * cache_path: キャッシュファイルの保存先
      */
     'hooks_auto_loader' => [
-        'cache'       => true,
-        'cache_path'  => \App\Helpers\Path::storage() . '/cache/app/hooks.php',
+        'cache'      => true,
+        'cache_path' => \App\Helpers\Path::storage() . '/cache/app/hooks.php',
     ],
 
     /**
+     * app/Hooks/RegisterPostType.phpで参照
+     *
      * カスタム投稿タイプの設定
      */
-    'post_types'      => [
+    'post_types'        => [
 
         'news' => [
             'labels'        => [
@@ -39,9 +42,11 @@ return [
     ],
 
     /**
+     * app/Hooks/RegisterTaxonomy.phpで参照
+     *
      * カスタムタクソノミーの設定
      */
-    'taxonomies'      => [
+    'taxonomies'        => [
 
         'news_cat' => [
             'post_type'    => 'news',
@@ -53,11 +58,13 @@ return [
     ],
 
     /**
+     * app/Hooks/RegisterOptionPage.phpで参照
+     *
      * オプションページの設定
      */
-    'option_view_dir' => \App\Helpers\Path::views() . '/app/admin',
+    'option_view_dir'   => \App\Helpers\Path::views() . '/app/admin',
 
-    'option_pages'    => [
+    'option_pages'      => [
 
         'csv-in-expoter' => [
             'show'       => true,

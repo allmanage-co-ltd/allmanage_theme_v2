@@ -7,6 +7,8 @@ return [
     'root'    => __DIR__ . '/..',
 
     /**
+     * app/Services/Http/Runtime.phpで参照
+     *
      * 実行環境判定
      */
     'runtime' => [

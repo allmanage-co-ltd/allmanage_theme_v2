@@ -25,9 +25,6 @@ class EditClientMenu implements BootableWpHookInterface
         $this->opts                 = $config['default_option'];
     }
 
-    /**
-     * 初期化処理
-     */
     public function boot(): void
     {
         if (!$this->role()) {

@@ -10,9 +10,8 @@ use App\Hooks\Core\HooksAutoLoader;
  * - 処理は書かない
  * - 登録と起動のみを行う
  *
- * 今回のアップデートで、app/ 配下のクラスが
- * BootableWpHookInterface を実装していれば
- * HooksAutoLoader により自動 Boot される仕様に変更した。
+ * app/ 配下でBootableWpHookInterface を実装したクラスが
+ * HooksAutoLoader::handle() により自動 Boot される
  */
 class App
 {

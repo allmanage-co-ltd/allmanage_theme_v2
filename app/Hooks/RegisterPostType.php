@@ -17,9 +17,6 @@ use App\Services\Config;
  */
 class RegisterPostType implements BootableWpHookInterface
 {
-    /**
-     * 初期化処理
-     */
     public function boot(): void
     {
         add_action('init', $this->register(...));

@@ -1,7 +1,11 @@
 <?php
+
+/**
+ * app/Hooks/AddSearchFromFilter.phpで参照s
+ */
 return [
     /**
-     *  検索フィルター機能の有効化
+     * 検索フィルター機能の有効化
      *
      * - true の場合、add_filter を使って検索条件を拡張する
      * - false の場合、標準のWordPress検索を使用する

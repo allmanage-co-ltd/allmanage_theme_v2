@@ -64,7 +64,7 @@ abstract class ImportCsvAbstract implements CsvImporterInterface
                 postType: static::postType(),
                 map: $this->map(),
                 isDryRun: isset($_REQUEST[static::dryRunParam()]),
-            ))();
+            ))->run();
         } catch (\Throwable $throwable) {
             AppError::abort($throwable);
         }

@@ -6,9 +6,9 @@ use App\Interfaces\BootableWpHookInterface;
 use App\Interfaces\CsvExporterInterface;
 use App\Services\Config;
 
-/**
+/**---------------------------------------------
  * CSV エクスポートの入口。
- *
+ * ---------------------------------------------
  * 設定に登録された exporter を CsvExporterInterface で扱う。
  */
 class ExportCsvHook implements BootableWpHookInterface

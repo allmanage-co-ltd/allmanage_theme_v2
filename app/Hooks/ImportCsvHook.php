@@ -7,9 +7,9 @@ use App\Interfaces\BootableWpHookInterface;
 use App\Interfaces\CsvImporterInterface;
 use App\Services\Config;
 
-/**
+/**---------------------------------------------
  * CSV インポートの入口。
- *
+ * ---------------------------------------------
  * 設定に登録された importer を CsvImporterInterface で扱う。
  */
 class ImportCsvHook implements BootableWpHookInterface
