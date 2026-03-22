@@ -63,21 +63,7 @@ class HooksAutoLoader
                 continue;
             }
 
-            $ref = new \ReflectionClass($class);
-
-            // 抽象クラスは生成できないため除外
-            if ($ref->isAbstract()) {
-                continue;
-            }
-
-            // Hook起動対象は BootableWpHookInterface 実装クラスのみに限定
-            if (!$ref->implementsInterface(BootableWpHookInterface::class)) {
-                continue;
-            }
-
-            // 条件を満たしたクラスだけインスタンス化して boot() 実行
-            $instance = $ref->newInstance();
-            $instance->boot();
+            (new $class())->boot();
         }
     }
 
@@ -197,8 +183,6 @@ class HooksAutoLoader
      *
      * 例:
      * <?php return ['App\\Hooks\\ExampleHook'];
-     *
-     * @param array<int, string> $classes
      */
     private static function writeCache(string $path, array $classes): bool
     {
@@ -265,7 +249,12 @@ class HooksAutoLoader
             }
 
             // Hook起動対象はInterface実装クラスのみ
-            if (\is_subclass_of($class, BootableWpHookInterface::class)) {
+            $ref = new \ReflectionClass($class);
+
+            if (
+                !$ref->isAbstract() &&
+                $ref->implementsInterface(BootableWpHookInterface::class)
+            ) {
                 $classes[] = $class;
             }
         }
