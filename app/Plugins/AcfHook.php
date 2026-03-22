@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Plugins\Acf;
+namespace App\Plugins;
 
 use App\Interfaces\BootableWpHookInterface;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Errors;
+namespace App\Error;
 
-use App\Actions\Logger\LogFieldResolver;
+use App\Services\Logger\LogFieldResolver;
 use App\Interfaces\AbortAppErrorInterface;
-use App\Support\Config;
-use App\Support\Logger;
-use App\Support\Runtime;
+use App\Services\Config;
+use App\Services\Logger\Logger;
+use App\Services\Http\Runtime;
 
 /**
  * テーマ内で処理を止めたい時の共通窓口

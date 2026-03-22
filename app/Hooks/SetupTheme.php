@@ -3,8 +3,8 @@
 namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Session;
-use App\Support\Config;
+use App\Services\Http\Session;
+use App\Services\Config;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス

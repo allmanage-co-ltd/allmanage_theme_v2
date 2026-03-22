@@ -1,28 +1,32 @@
 <?php
 
-namespace App\Actions\Logger;
+namespace App\Services\Logger;
 
-use App\Enums\LogFieeldEnum;
-use App\Support\Runtime;
+use App\Enums\LogFieldEnum;
+use App\Helpers\Arr;
+use App\Services\Http\Runtime;
 
+/**
+ * ログに付与する共通フィールド解決
+ */
 class LogFieldResolver
 {
     public static function handle(array $fields): array
     {
         $map = [
-            LogFieeldEnum::RequestId->value => fn() => Runtime::requestId(),
-            LogFieeldEnum::Ip->value        => fn() => $_SERVER['REMOTE_ADDR'] ?? '',
-            LogFieeldEnum::Xff->value       => fn() => explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '')[0] ?? '',
-            LogFieeldEnum::Method->value    => fn() => $_SERVER['REQUEST_METHOD'] ?? '',
-            LogFieeldEnum::Uri->value       => fn() => $_SERVER['REQUEST_URI'] ?? '',
-            LogFieeldEnum::Query->value     => fn() => $_SERVER['QUERY_STRING'] ?? '',
-            LogFieeldEnum::Referer->value   => fn() => $_SERVER['HTTP_REFERER'] ?? '',
-            LogFieeldEnum::Ua->value        => fn() => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            LogFieeldEnum::UserId->value    => fn() => \get_current_user_id(),
-            LogFieeldEnum::PostId->value    => fn() => \get_queried_object_id(),
-            LogFieeldEnum::PostType->value  => fn() => \get_post_type(\get_queried_object_id()),
-            LogFieeldEnum::Status->value    => fn() => \http_response_code(),
-            LogFieeldEnum::Is404->value     => fn() => \is_404(),
+            LogFieldEnum::RequestId->value => fn() => Runtime::requestId(),
+            LogFieldEnum::Ip->value        => fn() => $_SERVER['REMOTE_ADDR'] ?? '',
+            LogFieldEnum::Xff->value       => fn() => Arr::first(Arr::split($_SERVER['HTTP_X_FORWARDED_FOR'] ?? '')) ?? '',
+            LogFieldEnum::Method->value    => fn() => $_SERVER['REQUEST_METHOD'] ?? '',
+            LogFieldEnum::Uri->value       => fn() => $_SERVER['REQUEST_URI'] ?? '',
+            LogFieldEnum::Query->value     => fn() => $_SERVER['QUERY_STRING'] ?? '',
+            LogFieldEnum::Referer->value   => fn() => $_SERVER['HTTP_REFERER'] ?? '',
+            LogFieldEnum::Ua->value        => fn() => $_SERVER['HTTP_USER_AGENT'] ?? '',
+            LogFieldEnum::UserId->value    => fn() => \get_current_user_id(),
+            LogFieldEnum::PostId->value    => fn() => \get_queried_object_id(),
+            LogFieldEnum::PostType->value  => fn() => \get_post_type(\get_queried_object_id()),
+            LogFieldEnum::Status->value    => fn() => \http_response_code(),
+            LogFieldEnum::Is404->value     => fn() => \is_404(),
         ];
 
         $result = [];
@@ -34,6 +38,7 @@ class LogFieldResolver
                 $result[$key] = $map[$key]();
             }
         }
+
         return $result;
     }
 }

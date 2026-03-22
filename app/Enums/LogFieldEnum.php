@@ -2,7 +2,10 @@
 
 namespace App\Enums;
 
-enum LogFieeldEnum: string
+/**
+ * ログに出力する標準フィールド定義
+ */
+enum LogFieldEnum: string
 {
     case RequestId = 'request_id';
     case Ip        = 'ip';

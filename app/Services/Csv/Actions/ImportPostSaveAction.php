@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Csv;
+namespace App\Services\Csv\Actions;
 
 use App\Enums\CsvColumnActionEnum;
 

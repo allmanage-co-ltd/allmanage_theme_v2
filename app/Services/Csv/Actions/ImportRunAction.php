@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Actions\Csv;
+namespace App\Services\Csv\Actions;
 
 use App\Enums\CsvColumnActionEnum;
-use App\Support\CsvReader;
-use App\Support\Html;
+use App\Services\Csv\CsvReader;
+use App\Helpers\Html;
 
 /**---------------------------------------------
  * CSVインポート オーケストレーター

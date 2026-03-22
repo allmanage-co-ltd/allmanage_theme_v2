@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Csv;
+namespace App\Services\Csv\Actions;
 
 /**---------------------------------------------
  * 添付ファイルID解決

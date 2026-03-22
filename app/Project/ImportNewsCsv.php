@@ -2,10 +2,10 @@
 
 namespace App\Project;
 
-use App\Support\Abstracts\ImportCsvAbstract;
+use App\Services\Csv\ImportCsvAbstract;
 use App\Enums\CsvColumnActionEnum;
 use App\Enums\CsvValueTypeEnum;
-use App\Support\Config;
+use App\Services\Config;
 
 /**---------------------------------------------
  * News CSVインポート

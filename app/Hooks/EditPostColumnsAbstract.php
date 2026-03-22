@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Hooks\Abstracts;
+namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
-use App\Plugins\Acf\Acf;
+use App\Plugins\Acf;
 
 /**
  * 投稿一覧カラム追加の共通処理。

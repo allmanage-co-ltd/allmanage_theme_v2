@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Actions\Csv;
+namespace App\Services\Csv\Actions;
 
 use App\Enums\CsvColumnActionEnum;
+use App\Helpers\Arr;
 
 /**---------------------------------------------
  * カラム単位のアクション実行
@@ -27,9 +28,6 @@ class ImportColumnAction
 
     /**
      * アクションを実行する
-     *
-     * - isDryRun が true の場合は何もしない
-     * - action が CsvColumnActionEnum でない場合は何もしない
      */
     public function __invoke(int $post_id, string $key, mixed $value, array $config): void
     {
@@ -47,19 +45,12 @@ class ImportColumnAction
             CsvColumnActionEnum::UpdateMeta   => update_post_meta($post_id, $key, $value),
             CsvColumnActionEnum::SetTerms     => $this->setTerms($post_id, $value, $config),
             CsvColumnActionEnum::SetThumbnail => $this->setThumbnail($post_id, $value),
-            default                              => null,
+            default                           => null,
         };
     }
 
     /**
      * タクソノミーのタームを設定する
-     *
-     * - taxonomy の指定がない場合は何もしない
-     * - config['explode'] が指定されている場合はその区切り文字で分割する
-     *   例: "お知らせ,スポーツ" → ['お知らせ', 'スポーツ']
-     * - 数字文字列（"5" など）は int にキャストしてIDとして扱う。
-     *   wp_set_object_terms() に文字列を渡すとスラッグとして解釈されるため、
-     *   CSVにterm_idが入っている場合に意図通りに動かない。
      */
     private function setTerms(int $post_id, mixed $value, array $config): void
     {
@@ -70,15 +61,13 @@ class ImportColumnAction
         }
 
         if (\is_string($value) && isset($config['explode'])) {
-            $terms = \array_values(\array_filter(
-                \array_map('trim', \explode($config['explode'], $value))
-            ));
+            $terms = Arr::split($value, $config['explode']);
         } else {
             $terms = \is_array($value) ? $value : [$value];
         }
 
         $terms = \array_map(
-            fn($t) => \is_numeric($t) ? (int) $t : $t,
+            static fn(mixed $term): mixed => \is_numeric($term) ? (int) $term : $term,
             $terms
         );
 
@@ -87,10 +76,6 @@ class ImportColumnAction
 
     /**
      * アイキャッチ画像を設定する
-     *
-     * - value が空の場合は何もしない
-     * - ImportAttachmentResolveAction でURLから attachment_id を解決する
-     * - attachment_id が取得できない場合は何もしない
      */
     private function setThumbnail(int $post_id, mixed $value): void
     {

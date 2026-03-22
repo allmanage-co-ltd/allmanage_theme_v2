@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Plugins\Acf;
+namespace App\Plugins;
 
 /**---------------------------------------------
  * Advanced Custom Fields 連携クラス

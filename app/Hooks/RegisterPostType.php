@@ -3,7 +3,7 @@
 namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Config;
+use App\Services\Config;
 
 /**---------------------------------------------
  * カスタム投稿タイプ登録クラス

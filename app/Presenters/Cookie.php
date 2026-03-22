@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Presenter;
+namespace App\Presenters;
 
-use App\Support\Fmt;
+use App\Helpers\Fmt;
 
 /**---------------------------------------------
  * Cookieポップアップ生成クラス

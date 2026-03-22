@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Helpers;
 
 /**---------------------------------------------
  * HTMLラッパー系のヘルパー

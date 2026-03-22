@@ -3,9 +3,9 @@
 namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Runtime;
-use App\Support\Config;
-use App\Presenter\Metadata;
+use App\Services\Http\Runtime;
+use App\Services\Config;
+use App\Presenters\Metadata;
 
 /**---------------------------------------------
  * SEO 関連フッククラス

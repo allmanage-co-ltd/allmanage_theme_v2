@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support;
+namespace App\Helpers;
 
 /**---------------------------------------------
  * パス取得ヘルパー
@@ -50,16 +50,19 @@ class Path
 
     /**
      * パス結合
+     *
+     * - 先頭 / 末尾のスラッシュ揺れを吸収する
+     * - 空文字は自然に無視される
      */
-    private static function join(string ...$parts): string
+    public static function join(string ...$parts): string
     {
-        $first = \array_shift($parts);
+        $first = (string) \array_shift($parts);
 
-        return \rtrim((string) $first, '/')
+        return \rtrim($first, '/')
             . '/'
-            . \implode('/', \array_map(
-                fn($p) => \trim($p, '/'),
+            . \implode('/', \array_filter(\array_map(
+                static fn(string $part): string => \trim($part, '/'),
                 $parts
-            ));
+            ), static fn(string $part): bool => $part !== ''));
     }
 }

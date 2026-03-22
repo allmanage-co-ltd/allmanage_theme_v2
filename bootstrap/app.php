@@ -1,15 +1,18 @@
 <?php
 
-use App\Actions\Hook\HooksAutoLoader;
+use App\Hooks\Core\HooksAutoLoader;
 
 /**---------------------------------------------
  * アプリケーション起動クラス
  * ---------------------------------------------
- * - テーマ内のフック関連クラスを起動する
+ * - テーマ内の起動処理をまとめる入口
  * - WordPressの実行に必要な初期処理を束ねる
  * - 処理は書かない
  * - 登録と起動のみを行う
- * - 依存関係はここで一元管理する
+ *
+ * 今回のアップデートで、app/ 配下のクラスが
+ * BootableWpHookInterface を実装していれば
+ * HooksAutoLoader により自動 Boot される仕様に変更した。
  */
 class App
 {
@@ -18,6 +21,6 @@ class App
      */
     public function boot(): void
     {
-        (new HooksAutoLoader)->handle();
+        HooksAutoLoader::handle();
     }
 }

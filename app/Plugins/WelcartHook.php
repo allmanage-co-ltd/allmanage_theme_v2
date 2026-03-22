@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Plugins\Welcart;
+namespace App\Plugins;
 
 use App\Interfaces\BootableWpHookInterface;
 

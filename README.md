@@ -7,38 +7,46 @@
 
 このテーマでは、外部メンバーでも迷いにくいように次を分けています。
 
-- `app/WordPress/` : WordPress 依存コード
-- `assets/` : CSS / JS / 画像などのフロント資産
-- `app/Project/` : 案件別コード
-- `app/Shared/` : 再利用したい共通資産
-- `app/Interfaces/` : 最小限の共通ルール
-- `app/Errors/` : 終了系エラーの共通窓口
+- `app/Hooks/` : WordPress 起動処理
+- `app/Plugins/` : プラグイン依存処理
+- `app/Services/` : 共通サービス
+- `app/Helpers/` : 小さい再利用関数
+- `app/Presenters/` : View 組み立て
+- `app/Project/` : 案件固有コード
+- `app/Interfaces/` / `app/Enums/` : 契約と定義
+- `app/Error/` : 終了系エラーの共通窓口
 
 ## まず触る場所
 
 - 画面表示を変えたい → `views/` と `assets/`
-- WordPress の挙動を変えたい → `app/WordPress/`
+- WordPress の挙動を変えたい → `app/Hooks/`
+- プラグイン連携を変えたい → `app/Plugins/`
 - 案件別ロジックを追加したい → `app/Project/`
 - view から使う関数を確認したい → `bootstrap/functions.php`
 - 設定を変えたい → `config/`
 
 ## app 配下の実務ルール
 
-- `Project/` は外部メンバーが主に触る唯一の PHP ディレクトリとして扱う
-- そのため `Project/` 内は細分化しすぎない
-- WordPress 依存は `WordPress/` に寄せる
-- 再利用したい処理は `Shared/` に寄せる
+- `Project/` は案件固有コードの一時置き場として使ってよい
+- 資産化できそうになったら `Hooks/`, `Services/`, `Helpers/` へ切り出す
+- Hook 起動クラスは `BootableWpHookInterface` 実装を基本とする
 - 処理停止は `AppError::abort()` に寄せる
+- 標準関数の繰り返しが増えたら `Helpers/` を育てる
 
 ## ディレクトリ概要
 
 ```text
 ├─ app/
-│  ├─ Errors/
+│  ├─ Enums/
+│  ├─ Error/
+│  ├─ Helpers/
+│  ├─ Hooks/
+│  │  └─ Core/
 │  ├─ Interfaces/
+│  ├─ Plugins/
+│  ├─ Presenters/
 │  ├─ Project/
-│  ├─ Shared/
-│  └─ WordPress/
+│  └─ Services/
 ├─ assets/
 ├─ bootstrap/
 ├─ config/
@@ -48,14 +56,21 @@
 
 ## namespace 方針
 
-- `app/WordPress/` は `App\WordPress\...`
-- `app/Project/` は `App\UseCase\...`
-- `app/Shared/` は `App\Support\...`
+- `app/` 配下は **ディレクトリと namespace を合わせる**
+- 例:
+  - `app/Hooks/SetupTheme.php` → `App\Hooks\SetupTheme`
+  - `app/Services/Http/Session.php` → `App\Services\Http\Session`
+  - `app/Presenters/View.php` → `App\Presenters\View`
+  - `app/Helpers/Path.php` → `App\Helpers\Path`
 
-少なくとも `WordPress/` 配下は、ディレクトリと namespace が素直に対応する状態を維持します。
+## 起動方針
+
+- `bootstrap/app.php` は `HooksAutoLoader` を起動するだけに保つ
+- `BootableWpHookInterface` を実装したクラスは自動 Boot 対象になる
+- 手動配線が必要なのは特殊ケースのみに寄せる
 
 ## エラー処理方針
 
 - `wp_die()` を直接散らさない
 - テーマ内で処理を止める時は `AppError::abort()` を使う
-- 終了方法を変えたくなった時は `app/Errors/AppError.php` だけを見ればよい状態にする
+- 終了方法を変えたくなった時は `app/Error/AppError.php` だけを見ればよい状態にする

@@ -2,7 +2,7 @@
 
 namespace App\Project;
 
-use App\Hooks\Abstracts\EditPostColumnsAbstract;
+use App\Hooks\EditPostColumnsAbstract;
 
 /**---------------------------------------------
  * 管理画面 News投稿一覧カラム編集
@@ -13,9 +13,9 @@ use App\Hooks\Abstracts\EditPostColumnsAbstract;
  * ---------------------------------------------
  * ■ 有効化方法
  * ---------------------------------------------
- * bootstrap/app.php でインスタンス化して boot() を呼ぶ:
- *
- *   (new \App\UseCase\Edit{投稿タイプ名}PostColumns())->boot();
+ * このクラスは親クラス経由で BootableWpHookInterface の契約に乗るため、
+ * app/ 配下に置かれていれば HooksAutoLoader から自動 Boot されます。
+ * 個別に bootstrap/app.php へ手動登録する必要はありません。
  */
 final class EditNewsPostColumns extends EditPostColumnsAbstract
 {

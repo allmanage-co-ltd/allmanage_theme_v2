@@ -2,10 +2,10 @@
 
 namespace App\Hooks;
 
-use App\Errors\AppError;
+use App\Error\AppError;
 use App\Interfaces\BootableWpHookInterface;
 use App\Interfaces\CsvImporterInterface;
-use App\Support\Config;
+use App\Services\Config;
 
 /**
  * CSV インポートの入口。

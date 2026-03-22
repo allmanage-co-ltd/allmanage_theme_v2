@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Support\Abstracts;
+namespace App\Services\Csv;
 
-use App\Errors\AppError;
+use App\Error\AppError;
 use App\Interfaces\CsvExporterInterface;
-use App\Support\CsvWriter;
-use App\Support\Html;
-use App\Actions\Csv\ExportGetTermSlugsAction;
+use App\Services\Csv\CsvWriter;
+use App\Helpers\Html;
+use App\Services\Csv\Actions\ExportGetTermSlugsAction;
 
 /**
  * CSV エクスポートの共通処理。

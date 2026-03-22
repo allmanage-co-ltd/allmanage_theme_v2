@@ -33,7 +33,7 @@
  */
 function get_acf_fields(int $post_id, array $keys): array
 {
-    return \App\Plugins\Acf\Acf::getByKeys($post_id, $keys);
+    return \App\Plugins\Acf::getByKeys($post_id, $keys);
 }
 
 /**---------------------------------------------
@@ -85,9 +85,9 @@ function img_uri(): string
  *   wpquery()->setPostType(...)->setPerPage(...)->build();
  *   wpquery()->setPostType(...)->setPerPage(...)->debug();
  */
-function wpquery(): \App\Wrapper\MyWpQuery
+function wpquery(): \App\Services\Query\MyWpQuery
 {
-    return \App\Wrapper\MyWpQuery::new();
+    return \App\Services\Query\MyWpQuery::new();
 }
 
 /**
@@ -98,7 +98,7 @@ function wpquery(): \App\Wrapper\MyWpQuery
  */
 function config(string $key, $default = null)
 {
-    return \App\Support\Config::get($key, $default);
+    return \App\Services\Config::get($key, $default);
 }
 
 /**
@@ -109,7 +109,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Support\Config::get("permalink.{$slug}", '/');
+    return \App\Services\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -123,7 +123,7 @@ function url(string $slug): string
  */
 function datepicker(array $options = []): void
 {
-    (new \App\Presenter\Datepicker($options))->boot();
+    (new \App\Presenters\Datepicker($options))->boot();
 }
 
 /**
@@ -134,7 +134,7 @@ function datepicker(array $options = []): void
  */
 function slog()
 {
-    return \App\Support\Logger::app();
+    return \App\Services\Logger\Logger::app();
 }
 
 /**
@@ -147,9 +147,9 @@ function slog()
  *   sess()->flash('message', '送信しました');
  *   $message = sess()->pull('message');
  */
-function sess(): \App\Support\Session
+function sess(): \App\Services\Http\Session
 {
-    return new \App\Support\Session();
+    return new \App\Services\Http\Session();
 }
 
 /**
@@ -161,9 +161,9 @@ function sess(): \App\Support\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method, string $url, array $options = []): \App\Support\Curl
+function curl(string $method, string $url, array $options = []): \App\Services\Http\Curl
 {
-    return \App\Support\Curl::request($method, $url, $options);
+    return \App\Services\Http\Curl::request($method, $url, $options);
 }
 
 /**
@@ -174,7 +174,7 @@ function curl(string $method, string $url, array $options = []): \App\Support\Cu
  */
 function is_local(): bool
 {
-    return \App\Support\Runtime::isLocal();
+    return \App\Services\Http\Runtime::isLocal();
 }
 
 /**
@@ -185,7 +185,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Support\Runtime::isMobile();
+    return \App\Services\Http\Runtime::isMobile();
 }
 
 /**
@@ -196,7 +196,7 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Support\Runtime::isBot();
+    return \App\Services\Http\Runtime::isBot();
 }
 
 /**
@@ -204,14 +204,14 @@ function is_bot(): bool
  *
  * header + view + footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
+ * App\Presenters\View側で判定し、呼ぶテンプレートを切り替えています。
  *
  * 使用例（テンプレートページで）:
  *   the_view();
  */
 function the_view(): void
 {
-    \App\Presenter\View::pages();
+    \App\Presenters\View::pages();
 }
 
 /**
@@ -222,7 +222,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-    \App\Presenter\View::layout($name);
+    \App\Presenters\View::layout($name);
 }
 
 /**
@@ -236,7 +236,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-    \App\Presenter\View::component($name, $data);
+    \App\Presenters\View::component($name, $data);
 }
 
 /**
@@ -256,7 +256,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-    (new \App\Presenter\Breadcrumb)->render();
+    (new \App\Presenters\Breadcrumb)->render();
 }
 
 /**
@@ -282,7 +282,7 @@ function the_breadcrumb(): void
  */
 function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
 {
-    (new \App\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
+    (new \App\Presenters\Pagination($query, $range, $prev_text, $next_text))->render();
 }
 
 /**
@@ -310,7 +310,7 @@ function the_postnavi(
     string $prev_text = '← 前へ',
     string $next_text = '次へ →',
 ): void {
-    (new \App\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\Presenters\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -321,5 +321,5 @@ function the_postnavi(
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\Presenter\Cookie($days, $link))->render();
+    (new \App\Presenters\Cookie($days, $link))->render();
 }

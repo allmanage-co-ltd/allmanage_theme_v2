@@ -3,7 +3,7 @@
 namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Config;
+use App\Services\Config;
 
 /**---------------------------------------------
  * カスタムタクソノミー登録クラス

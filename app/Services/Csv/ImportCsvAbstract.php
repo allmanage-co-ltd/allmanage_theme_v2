@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Support\Abstracts;
+namespace App\Services\Csv;
 
-use App\Errors\AppError;
+use App\Error\AppError;
 use App\Interfaces\CsvImporterInterface;
-use App\Support\CsvReader;
-use App\Actions\Csv\ImportRunAction;
+use App\Services\Csv\CsvReader;
+use App\Services\Csv\Actions\ImportRunAction;
 
 /**---------------------------------------------
  * CSVインポート 基底クラス

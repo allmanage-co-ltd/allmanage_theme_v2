@@ -2,9 +2,9 @@
 
 namespace App\Hooks;
 
+use App\Helpers\Path;
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Config;
-use App\Support\Path;
+use App\Services\Config;
 
 /**---------------------------------------------
  * 管理画面オプションページ登録クラス
@@ -33,7 +33,6 @@ class RegisterOptionPage implements BootableWpHookInterface
     public function register(): void
     {
         foreach (Config::get('cms.option_pages') ?? [] as $key => $option) {
-
             if (empty($option['show'])) {
                 continue;
             }
@@ -59,8 +58,9 @@ class RegisterOptionPage implements BootableWpHookInterface
             return;
         }
 
-        $dir = \rtrim(Config::get('cms.option_view_dir') ?? Path::views() . '/app/admin', '/');
+        $baseDir = Config::get('cms.option_view_dir') ?? Path::views('app/admin');
+        $path    = Path::join(\rtrim($baseDir, '/'), $view);
 
-        include "$dir/{$view}";
+        include $path;
     }
 }

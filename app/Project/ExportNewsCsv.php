@@ -3,8 +3,8 @@
 namespace App\Project;
 
 use App\Enums\CsvColumnEnum;
-use App\Wrapper\MyWpQuery;
-use App\Support\Abstracts\ExportCsvAbstract;
+use App\Services\Query\MyWpQuery;
+use App\Services\Csv\ExportCsvAbstract;
 
 /**---------------------------------------------
  * News CSVエクスポート

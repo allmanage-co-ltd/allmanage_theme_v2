@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Actions\Hook;
+namespace App\Hooks\Core;
 
-use App\Support\Config;
-use App\Support\Path;
+use App\Services\Config;
+use App\Helpers\Path;
 use App\Interfaces\BootableWpHookInterface;
 
 /**

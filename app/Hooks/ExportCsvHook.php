@@ -4,7 +4,7 @@ namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
 use App\Interfaces\CsvExporterInterface;
-use App\Support\Config;
+use App\Services\Config;
 
 /**
  * CSV エクスポートの入口。

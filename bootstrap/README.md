@@ -6,9 +6,11 @@
 
 ### `app.php`
 
-- `App` クラスを定義し、テーマ起動時に必要なクラスを `boot()` する
+- `App` クラスを定義し、テーマ起動時の入口をまとめる
+- 今回の更新で、`BootableWpHookInterface` を実装したクラスは `HooksAutoLoader` により **自動 Boot** される
 - 方針:
-    - **ここには処理ロジックを書かず、起動の配線だけを書く**
+  - **ここには処理ロジックを書かず、起動の配線だけを書く**
+  - 個別クラスを毎回手動登録する場所ではなく、オートローダー起動の入口として保つ
 
 ### `functions.php`
 
@@ -23,7 +25,7 @@
 
 - 新しい機能を追加する時:
   1. 先に `app/` 側にクラス実装
-  2. 必要な場合のみ `bootstrap/functions.php` に薄いラッパーを追加
-  3. WordPress 起動時に必要なら `bootstrap/app.php` の `App::boot()` に登録
+  2. Hook 起動が必要なら `BootableWpHookInterface` を実装
+  3. 必要な場合のみ `bootstrap/functions.php` に薄いラッパーを追加
 
 - `functions.php`（テーマ直下）はエントリーポイントのため、原則触らない

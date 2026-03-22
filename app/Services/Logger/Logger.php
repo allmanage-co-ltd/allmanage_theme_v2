@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Support;
+namespace App\Services\Logger;
 
+use App\Helpers\Path;
+use App\Services\Config;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonoLogger;
 
@@ -16,11 +18,12 @@ class Logger
 {
     private static ?MonoLogger $app = null;
     private static ?MonoLogger $access = null;
+    private static ?MonoLogger $error = null;
 
     /**
      * アプリログ（日別）
      */
-    public static function app(): MonoLogger
+    public static function app(): ?MonoLogger
     {
         return self::$app ??= self::createLogger('app', 'logger.app.use', 'logger.app.dir');
     }
@@ -28,7 +31,7 @@ class Logger
     /**
      * アクセスログ（日別）
      */
-    public static function access(): MonoLogger
+    public static function access(): ?MonoLogger
     {
         return self::$access ??= self::createLogger('access', 'logger.access.use', 'logger.access.dir');
     }
@@ -36,24 +39,21 @@ class Logger
     /**
      * エラーログ（日別）
      */
-    public static function error(): MonoLogger
+    public static function error(): ?MonoLogger
     {
-        return self::$access ??= self::createLogger('error', 'logger.error.use', 'logger.error.dir');
+        return self::$error ??= self::createLogger('error', 'logger.error.use', 'logger.error.dir');
     }
 
     /**
      * Monolog インスタンスを生成する
-     *
-     * - configのフラグが false の場合はインスタンスを生成しない
-     * - ログディレクトリが存在しない場合は作成する
      */
-    private static function createLogger(string $channel, string $config_use, string $config_dir): ?MonoLogger
+    private static function createLogger(string $channel, string $configUse, string $configDir): ?MonoLogger
     {
-        if (!Config::get($config_use)) {
+        if (!Config::get($configUse)) {
             return null;
         }
 
-        $dir = Path::root() . Config::get($config_dir);
+        $dir = Path::root() . Config::get($configDir);
 
         if (!\is_dir($dir) && !\mkdir($dir, 0755, true) && !\is_dir($dir)) {
             throw new \RuntimeException("ログのディレクトリ作成に失敗しました: {$dir}");

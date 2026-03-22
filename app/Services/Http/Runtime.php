@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Support;
+namespace App\Services\Http;
+
+use App\Services\Config;
 
 /**---------------------------------------------
  * 実行環境判定サービス
@@ -21,17 +23,14 @@ class Runtime
     {
         static $requestId = null;
 
-        // すでに生成済みなら使い回す
         if ($requestId !== null) {
             return $requestId;
         }
 
-        // X-Request-Id ヘッダがあればそれを優先（プロキシ対応）
         if (!empty($_SERVER['HTTP_X_REQUEST_ID'])) {
             return $requestId = (string) $_SERVER['HTTP_X_REQUEST_ID'];
         }
 
-        // なければ自前生成（時刻 + ランダム）
         $requestId = \sprintf(
             '%s-%s',
             \date('YmdHis'),
@@ -43,9 +42,6 @@ class Runtime
 
     /**
      * エラーID
-     *
-     * - 呼び出し毎に新規生成
-     * - 1エラーにつき1回使用する前提
      */
     public static function errorId(): string
     {
@@ -67,9 +63,7 @@ class Runtime
             return false;
         }
 
-        $locals = Config::get('app.runtime.local');
-
-        foreach ($locals as $local) {
+        foreach (Config::get('app.runtime.local', []) as $local) {
             if (str_contains((string) $host, (string) $local)) {
                 return true;
             }
@@ -83,7 +77,7 @@ class Runtime
      */
     public static function isMobile(): bool
     {
-        return self::matchAgent(Config::get('app.runtime.mobile'));
+        return self::matchAgent(Config::get('app.runtime.mobile', []));
     }
 
     /**
@@ -91,7 +85,7 @@ class Runtime
      */
     public static function isBot(): bool
     {
-        return self::matchAgent(Config::get('app.runtime.robots'));
+        return self::matchAgent(Config::get('app.runtime.robots', []));
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Hooks\Abstracts;
+namespace App\Hooks;
 
 use App\Interfaces\BootableWpHookInterface;
 

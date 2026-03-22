@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Presenter;
+namespace App\Presenters;
 
-use App\Support\Config;
+use App\Services\Config;
 
 /**---------------------------------------------
  * メタ情報管理サービス

@@ -11,7 +11,7 @@ return [
      */
     'hooks_auto_loader' => [
         'cache'       => true,
-        'cache_path'  => \App\Support\Path::storage() . '/cache/app/hooks.php',
+        'cache_path'  => \App\Helpers\Path::storage() . '/cache/app/hooks.php',
     ],
 
     /**
@@ -55,7 +55,7 @@ return [
     /**
      * オプションページの設定
      */
-    'option_view_dir' => \App\Support\Path::views() . '/app/admin',
+    'option_view_dir' => \App\Helpers\Path::views() . '/app/admin',
 
     'option_pages'    => [
 

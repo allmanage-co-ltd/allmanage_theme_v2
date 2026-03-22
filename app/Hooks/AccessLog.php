@@ -2,11 +2,11 @@
 
 namespace App\Hooks;
 
-use App\Actions\Logger\LogFieldResolver;
+use App\Services\Logger\LogFieldResolver;
 use App\Interfaces\BootableWpHookInterface;
-use App\Support\Config;
-use App\Support\Logger;
-use App\Support\Runtime;
+use App\Services\Config;
+use App\Services\Logger\Logger;
+use App\Services\Http\Runtime;
 
 /**
  * アクセスログ記録
