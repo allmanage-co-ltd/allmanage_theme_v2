@@ -2,7 +2,6 @@
 
 namespace App\Hooks\Core;
 
-use App\Error\AppError;
 use App\Services\Config;
 use App\Helpers\Path;
 use App\Interfaces\BootableWpHookInterface;
@@ -64,11 +63,7 @@ class HooksAutoLoader
                 continue;
             }
 
-            try {
-                (new $class())->boot();
-            } catch (\Throwable $throwable) {
-                AppError::abort($throwable);
-            }
+            (new $class())->boot();
         }
     }
 

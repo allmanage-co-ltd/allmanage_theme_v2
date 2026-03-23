@@ -19,9 +19,8 @@ class App
     /**
      * 各 WordPress 起動クラスを初期化
      *
-     * - HooksAutoLoader::handle() がスキャン・キャッシュ処理ごと失敗した場合は
-     *   AppError::abort() で安全に停止する
-     * - 個別 Hook クラスの boot() 内で起きた例外は HooksAutoLoader 側で吸収される
+     * - HooksAutoLoader::handle() 内で起きた例外（スキャン・キャッシュ・個別 Hook の boot()）を
+     *   AppError::abort() で一括して安全停止する
      */
     public function boot(): void
     {

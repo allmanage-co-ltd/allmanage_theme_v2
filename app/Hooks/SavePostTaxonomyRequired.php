@@ -12,7 +12,7 @@ use App\Services\Config;
  * - 未選択の場合は投稿を下書きに戻し、エラー通知を表示する
  * - 対象の投稿タイプとタクソノミーは Config で定義する
  */
-class PostTaxonomyRequired implements BootableWpHookInterface
+class SavePostTaxonomyRequired implements BootableWpHookInterface
 {
     private array $config;
 
@@ -26,9 +26,6 @@ class PostTaxonomyRequired implements BootableWpHookInterface
         $this->config = Config::get('cms.taxonomy_required') ?? [];
     }
 
-    /**
-     * フック登録
-     */
     public function boot(): void
     {
         add_action('save_post',     $this->checkTaxonomy(...));

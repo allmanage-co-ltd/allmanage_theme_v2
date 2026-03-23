@@ -58,7 +58,7 @@ return [
     ],
 
     /**
-     * app/Hooks/PostTaxonomyRequired.phpで参照
+     * app/Hooks/SavePostTaxonomyRequired.phpで参照
      *
      * 投稿タイプのタクソノミーを選択必須に設定
      */

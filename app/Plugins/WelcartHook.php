@@ -11,9 +11,6 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class WelcartHook implements BootableWpHookInterface
 {
-    /**
-     * フック登録
-     */
     public function boot(): void
     {
         if (!\class_exists('usc_e_shop')) {
