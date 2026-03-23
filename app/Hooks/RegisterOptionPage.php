@@ -2,6 +2,7 @@
 
 namespace App\Hooks;
 
+use App\Error\AppError;
 use App\Helpers\Path;
 use App\Interfaces\BootableWpHookInterface;
 use App\Services\Config;
@@ -45,19 +46,29 @@ class RegisterOptionPage implements BootableWpHookInterface
     }
 
     /**
-     * 管理画面View表示
+     * 管理画面 View 表示
+     *
+     * - ビューファイルが存在しない場合は例外を投げて AppError で停止する
      */
     private function render(array $option): void
     {
-        $view = $option['view'] ?? null;
+        try {
+            $view = $option['view'] ?? null;
 
-        if (!$view) {
-            return;
+            if (!$view) {
+                throw new \RuntimeException("オプションページ '{$option['page_title']}' にビューが設定されていません");
+            }
+
+            $baseDir = Config::get('cms.option_view_dir') ?? Path::views('app/admin');
+            $path    = Path::join(\rtrim($baseDir, '/'), $view);
+
+            if (!\file_exists($path)) {
+                throw new \RuntimeException("ビューファイルが見つかりません: {$path}");
+            }
+
+            include $path;
+        } catch (\Throwable $throwable) {
+            AppError::abort($throwable);
         }
-
-        $baseDir = Config::get('cms.option_view_dir') ?? Path::views('app/admin');
-        $path    = Path::join(\rtrim($baseDir, '/'), $view);
-
-        include $path;
     }
 }

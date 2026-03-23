@@ -25,6 +25,11 @@ class AccessLog implements BootableWpHookInterface
     public function boot(): void
     {
         $config = $this->config();
+
+        if (!\is_array($config['hooks'] ?? null)) {
+            throw new \RuntimeException('logger.access.hooks の設定が配列ではありません');
+        }
+
         foreach ($config['hooks'] as $hook) {
             add_action($hook, $this->log(...));
         }

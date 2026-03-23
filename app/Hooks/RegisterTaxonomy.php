@@ -2,6 +2,7 @@
 
 namespace App\Hooks;
 
+use App\Error\AppError;
 use App\Interfaces\BootableWpHookInterface;
 use App\Services\Config;
 
@@ -42,11 +43,19 @@ class RegisterTaxonomy implements BootableWpHookInterface
      */
     public function register(): void
     {
-        foreach (Config::get('cms.taxonomies') ?? [] as $name => $args) {
-            $post_type = $args['post_type'];
-            unset($args['post_type']);
+        try {
+            foreach (Config::get('cms.taxonomies') ?? [] as $name => $args) {
+                if (!isset($args['post_type'])) {
+                    throw new \RuntimeException("タクソノミー '{$name}' に post_type が設定されていません");
+                }
 
-            register_taxonomy($name, $post_type, $args);
+                $post_type = $args['post_type'];
+                unset($args['post_type']);
+
+                register_taxonomy($name, $post_type, $args);
+            }
+        } catch (\Throwable $throwable) {
+            AppError::abort($throwable);
         }
     }
 }

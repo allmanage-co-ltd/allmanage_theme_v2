@@ -21,26 +21,30 @@ class ExportCsvHook implements BootableWpHookInterface
 
     private function register(): void
     {
-        foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
-            if (!\is_string($class) || !\is_subclass_of($class, ExportCsvAbstract::class)) {
-                continue;
+        try {
+            foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
+                if (!\is_string($class) || !\is_subclass_of($class, ExportCsvAbstract::class)) {
+                    continue;
+                }
+
+                $param = $class::exportParam();
+
+                if (!isset($_GET[$param]) || $_GET[$param] !== $class::postType()) {
+                    continue;
+                }
+
+                // パラメータが一致したがアクセス権限がない場合は例外を投げる
+                if (!$class::isAllowed()) {
+                    throw new \RuntimeException('CSVエクスポートの権限がありません');
+                }
+
+                /** @var ExportCsvAbstract $exporter */
+                $exporter = new $class();
+                $exporter->handle();
+                return;
             }
-
-            $param = $class::exportParam();
-
-            if (!isset($_GET[$param]) || $_GET[$param] !== $class::postType()) {
-                continue;
-            }
-
-            // パラメータが一致したがアクセス権限がない場合はエラーで停止する
-            if (!$class::isAllowed()) {
-                AppError::abort(new \RuntimeException('CSVエクスポートの権限がありません'));
-            }
-
-            /** @var ExportCsvAbstract $exporter */
-            $exporter = new $class();
-            $exporter->handle();
-            return;
+        } catch (\Throwable $throwable) {
+            AppError::abort($throwable);
         }
     }
 }

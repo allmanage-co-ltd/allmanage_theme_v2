@@ -25,29 +25,33 @@ class ImportCsvHook implements BootableWpHookInterface
             return;
         }
 
-        foreach (Config::get('cms.option_pages.csv-in-expoter.importer', []) as $class) {
-            if (!\is_string($class) || !\is_subclass_of($class, ImportCsvAbstract::class)) {
-                continue;
+        try {
+            foreach (Config::get('cms.option_pages.csv-in-expoter.importer', []) as $class) {
+                if (!\is_string($class) || !\is_subclass_of($class, ImportCsvAbstract::class)) {
+                    continue;
+                }
+
+                $param = $class::importParam();
+
+                if (!isset($_POST[$param]) || $_POST[$param] !== $class::postType()) {
+                    continue;
+                }
+
+                // パラメータが一致したがアクセス権限がない場合は例外を投げる
+                if (!$class::isAllowed()) {
+                    throw new \RuntimeException('CSVインポートの権限がありません');
+                }
+
+                /** @var ImportCsvAbstract $importer */
+                $importer = new $class();
+                $importer->handle();
+
+                $redirectUrl = add_query_arg($class::successParam(), 1, $class::redirectUrl());
+                wp_redirect($redirectUrl);
+                exit;
             }
-
-            $param = $class::importParam();
-
-            if (!isset($_POST[$param]) || $_POST[$param] !== $class::postType()) {
-                continue;
-            }
-
-            // パラメータが一致したがアクセス権限がない場合はエラーで停止する
-            if (!$class::isAllowed()) {
-                AppError::abort(new \RuntimeException('CSVインポートの権限がありません'));
-            }
-
-            /** @var ImportCsvAbstract $importer */
-            $importer = new $class();
-            $importer->handle();
-
-            $redirectUrl = add_query_arg($class::successParam(), 1, $class::redirectUrl());
-            wp_redirect($redirectUrl);
-            exit;
+        } catch (\Throwable $throwable) {
+            AppError::abort($throwable);
         }
     }
 }

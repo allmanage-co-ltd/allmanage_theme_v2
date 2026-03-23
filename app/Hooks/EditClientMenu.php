@@ -20,7 +20,12 @@ class EditClientMenu implements BootableWpHookInterface
 
     public function __construct()
     {
-        $config                     = Config::get('menu.client_menu');
+        $config = Config::get('menu.client_menu');
+
+        if (!\is_array($config)) {
+            throw new \RuntimeException('menu.client_menu の設定が配列ではありません');
+        }
+
         $this->visible_custom_menus = $config['visible'];
         $this->opts                 = $config['default_option'];
     }
