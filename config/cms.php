@@ -58,6 +58,21 @@ return [
     ],
 
     /**
+     * app/Hooks/PostTaxonomyRequired.phpで参照
+     *
+     * 投稿タイプのタクソノミーを選択必須に設定
+     */
+    'taxonomy_required' => [
+        'news' => [
+            'news_cat' => 'カテゴリーを選択してください。',
+            // 'news_tag' => 'タグを選択してください。',
+        ],
+        // 'works' => [
+        //     'works_cat' => 'カテゴリーを選択してください。',
+        // ],
+    ],
+
+    /**
      * app/Hooks/RegisterOptionPage.phpで参照
      *
      * オプションページの設定
