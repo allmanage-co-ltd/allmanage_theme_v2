@@ -1,5 +1,6 @@
 <?php
 
+use App\Error\AppError;
 use App\Hooks\Core\HooksAutoLoader;
 
 /**---------------------------------------------
@@ -17,9 +18,17 @@ class App
 {
     /**
      * 各 WordPress 起動クラスを初期化
+     *
+     * - HooksAutoLoader::handle() がスキャン・キャッシュ処理ごと失敗した場合は
+     *   AppError::abort() で安全に停止する
+     * - 個別 Hook クラスの boot() 内で起きた例外は HooksAutoLoader 側で吸収される
      */
     public function boot(): void
     {
-        HooksAutoLoader::handle();
+        try {
+            HooksAutoLoader::handle();
+        } catch (\Throwable $throwable) {
+            AppError::abort($throwable);
+        }
     }
 }

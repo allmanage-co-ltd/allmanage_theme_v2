@@ -242,7 +242,10 @@ EOF,
     }
 
     /**
+     * メール本文に差し込む送信内容テキストを生成する
      *
+     * - 自動返信メール・管理者メール共通で使用するテンプレート文字列
+     * - MW WP Form のフィールドタグ（{field_name}）をそのまま含む
      */
     public function buildInputText(): string
     {

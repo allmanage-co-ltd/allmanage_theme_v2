@@ -8,13 +8,20 @@ use App\Services\Config;
 use App\Services\Logger\Logger;
 use App\Services\Http\Runtime;
 
-/**
- * アクセスログ記録
- *
- * 各種設定項目は config/logger.php で定義
+/**---------------------------------------------
+ * アクセスログ記録クラス
+ * ---------------------------------------------
+ * - 設定されたフックに対してアクセスログを記録する
+ * - Bot・ローカル環境はログ対象外とする
+ * - 記録項目・対象フック・チャンネル名は config/logger.php で定義する
  */
 class AccessLog implements BootableWpHookInterface
 {
+    /**
+     * フック登録
+     *
+     * - config で指定されたすべてのフックに log() を登録する
+     */
     public function boot(): void
     {
         $config = $this->config();
@@ -23,6 +30,12 @@ class AccessLog implements BootableWpHookInterface
         }
     }
 
+    /**
+     * アクセスログを記録する
+     *
+     * - Bot・ローカル環境は記録しない
+     * - LogFieldResolver でフィールドを解決し Logger::access() に渡す
+     */
     public function log(): void
     {
         if (Runtime::isBot() || Runtime::isLocal()) {
@@ -35,6 +48,9 @@ class AccessLog implements BootableWpHookInterface
         Logger::access()->info($config['channel'], $content);
     }
 
+    /**
+     * アクセスログ設定を取得する
+     */
     private function config(): array
     {
         return Config::get('logger.access');
