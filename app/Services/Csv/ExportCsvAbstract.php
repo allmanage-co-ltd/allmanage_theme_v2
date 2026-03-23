@@ -42,12 +42,12 @@ abstract class ExportCsvAbstract
 
     final public function handle(): void
     {
-        if (isset($_GET[static::dryRunParam()])) {
-            Html::table($this->toArray());
-            exit;
-        }
-
         try {
+            if (isset($_GET[static::dryRunParam()])) {
+                Html::table($this->toArray());
+                exit;
+            }
+
             while (ob_get_level() > 0) {
                 ob_end_clean();
             }

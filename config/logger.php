@@ -50,7 +50,7 @@ return [
      */
     'error'  => [
         'use'     => true,
-        'dir'     => '/storage/logs/errors/',
+        'dir'     => '/storage/logs/error/',
         'content' => [
             \App\Enums\LogFieldEnum::RequestId,
             \App\Enums\LogFieldEnum::Ip,
