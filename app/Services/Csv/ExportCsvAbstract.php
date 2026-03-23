@@ -3,18 +3,16 @@
 namespace App\Services\Csv;
 
 use App\Error\AppError;
-use App\Interfaces\CsvExporterInterface;
-use App\Services\Csv\CsvWriter;
 use App\Helpers\Html;
 use App\Services\Csv\Actions\ExportGetTermSlugsAction;
 
 /**
  * CSV エクスポートの共通処理。
  *
- * Hook からは CsvExporterInterface で扱い、
- * 実装側だけがこの Abstract を継承する。
+ * 実装クラスはこの Abstract を継承する。
+ * ExportCsvHook からは ExportCsvAbstract のサブクラスとして扱われる。
  */
-abstract class ExportCsvAbstract implements CsvExporterInterface
+abstract class ExportCsvAbstract
 {
     abstract public static function postType(): string;
 

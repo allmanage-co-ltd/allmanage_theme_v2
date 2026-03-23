@@ -5,7 +5,6 @@ namespace App\Hooks;
 use App\Interfaces\BootableWpHookInterface;
 use App\Services\Http\Session;
 use App\Services\Config;
-use ftp;
 
 /**---------------------------------------------
  * テーマ初期設定フッククラス

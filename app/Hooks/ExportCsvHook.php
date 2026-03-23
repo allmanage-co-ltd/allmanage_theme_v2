@@ -2,14 +2,15 @@
 
 namespace App\Hooks;
 
+use App\Error\AppError;
 use App\Interfaces\BootableWpHookInterface;
-use App\Interfaces\CsvExporterInterface;
+use App\Services\Csv\ExportCsvAbstract;
 use App\Services\Config;
 
 /**---------------------------------------------
  * CSV エクスポートの入口。
  * ---------------------------------------------
- * 設定に登録された exporter を CsvExporterInterface で扱う。
+ * 設定に登録された exporter を ExportCsvAbstract のサブクラスとして検証する。
  */
 class ExportCsvHook implements BootableWpHookInterface
 {
@@ -21,7 +22,7 @@ class ExportCsvHook implements BootableWpHookInterface
     private function register(): void
     {
         foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
-            if (!\is_string($class) || !\is_subclass_of($class, CsvExporterInterface::class)) {
+            if (!\is_string($class) || !\is_subclass_of($class, ExportCsvAbstract::class)) {
                 continue;
             }
 
@@ -31,11 +32,12 @@ class ExportCsvHook implements BootableWpHookInterface
                 continue;
             }
 
+            // パラメータが一致したがアクセス権限がない場合はエラーで停止する
             if (!$class::isAllowed()) {
-                continue;
+                AppError::abort(new \RuntimeException('CSVエクスポートの権限がありません'));
             }
 
-            /** @var CsvExporterInterface $exporter */
+            /** @var ExportCsvAbstract $exporter */
             $exporter = new $class();
             $exporter->handle();
             return;

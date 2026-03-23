@@ -3,8 +3,6 @@
 namespace App\Services\Csv;
 
 use App\Error\AppError;
-use App\Interfaces\CsvImporterInterface;
-use App\Services\Csv\CsvReader;
 use App\Services\Csv\Actions\ImportRunAction;
 
 /**---------------------------------------------
@@ -14,20 +12,20 @@ use App\Services\Csv\Actions\ImportRunAction;
  * カラム定義と投稿タイプはサブクラスに委ねる。
  * 実行処理は ImportRunAction に委譲する。
  *
- * Hook からは CsvImporterInterface で扱い、
- * 実装側だけがこの Abstract を継承する。
+ * 実装クラスはこの Abstract を継承する。
+ * ImportCsvHook からは ImportCsvAbstract のサブクラスとして扱われる。
  */
-abstract class ImportCsvAbstract implements CsvImporterInterface
+abstract class ImportCsvAbstract
 {
     /**
      * 投稿タイプ
      *
-     * - ルーティングキーとしても使用される: ?csv_import=<postType>
+     * - ルーティングキーとしても使用される（POSTパラメータ: csv_import=<postType>）
      */
     abstract public static function postType(): string;
 
     /**
-     * 完了後のリダイレクト先
+     * 完了後のリダイレクト先
      */
     abstract public static function redirectUrl(): string;
 

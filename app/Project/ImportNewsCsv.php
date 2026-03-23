@@ -26,8 +26,10 @@ use App\Services\Config;
  * ---------------------------------------------
  * ■ インポート実行方法
  * ---------------------------------------------
- *   ?csv_import=news           ← インポート実行
- *   ?csv_import=news&dry_run=1 ← 結果ログのみ（DB更新なし）
+ *   [POST] csv_import=news           ← インポート実行
+ *   [POST] csv_import=news&dry_run=1 ← 結果ログのみ（DB更新なし）
+ *
+ *   ※ csv_import は POST パラメータ、dry_run は GET/POST どちらでも可
  *
  * ---------------------------------------------
  * ■ オーバーライド可能なメソッド

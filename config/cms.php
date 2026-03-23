@@ -75,10 +75,11 @@ return [
             'view'       => 'csv-in-expoter.php',
 
             /**
-             * CSVエクスポートクラス（csv-in-expoter独自定義）
+             * CSVエクスポート・インポートクラス（csv-in-expoter独自定義）
              *
-             * - CsvExporterInterface を実装したクラス
-             * - Hookとオプションページでから参照される
+             * - exporter: ExportCsvAbstract を継承したクラス
+             * - importer: ImportCsvAbstract を継承したクラス
+             * - Hook とオプションページから参照される
              */
             'exporter'   => [
                 \App\Project\ExportNewsCsv::class,
