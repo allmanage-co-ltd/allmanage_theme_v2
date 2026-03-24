@@ -1,9 +1,10 @@
 <?php
 
+/**
+ * app/Presenters/Metadata.phpで参照し、
+ * app/Hooks/AddHeadMetadata.phpでフック登録
+ */
 return [
-    /**
-     * 主にheadに入れ込むデータとして使用
-     */
     'name'               => 'Allmanage',
     'copy'               => 'Copyright © ALLMANAGE Co., Ltd. All Rights Reserved',
 

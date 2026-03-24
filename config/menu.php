@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * app/Hooks/EditClientMenu.phpで参照
+ */
 return [
     /**
      * お客様用管理画面の設定

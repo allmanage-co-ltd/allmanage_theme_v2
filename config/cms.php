@@ -2,10 +2,25 @@
 
 return [
     /**
+     * app/Hooks/Core/HooksAutoLoader.phpで参照
+     *
+     * フックの自動読み込みの設定
+     * - BootableWpHookInterface を実装したクラスをスキャンして自動登録する
+     *
+     * cache: キャッシュファイルを有効にするか
+     * cache_path: キャッシュファイルの保存先
+     */
+    'hooks_auto_loader' => [
+        'cache'      => true,
+        'cache_path' => \App\Helpers\Path::storage() . '/cache/app/hooks.php',
+    ],
+
+    /**
+     * app/Hooks/RegisterPostType.phpで参照
+     *
      * カスタム投稿タイプの設定
      */
-    'post_types'   => [
-        // お知らせ
+    'post_types'        => [
         'news' => [
             'labels'        => [
                 'name'          => 'NEWS',
@@ -26,9 +41,11 @@ return [
     ],
 
     /**
+     * app/Hooks/RegisterTaxonomy.phpで参照
+     *
      * カスタムタクソノミーの設定
      */
-    'taxonomies'   => [
+    'taxonomies'        => [
         'news_cat' => [
             'post_type'    => 'news',
             'label'        => 'カテゴリー',
@@ -39,16 +56,55 @@ return [
     ],
 
     /**
+     * app/Hooks/SavePostTaxonomyRequired.phpで参照
+     *
+     * 投稿タイプのタクソノミーを選択必須に設定
+     * 指定タクソノミーが未選択の場合は下書きに戻してエラーメッセージを表示
+     *
+     * '指定の投稿タイプ' => [ 'タクソノミー' => 'エラーメッセージ' ]
+     */
+    'taxonomy_required' => [
+        'news' => [
+            'news_cat' => 'カテゴリーを選択してください。',
+            // 'news_tag' => 'タグを選択してください。',
+        ],
+        // 'works' => [
+        //     'works_cat' => 'カテゴリーを選択してください。',
+        // ],
+    ],
+
+    /**
+     * app/Hooks/RegisterOptionPage.phpで参照
+     *
      * オプションページの設定
      */
-    // 'option_pages' => [
-    //     'csv-in-expoter' => [
-    //         'show'       => true,
-    //         'page_title' => 'CSV',
-    //         'menu_title' => 'CSV',
-    //         'capability' => 'manage_options',
-    //         'slug'       => 'csv-in-expoter',
-    //         'view'       => 'csv-in-expoter.php',
-    //     ],
-    // ],
+    'option_pages'      => [
+        'csv-in-expoter' => [
+            'show'       => true,
+            'page_title' => 'CSV',
+            'menu_title' => 'CSV',
+            'capability' => 'manage_options',
+            'slug'       => 'csv-in-expoter',
+            'view'       => 'csv-in-expoter.php',
+            /**
+             * CSVエクスポート・インポートクラス（csv-in-expoter独自定義）
+             *
+             * - exporter: ExportCsvAbstract を継承したクラス
+             * - importer: ImportCsvAbstract を継承したクラス
+             * - Hook とオプションページから参照される
+             */
+            'exporter'   => [
+                \App\Project\ExportNewsCsv::class,
+                // \App\Project\ExportWorksCsv::class,
+            ],
+            'importer'   => [
+                \App\Project\ImportNewsCsv::class,
+                // \App\Project\ImportWorksCsv::class,
+            ],
+        ],
+    ],
+    /**
+     * オプションページのテンプレートファイルをどのフォルダに置くか
+     */
+    'option_view_dir'   => \App\Helpers\Path::views() . '/app/admin',
 ];

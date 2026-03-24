@@ -24,15 +24,16 @@
  * 使用する際は定義元のクラスメソッドをカスタムしてください。
  *
  * 使用例:
- *   $sample = get_acf( get_the_ID() )->handle();
- *   $sampe['acf_is_public'];
+ *   // $sample = get_acf_fields( get_the_ID(), ['acf_is_public', 'acf_check', 'acf_price'] );
+ *   $sample = get_acf_fields( get_the_ID(), config('acf.news') );
+ *   echo $sampe['acf_price'];
  *
  * カスタムフィールドが集約した配列が返ります。
  * 配列のキーはそのままカスタムフィールドのキーです。
  */
-function get_acf(int $post_id): \App\UseCase\GetAcfFields
+function get_acf_fields(int $post_id, array $keys): array
 {
-    return new \App\UseCase\GetAcfFields($post_id);
+    return \App\Plugins\Acf::getByKeys($post_id, $keys);
 }
 
 /**---------------------------------------------
@@ -84,9 +85,9 @@ function img_uri(): string
  *   wpquery()->setPostType(...)->setPerPage(...)->build();
  *   wpquery()->setPostType(...)->setPerPage(...)->debug();
  */
-function wpquery(): \App\CMS\Wrapper\MyWpQuery
+function wpquery(): \App\Services\Query\MyWpQuery
 {
-    return \App\CMS\Wrapper\MyWpQuery::new();
+    return \App\Services\Query\MyWpQuery::new();
 }
 
 /**
@@ -97,7 +98,7 @@ function wpquery(): \App\CMS\Wrapper\MyWpQuery
  */
 function config(string $key, $default = null)
 {
-    return \App\Support\Config::get($key, $default);
+    return \App\Services\Config::get($key, $default);
 }
 
 /**
@@ -108,23 +109,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-    return \App\Support\Config::get("permalink.{$slug}", '/');
-}
-
-/**
- * wpdbのラッパー
- *
- * WPテーマではあまり使わなそう
- *
- * 使用例:
- *   db()->stmt('...', [arg])->debug();        ←組み立てたSQLの出力のみ
- *   db()->stmt('SELECT * FROM wp_posts WHERE ID = %d', [1])->get();
- *   db()->stmt('...', [arg])->select();
- *   db()->stmt('...', [arg])->execute();
- */
-function db(): \App\CMS\Wrapper\MyWpDb
-{
-    return \App\CMS\Wrapper\MyWpDb::new();
+    return \App\Services\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -138,7 +123,7 @@ function db(): \App\CMS\Wrapper\MyWpDb
  */
 function datepicker(array $options = []): void
 {
-    (new \App\CMS\Presenter\Datepicker($options))->boot();
+    (new \App\Presenters\Datepicker($options))->boot();
 }
 
 /**
@@ -149,7 +134,7 @@ function datepicker(array $options = []): void
  */
 function slog()
 {
-    return \App\Support\Logger::app();
+    return \App\Services\Logger\Logger::app();
 }
 
 /**
@@ -162,9 +147,9 @@ function slog()
  *   sess()->flash('message', '送信しました');
  *   $message = sess()->pull('message');
  */
-function sess(): \App\Support\Session
+function sess(): \App\Services\Http\Session
 {
-    return new \App\Support\Session();
+    return new \App\Services\Http\Session();
 }
 
 /**
@@ -176,9 +161,9 @@ function sess(): \App\Support\Session
  *       d($res->body());
  *   }
  */
-function curl(string $method, string $url, array $options = []): \App\Support\Curl
+function curl(string $method, string $url, array $options = []): \App\Services\Http\Curl
 {
-    return \App\Support\Curl::request($method, $url, $options);
+    return \App\Services\Http\Curl::request($method, $url, $options);
 }
 
 /**
@@ -189,7 +174,7 @@ function curl(string $method, string $url, array $options = []): \App\Support\Cu
  */
 function is_local(): bool
 {
-    return \App\Support\Runtime::isLocal();
+    return \App\Services\Http\Runtime::isLocal();
 }
 
 /**
@@ -200,7 +185,7 @@ function is_local(): bool
  */
 function is_mobile(): bool
 {
-    return \App\Support\Runtime::isMobile();
+    return \App\Services\Http\Runtime::isMobile();
 }
 
 /**
@@ -211,7 +196,7 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-    return \App\Support\Runtime::isBot();
+    return \App\Services\Http\Runtime::isBot();
 }
 
 /**
@@ -219,14 +204,14 @@ function is_bot(): bool
  *
  * header + view + footer を一括で処理
  * ページ、アーカイブ、タクソノミー、シングル、サーチを
- * App\CMS\Presenter\View側で判定し、呼ぶテンプレートを切り替えています。
+ * App\Presenters\View側で判定し、呼ぶテンプレートを切り替えています。
  *
  * 使用例（テンプレートページで）:
  *   the_view();
  */
 function the_view(): void
 {
-    \App\CMS\Presenter\View::pages();
+    \App\Presenters\View::pages();
 }
 
 /**
@@ -237,7 +222,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-    \App\CMS\Presenter\View::layout($name);
+    \App\Presenters\View::layout($name);
 }
 
 /**
@@ -251,7 +236,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-    \App\CMS\Presenter\View::component($name, $data);
+    \App\Presenters\View::component($name, $data);
 }
 
 /**
@@ -271,7 +256,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-    (new \App\CMS\Presenter\Breadcrumb)->render();
+    (new \App\Presenters\Breadcrumb)->render();
 }
 
 /**
@@ -297,7 +282,7 @@ function the_breadcrumb(): void
  */
 function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
 {
-    (new \App\CMS\Presenter\Pagination($query, $range, $prev_text, $next_text))->render();
+    (new \App\Presenters\Pagination($query, $range, $prev_text, $next_text))->render();
 }
 
 /**
@@ -325,7 +310,7 @@ function the_postnavi(
     string $prev_text = '← 前へ',
     string $next_text = '次へ →',
 ): void {
-    (new \App\CMS\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\Presenters\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -336,5 +321,5 @@ function the_postnavi(
  */
 function the_cookie_modal($days = 365, $link = '/privacy'): void
 {
-    (new \App\CMS\Presenter\Cookie($days, $link))->render();
+    (new \App\Presenters\Cookie($days, $link))->render();
 }

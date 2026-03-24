@@ -16,6 +16,7 @@ services:
       --collation-server=utf8mb4_unicode_ci
 
   wordpress:
+    user: "1000:1000"
     image: wordpress:latest
     container_name: wordpress
     depends_on:

@@ -236,7 +236,7 @@ class GetNewsCards
  */
 function get_news_cards(): array
 {
-  return (new \App\UseCase\GetNewsCards())->execute();
+  return (new \App\Project\GetNewsCards())->execute();
 }
 ```
 

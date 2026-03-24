@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * app/Hooks/AssetsEnqueuer.phpで参照
+ */
 return [
     /**
      * アセットのバージョン（任意）

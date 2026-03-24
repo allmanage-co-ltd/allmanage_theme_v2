@@ -71,7 +71,7 @@ function the_postnavi(
     string $prev_text = '← 前へ',
     string $next_text = '次へ →',
 ): void {
-    (new \App\CMS\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\WordPress\Presenter\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 ```
 ```html

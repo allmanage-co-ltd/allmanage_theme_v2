@@ -2,7 +2,9 @@
 
 return [
     /**
-     * ページURLの一覧
+     * ページURLの一覧定義
+     *
+     * echo url('home');
      */
     'home'      => home() . '/',
     'company'   => home() . '/company',

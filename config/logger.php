@@ -1,22 +1,66 @@
 <?php
 
+/**
+ * 以下で参照
+ * - app/Services/Logger/Logger.php
+ * - app/Hooks/AccessLog.php
+ *
+ * contentのEnum定義は以下で設定値に基づく値を解決している
+ *  - app/Services/Logger/LogFieldResolver.php
+ */
 return [
     /**
-     * ログ設定
-     *
-     * - use_xxx_log: ログの有効/無効
-     * - xxx_log_dir: ログファイルの出力先（テーマルートからの相対パス）
-     **/
+     * アプリケーションログ設定
+     */
+    'app'    => [
+        'use' => true,
+        'dir' => '/storage/logs/app/',
+    ],
 
-    // アプリログ
-    'use_app_log'    => true,
-    'app_log_dir'    => '/storage/logs/',
+    /**
+     * アクセスログ設定
+     */
+    'access' => [
+        'use'     => true,
+        'dir'     => '/storage/logs/access/',
+        'channel' => 'access',
+        'hooks'   => [
+            'template_redirect',
+            'admin_init',
+        ],
+        'content' => [
+            \App\Enums\LogFieldEnum::RequestId,
+            \App\Enums\LogFieldEnum::Ip,
+            \App\Enums\LogFieldEnum::Xff,
+            \App\Enums\LogFieldEnum::Method,
+            \App\Enums\LogFieldEnum::Uri,
+            \App\Enums\LogFieldEnum::Query,
+            \App\Enums\LogFieldEnum::Referer,
+            \App\Enums\LogFieldEnum::Ua,
+            \App\Enums\LogFieldEnum::UserId,
+            \App\Enums\LogFieldEnum::PostId,
+            \App\Enums\LogFieldEnum::PostType,
+            \App\Enums\LogFieldEnum::Status,
+            \App\Enums\LogFieldEnum::Is404,
+        ],
+    ],
 
-    // アクセスログ
-    'use_access_log' => true,
-    'access_log_dir' => '/storage/logs/access/',
-
-    // エラーログ（不要？）
-    // 'use_error_log'  => false,
-    // 'error_log_dir'  => '/storage/logs/errors/',
+    /**
+     * エラーログ設定
+     */
+    'error'  => [
+        'use'     => true,
+        'dir'     => '/storage/logs/error/',
+        'content' => [
+            \App\Enums\LogFieldEnum::RequestId,
+            \App\Enums\LogFieldEnum::Ip,
+            \App\Enums\LogFieldEnum::Ua,
+            \App\Enums\LogFieldEnum::Xff,
+            \App\Enums\LogFieldEnum::Status,
+            \App\Enums\LogFieldEnum::Method,
+            \App\Enums\LogFieldEnum::Uri,
+            \App\Enums\LogFieldEnum::Query,
+            \App\Enums\LogFieldEnum::Referer,
+        ],
+    ],
 ];

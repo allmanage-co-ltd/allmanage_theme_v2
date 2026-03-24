@@ -19,14 +19,14 @@
             <?php if (is_home() || is_front_page()): ?>
                 <h1 class="l-header__logo">
                     <a href="<?= url('home'); ?>">
-                        <img src="<?= config('seo.logo_white') ?>" alt="<?= config('seo.name'); ?>" class="logo_white">
+                        <!-- <img src="<?= config('seo.logo_white') ?>" alt="<?= config('seo.name'); ?>" class="logo_white"> -->
                         <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>" class="logo_act">
                     </a>
                 </h1>
             <?php else: ?>
                 <div class="l-header__logo">
                     <a href="<?= url('home'); ?>">
-                        <img src="<?= config('seo.logo_white') ?>" alt="<?= config('seo.name'); ?>" class="logo_white">
+                        <!-- <img src="<?= config('seo.logo_white') ?>" alt="<?= config('seo.name'); ?>" class="logo_white"> -->
                         <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>" class="logo_act">
                     </a>
                 </div>

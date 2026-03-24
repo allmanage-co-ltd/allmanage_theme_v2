@@ -15,65 +15,30 @@
 - [VIEWS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/views/README.md)
 - [SASS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
 - [app ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
-- [CMS ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/CMS/README.md)
-- [Support ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/Support/README.md)
-- [UseCase ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/UseCase/README.md)
+- [bootstrap ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/bootstrap/README.md)
 
-## テーマの方針
+## このテーマの整理方針
 
-- ドキュメントの整備と保守性の高いソースコードで、数年後に触るエンジニアが楽に修正できるようにする
-- 見る必要のないコードを見なくてもコーディングできるようにして、スピード＆クオリティを高める
+外部のコーダーさんはテーマを理解する必要がないように作っています。
 
-## 運用ルール
+保守を担当する社内のエンジニアはある程度理解しておくとカスタマイズやちょっとした更新作業がスムーズに行えますがドキュメントを整備しているので都度でも大丈夫です。
 
-1. クラスや関数には必ずコメントを残すようにする。最低でも一言何をしているか。余裕があれば詳細に残す。チームで取り組む以上は後から他のエンジニアがそのコードを必ず読むため。コメントも資産になります。
+1. 基本的には`views` `config` `assets` `bootstrap/functions.php` だけを見ればコーディング作業ができるように作っていますので、これらのディレクトリをチェックいただければ大丈夫です。
 
-2. ロジックを書く際は、まず今後も使用できるかを考える、今後も使用できるなら`Support`に基盤を残す、案件ごとに使い捨てではなく資産化できるソースコードは積極的にプルリクする。
-
-3. `app`ディレクトリを除き、不用意にディレクトリを切ることは推奨しません。どうしてもな場合は弊社エンジニアに相談し、テーマに取り入れてもらってください。
-
-4. デフォルト状態のテーマで、誤りや改善点を見つけた場合は必ず弊社エンジニアに報告してください。
-
-5. 弊社のコーディング作業は委託が多いため、厳格なコーディングルールは設けていませんが、独りよがりであきらかに煩雑なコードは、後から触るエンジニアの時間を奪う行為になるため、見つけ次第で指摘させていただきます。
-
-## コーディングについて
-
-1. 基本的には`views` `config` `assets` `bootstrap/functions.php` だけを見ればコーディング作業ができるように作っていますので、一番最初はこれらのディレクトリをチェックしてください。
-
-2. WordPress 標準ではテーマ直下にファイルが散らばりますが、それらの表示コードはすべて`views`ディレクトリに逃がしていますので、テーマ直下を触る必要はありません。
+2. WordPress 標準ではテーマ直下にファイルが散らばりますが、それらの表示コードはすべて`views`ディレクトリや`bootstrap/functions.php`に逃がしていますので、テーマ直下を触る必要はありません。
 
 3. CSS や JS の登録、カスタム投稿・タクソノミーの作成、ページ URL の設定は`config`ディレクトリを編集してください。その設定ファイルをもとに`app`ディレクトリの中でロジックを組んでいます。
 
-4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app`に逃がしています。
+4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app`に逃がしています。ここにある関数が`views`から使える関数の全てとなります。
 
-5. アドバイスや改善点は積極的に提案していただき、この先関わるエンジニアが生産性高く作業できるように、より良いテーマにしたいです。
+- カスタム投稿や CSS を追加したい → `config/`
+- 画像や JS、CSS を配置したい → `assets/`
+- ページを作成したい → `views/`
+- view から使う関数を確認したい → `bootstrap/functions.php`
 
----
-
-## ディレクトリ概要
-
-```
-├─ app/                # PHP実装（CMS連携・基盤ロジック・ユースケース）
-├─ assets/             # CSS / JS / 画像 / SCSS
-├─ bootstrap/          # CMS起動処理・グローバル関数
-├─ config/             # 各種設定（投稿タイプ、タクソノミー、パーマリンク、管理画面メニューなど）
-├─ views/              # page/single/archive/taxonomy/layout/componentの描画
-├─ tests/              # ロジックのテスト用（Pest採用）
-├─ functions.php       # テーマ起動エントリー（原則編集しない）
-└─ docker-compose.yaml # ローカル開発用WordPress環境
-```
-
-## 開発時に主に触る場所
-
-- 画面表示を変更したい: `views/` と `assets/`
-- WP の挙動やフックを変更したい: `app/CMS/`
-- カスタム投稿タイプ・タクソノミー: `config/cms.php`
-- プラグイン特有のフックやカスタム: `app/CMS/Plugins/`
-- 使いまわせる基盤ロジック/汎用ユーティリティ: `app/Support/`
-- 顧客毎のユースケースロジック・処理: `app/UseCase/`
-- view テンプレートから使う関数: `bootstrap/functions.php`
-  - 処理本体は `app/` の定説なクラスへ実装してください
-  - テーマ直下の`functions.php` は編集しません
+- WordPress の挙動を変えたい（任意） → `app/Hooks/`
+- プラグイン連携を変えたい（任意） → `app/Plugins/`
+- 案件別ロジックを追加したい（任意） → `app/Project/`
 
 ## 対応バージョン
 
@@ -177,7 +142,3 @@ docker compose up
 docker compose stop
 
 ```
-
-### 今後の展望
-
-- Trait, Interface, Enum 等の言語機能も活用していきたいが Wordpress では使わないか。。

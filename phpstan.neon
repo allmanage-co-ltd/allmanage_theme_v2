@@ -12,6 +12,9 @@ parameters:
         - node_modules
     ignoreErrors:
         - '#WP_Term::\$cat_ID#'
+        - '#Function get_fields not found#'
+        - '#Function get_field not found#'
+        - '#Function usces_is_login not found#'
     scanFiles:
         - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
     treatPhpDocTypesAsCertain: false

@@ -1,5 +1,8 @@
 <main class="p-home">
-    <div class="p-home_kv">
+    <?php
+    the_component('searchform');
+    ?>
+    <!-- <div class="p-home_kv">
         <div class="p-home_kv__img">
             <picture class="img c-ofi">
                 <source srcset="<?= img_uri(); ?>/home/img_kv.jpg" media="(min-width: 768px)" />
@@ -17,5 +20,5 @@
 
             </div>
         </section>
-    </div>
+    </div> -->
 </main>

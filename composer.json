@@ -10,9 +10,9 @@
     "php-stubs/acf-pro-stubs": "^6.5"
   },
   "scripts": {
-    "analyse": "vendor/bin/phpstan analyse > storage/framework/phpstan/phpstan.log || true",
-    "rector": "vendor/bin/rector process --dry-run > storage/framework/rector/rector.log || true",
-    "rector-fix": "vendor/bin/rector process > storage/framework/rector/rector-fix.log || true",
+    "analyse": "vendor/bin/phpstan analyse > storage/logs/phpstan/phpstan.log || true",
+    "rector": "vendor/bin/rector process --dry-run > storage/logs/rector/rector.log || true",
+    "rector-fix": "vendor/bin/rector process > storage/logs/rector/rector-fix.log || true",
     "test": "vendor/bin/pest -v"
   },
   "autoload": {
