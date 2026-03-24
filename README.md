@@ -8,6 +8,34 @@
 
 - **※コメントは 80%ほど AI に書いてもらっていますので、一部おかしい部分があるかもしれません。違和感のあるコメントはご指摘ください。**
 
+## このテーマの方針
+
+外部のコーダーさんは下記の必須項目のみ把握していただければコーディング可能です。
+
+初めて作業する際は先にドキュメントと必須ディレクトリをざっと確認してください。
+
+| ディレクトリ | 役割 | 必須/任意 |
+| --- | --- | --- |
+| `config`                  | カスタム投稿の追加やCSSの読み込みなど | **必須** |
+| `views`                   | テンプレートページのコーディング      | **必須** |
+| `assets`                  | 画像、JS、CSSなどの配置            | **必須** |
+| `bootstrap/functions.php` | viewsから呼び出し可能なグローバル関数 | **必須** |
+| `app/Project/`            | 案件固有のPHPロジック               | 任意 |
+| `app/Plugins/`            | プラグインの挙動を変えたい            | 任意 |
+| `app/Hooks/`              | WordPress の挙動を変えたい          | 任意 |
+
+### `views`ディレクトリ内について
+```sh
+views/
+├── app/       # 管理画面のオプションページテンプレート（configでディレクトリ変更可能）
+├── archive/   # archive-○○.php に対応
+├── component/ # views内で共通使用するコンポーネント（the_component()で呼び出し可能）
+├── layout/    # headerやfooterなどの共通レイアウト（header/footerは各テンプレートで自動読み込み）
+├── page/      # page-○○.php に対応。ファイル名＝パーマリンク、フォルダ階層＝URL階層（例: page/contact/thanks → /contact/thanks）
+├── single/    # single-○○.php に対応
+└── taxonomy/  # taxonomy-○○.php に対応
+```
+
 ## テーマドキュメント一覧
 
 - [テーマについて（本ドキュメント）](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/README.md)
@@ -17,29 +45,6 @@
 - [app ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
 - [bootstrap ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/bootstrap/README.md)
 
-## このテーマの整理方針
-
-外部のコーダーさんはテーマを理解する必要がないように作っています。
-
-保守を担当する社内のエンジニアはある程度理解しておくとカスタマイズやちょっとした更新作業がスムーズに行えますがドキュメントを整備しているので都度でも大丈夫です。
-
-1. 基本的には`views` `config` `assets` `bootstrap/functions.php` だけを見ればコーディング作業ができるように作っていますので、これらのディレクトリをチェックいただければ大丈夫です。
-
-2. WordPress 標準ではテーマ直下にファイルが散らばりますが、それらの表示コードはすべて`views`ディレクトリや`bootstrap/functions.php`に逃がしていますので、テーマ直下を触る必要はありません。
-
-3. CSS や JS の登録、カスタム投稿・タクソノミーの作成、ページ URL の設定は`config`ディレクトリを編集してください。その設定ファイルをもとに`app`ディレクトリの中でロジックを組んでいます。
-
-4. `views`から呼び出す関数は全て`bootstrap/functions.php`にまとめています。このファイルはグローバルに呼び出すことを許容しており、詳細なロジックは`app`に逃がしています。ここにある関数が`views`から使える関数の全てとなります。
-
-- カスタム投稿や CSS を追加したい → `config/`
-- 画像や JS、CSS を配置したい → `assets/`
-- ページを作成したい → `views/`
-- view から使う関数を確認したい → `bootstrap/functions.php`
-
-- WordPress の挙動を変えたい（任意） → `app/Hooks/`
-- プラグイン連携を変えたい（任意） → `app/Plugins/`
-- 案件別ロジックを追加したい（任意） → `app/Project/`
-
 ## 対応バージョン
 
 - PHP：8.0+
@@ -48,8 +53,9 @@
 
 ## Sass について
 
-基本は vscode プラグインの Live Sass Compailer または、
-`Makefile`に定義したショートカットコマンドを利用して npx でコンパイルします。
+基本は vscode プラグインの Live Sass Compailer を使用します。
+
+または`Makefile`に定義したショートカットコマンドを利用して npx でコンパイルします。
 
 どちらの方法でコンパイルしても構いません。
 
