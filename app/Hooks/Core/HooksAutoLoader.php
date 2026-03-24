@@ -43,7 +43,7 @@ class HooksAutoLoader
      */
     public static function handle(): void
     {
-        $config = Config::get('cms.hooks_auto_loader');
+        $config = Config::get('app.hooks_auto_loader');
 
         // hooks_auto_loader が配列で定義されている場合のみ cache 設定を読む
         // 未設定時は安全側として false 扱いにする
@@ -270,7 +270,7 @@ class HooksAutoLoader
      */
     private static function cachePath(): string
     {
-        return Config::get('cms.hooks_auto_loader.cache_path');
+        return Config::get('app.hooks_auto_loader.cache_path');
     }
 
     /**
