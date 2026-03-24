@@ -21,13 +21,19 @@ return [
      * アクセスログ設定
      */
     'access' => [
-        'use'     => true,
+        'use'     => true, // アクセスを有効にするか
         'dir'     => '/storage/logs/access/',
         'channel' => 'access',
+        /**
+         * アクセスログを記録するフックタイミング
+         */
         'hooks'   => [
-            'template_redirect',
-            'admin_init',
+            'template_redirect', // テンプレートページアクセス時
+            'admin_init', // 管理画面アクセス時
         ],
+        /**
+         * ログを記録するコンテンツ
+         */
         'content' => [
             \App\Enums\LogFieldEnum::RequestId,
             \App\Enums\LogFieldEnum::Ip,

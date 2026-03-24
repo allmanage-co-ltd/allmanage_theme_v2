@@ -1,5 +1,58 @@
 # バージョンアップ履歴
 
+## 2026.3.24
+
+### `app`ディレクトリ内の構造を大幅変更しました。（社内向け）
+
+※外部コーダーさんは基本触らない場所なのでスルーでOKです。
+
+※app内は大幅変更しましたが、viewsやbootstrap/functions.phpの互換性は保っています。
+
+前バージョンまではWP依存を分離してWPに限らずPHP資産を蓄積しようと思っていましたが、
+WPテーマなのになにしてんだ、、となったので諦めて保守性に振り切りました。
+Laravel使うならLaraevelのレールでコード書くので、あえて流用することはないかなと。。
+
+### `config`に新たに設定可能項目を追加しました。
+
+- `acf`: ACFのフィールド登録用
+- `cms.taxonomy_required`: タクソノミーの必須化設定
+- `logger.app`,`logger.access`,`logger.error`: ログ関連の設定
+- `searchform.filter`: WordPressのデフォルトs検索に、タクソノミー、カスタムフィールドを含める設定
+
+コメントも併せて整備し、どこのファイルで設定値を参照しているか追記しました。
+
+### `views`内を一部整理しました。
+
+NEWSアーカイブの.c-card_newsをコンポーネントに移行。
+
+以下で共通使用。
+
+- `views/archive/news.php`
+- `views/taxonomy/news_cat.php`
+- `views/page/search.php`
+
+```html
+<!-- views/archive/news.php -->
+<?php
+the_component('news/c-card_news', [
+    'query' => $query
+]);
+?>
+```
+
+### `get_acf_action`を`get_acf_fields`に変更、仕様変更に伴うシグネチャの変更
+
+```php
+
+// 前バージョン
+// $sample = get_acf_action( get_the_ID() )->news();
+// echo $sampe['acf_is_public'];
+
+// 今バージョン移行
+$sample = get_acf_fields( get_the_ID(), config('acf.news'));
+echo $sampe['acf_is_public'];
+```
+
 ## 2026.3.15
 
 ### viewsディレクトリのドキュメントを追加
