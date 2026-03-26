@@ -22,9 +22,9 @@ final class AppError implements AbortAppErrorInterface
     public static function abort(\Throwable $throwable): never
     {
         // ローカル環境の場合はスタックトレースを出力して処理を止める
-        // if (Runtime::isLocal()) {
-        //     self::exiter($throwable->getMessage());
-        // }
+        if (Runtime::isLocal()) {
+            self::exiter($throwable->getMessage());
+        }
 
         // 本番環境の場合はスタックトレースを出力せず処理を止める
         $error_id = Runtime::errorId();
