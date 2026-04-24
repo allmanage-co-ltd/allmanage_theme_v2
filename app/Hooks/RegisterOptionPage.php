@@ -10,7 +10,7 @@ use App\Services\Config;
  * 管理画面オプションページ登録クラス
  * ---------------------------------------------
  * - 管理画面側で使用する Admin クラス
- * - Csv 入出力用の管理ページを追加する
+ * - オプションページの登録・リダイレクト・描画を一元管理する
  * - 表示可否は Config 設定により制御する
  * - add_menu_page を散らさない
  * - functions.php に管理画面ロジックを書かない
@@ -22,6 +22,7 @@ class RegisterOptionPage implements BootableWpHookInterface
     public function boot(): void
     {
         add_action('admin_menu', $this->register(...));
+        add_action('admin_init', $this->redirect(...));
     }
 
     /**
@@ -40,12 +41,43 @@ class RegisterOptionPage implements BootableWpHookInterface
                 $option['capability'] ?? 'manage_options',
                 $option['slug'] ?? $key,
                 fn() => $this->render($option),
+                $option['icon'] ?? '',
+                $option['position'] ?? null,
             );
         }
     }
 
     /**
-     * 管理画面View表示
+     * ヘッダー送信前にリダイレクト処理を行う
+     * admin_init タイミングで実行されるため wp_redirect() が使用可能
+     */
+    public function redirect(): void
+    {
+        $currentPage = $_GET['page'] ?? null;
+
+        if (!$currentPage) {
+            return;
+        }
+
+        foreach (Config::get('cms.option_pages') ?? [] as $key => $option) {
+            $slug = $option['slug'] ?? $key;
+
+            if ($slug !== $currentPage) {
+                continue;
+            }
+
+            if (empty($option['redirect'])) {
+                continue;
+            }
+
+            wp_safe_redirect(admin_url($option['redirect']));
+            exit;
+        }
+    }
+
+    /**
+     * 管理画面 View を表示する
+     * redirect キーが設定されている場合はリダイレクトのみ行い描画しない
      */
     private function render(array $option): void
     {
@@ -57,6 +89,10 @@ class RegisterOptionPage implements BootableWpHookInterface
 
         $baseDir = Config::get('cms.option_view_dir') ?? Path::views('app/admin');
         $path    = Path::join(\rtrim($baseDir, '/'), $view);
+
+        if (!file_exists($path)) {
+            return;
+        }
 
         include $path;
     }

@@ -60,6 +60,11 @@ return [
     ],
 
     /**
+     * オプションページのテンプレートファイルをどのフォルダに置くか
+     */
+    'option_view_dir'   => \App\Helpers\Path::views() . '/app/admin',
+
+    /**
      * app/Hooks/RegisterOptionPage.phpで参照
      *
      * オプションページの設定
@@ -88,9 +93,15 @@ return [
                 // \App\Project\ImportWorksCsv::class,
             ],
         ],
+        'inquiry-history' => [
+            'show'       => true,
+            'page_title' => 'お問い合わせ履歴',
+            'menu_title' => 'お問い合わせ履歴',
+            'capability' => 'edit_posts',
+            'slug'       => 'inquiry-history',
+            'redirect'   => 'edit.php?post_type=mw-wp-form&page=mw-wp-form-save-data',
+            'icon'       => 'dashicons-email-alt',
+            'position'   => 30,
+        ],
     ],
-    /**
-     * オプションページのテンプレートファイルをどのフォルダに置くか
-     */
-    'option_view_dir'   => \App\Helpers\Path::views() . '/app/admin',
 ];

@@ -32,7 +32,8 @@ return [
             'option'    => [
                 'usc-e-shop/usc-e-shop.php', // ウェルカート
                 'usces_orderlist',           // ウェルカート
-                'csv-in-expoter',
+                'csv-in-expoter',            // CSVダウンロード
+                'inquiry-history',           // お問い合わせ履歴（mw form）
             ],
         ],
 
@@ -40,7 +41,7 @@ return [
          * その他の表示オプション、非表示はfalse
          */
         'default_option' => [
-            'helth'       => false, // サイトヘルスステータス
+            'health'      => false, // サイトヘルスステータス
             'activity'    => false, // アクティビティ
             'quick_press' => false, // クイックドラフト
             'primary'     => false, // WordPressイベントとニュース
@@ -48,6 +49,7 @@ return [
             'right_now'   => false, // 概要
             'new-content' => false, // WordPressロゴ/コメント/新規追加
             'notices'     => false, // 更新通知
+            'aioseo'      => false, // AIOSEOの概要
         ],
     ],
 ];

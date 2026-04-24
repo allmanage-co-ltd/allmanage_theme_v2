@@ -1,5 +1,42 @@
 # バージョンアップ履歴
 
+## 2026.4.24
+
+### `config/menu.php` に `aioseo` ダッシュボードウィジェット非表示設定を追加
+
+AIOSEOプラグイン導入時のダッシュボード概要ウィジェットを非表示にできるようにしました。
+
+```php
+// config/menu.php
+'dashboard' => [
+    'aioseo' => false, // AIOSEOの概要
+],
+```
+
+### `RegisterOptionPage.php` に `redirect` / `icon` / `position` 設定を追加
+
+オプションページに `redirect` キーを設定すると、そのページへアクセスした際に別の管理画面URLへリダイレクトできるようになりました。
+メニューアイコン（`icon`）と表示順（`position`）も設定可能になりました。
+
+```php
+// config/cms.php の例
+'inquiry-history' => [
+    'show'       => true,
+    'page_title' => 'お問い合わせ履歴',
+    'menu_title' => 'お問い合わせ履歴',
+    'capability' => 'edit_posts',
+    'slug'       => 'inquiry-history',
+    'redirect'   => 'edit.php?post_type=mw-wp-form&page=mw-wp-form-save-data', // このURLへリダイレクト
+    'icon'       => 'dashicons-email-alt',
+    'position'   => 30,
+],
+```
+
+### `SavePostTaxonomyRequired.php` のエラー処理を修正
+
+タクソノミー必須チェックで、auto-draft・リビジョン・ゴミ箱への移動時には検証をスキップするよう修正しました。
+下書き保存やゴミ箱操作時に誤ってバリデーションエラーが発生する問題を解消しています。
+
 ## 2026.3.24
 
 ### `app`ディレクトリ内の構造を大幅変更しました。（社内向け）

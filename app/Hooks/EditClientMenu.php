@@ -91,7 +91,7 @@ class EditClientMenu implements BootableWpHookInterface
             }
         }
 
-        if (!$this->opts['helth']) {
+        if (!$this->opts['health']) {
             remove_meta_box('dashboard_site_health', 'dashboard', 'normal');
         }
         if (!$this->opts['activity']) {
@@ -108,6 +108,9 @@ class EditClientMenu implements BootableWpHookInterface
         }
         if (!$this->opts['right_now']) {
             remove_meta_box('dashboard_right_now', 'dashboard', 'normal');
+        }
+        if (!$this->opts['aioseo']) {
+            remove_meta_box('aioseo-overview', 'dashboard', 'normal');
         }
     }
 

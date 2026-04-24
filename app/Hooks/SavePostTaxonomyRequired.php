@@ -44,8 +44,13 @@ class SavePostTaxonomyRequired implements BootableWpHookInterface
     {
         if ($this->checking) return;
 
-        $post_type = get_post_type($post_id);
+        // auto-draft・リビジョン・ゴミ箱は除外
+        $post = get_post($post_id);
+        if (!$post) return;
+        if (in_array($post->post_status, ['auto-draft', 'trash', 'inherit'], true)) return;
+        if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) return;
 
+        $post_type = $post->post_type;
         if (!isset($this->config[$post_type])) return;
 
         foreach ($this->config[$post_type] as $taxonomy => $message) {
