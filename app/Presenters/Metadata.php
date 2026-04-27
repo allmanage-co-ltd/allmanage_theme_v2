@@ -233,10 +233,11 @@ class Metadata
     public static function getGtags()
     {
         $gtags = Config::get('seo.gtags');
+        $html = '';
 
         if (!empty($gtags && !is_local())) {
             foreach ($gtags as $gtag) {
-                return <<<HTML
+                $html .= <<<HTML
 
     <!-- Google tag (gtag.js) -->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id={$gtag}"></script>
@@ -254,6 +255,8 @@ class Metadata
     HTML;
             }
         }
+
+        return $html;
     }
 
     /**
