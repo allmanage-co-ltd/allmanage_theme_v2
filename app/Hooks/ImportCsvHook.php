@@ -16,7 +16,7 @@ class ImportCsvHook implements BootableWpHookInterface
 {
     public function boot(): void
     {
-        add_action('init', $this->register(...));
+        add_action('init', $this->register(...), 20);
     }
 
     private function register(): void
