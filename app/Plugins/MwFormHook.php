@@ -234,7 +234,7 @@ EOT,
             'complete_url'          => '/contact/thanks/',
             'complete_message'      => <<<EOF
 <p>この度は、お問い合わせいただき、ありがとうございます。<br>ご入力いただきましたメールアドレス宛に自動返信メールをお送りしております。<br>ご送信いただいた内容を確認後、折り返しご連絡させていただきます。</p>
-<div class="c-form__button"><a href="../../" class="c-form__btn">トップページ</a></div>
+<div class="c-form__button"><a href="../../" class="c-form__btn c-btn -center">トップページ</a></div>
 EOF,
 
             default                 => $value,

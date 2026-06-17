@@ -1,26 +1,31 @@
-    <?php
+<?php
+if (is_page(['contact', 'confirm', 'thanks'])) {
     the_layout('footer-contact');
-    // the_component('totop');
-    //the_cookie_modal();
-    ?>
+}
+?>
 
-    <footer class="l-footer">
+<?php
+the_component('totop');
+the_cookie_modal(30, url('privacy'));
+?>
 
-        <div class="c-inner -lg">
-            <div class="l-footer__top">
-                <div class="l-footer__logo">
-                    <a href="<?= home(); ?>">
-                        <!-- <img src="<?= config('seo.logo_ft') ?>" alt="<?= config('seo.name'); ?>"> -->
-                        <!-- <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>"> -->
-                    </a>
-                </div>
-                <?php the_layout('footer-navi'); ?>
+<footer class="l-footer">
+
+    <div class="c-inner -lg">
+        <div class="l-footer__top">
+            <div class="l-footer__logo">
+                <a href="<?= home(); ?>">
+                    <!-- <img src="<?= config('seo.logo_ft') ?>" alt="<?= config('seo.name'); ?>"> -->
+                    <!-- <img src="<?= config('seo.logo') ?>" alt="<?= config('seo.name'); ?>"> -->
+                </a>
             </div>
-            <div class="l-footer__copyright"><?= config('seo.copy') ?></div>
+            <?php the_layout('footer-navi'); ?>
         </div>
-    </footer>
+        <div class="l-footer__copyright"><?= config('seo.copy') ?></div>
+    </div>
+</footer>
 
-    <?php wp_footer(); ?>
-    </body>
+<?php wp_footer(); ?>
+</body>
 
-    </html>
+</html>

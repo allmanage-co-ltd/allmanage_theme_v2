@@ -23,9 +23,8 @@ $name = config('seo.name');
                     </p>
                 </div>
                 <div class="u-mgt_xxl u-center">
-                    <a href="<?= url('home') ?>" class="c-btn">
+                    <a href="<?= url('home') ?>" class="c-btn -center">
                         <span class="c-btn__txt">TOPへ戻る</span>
-                        <div class="c-btn__icon"></div>
                     </a>
                 </div>
             </div>

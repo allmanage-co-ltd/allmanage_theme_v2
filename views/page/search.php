@@ -1,7 +1,8 @@
 <?php
+$post_type = $_GET['post_type'] ?? 'news';
 $sq    = get_search_query();
 $query = wpquery()
-    ->setPostType(['news'])
+    ->setPostType([$post_type])
     ->setSearchQuery($sq)
     ->setPerPage(10)
     ->setOrderByDate()
@@ -14,8 +15,8 @@ $query = wpquery()
         <div class="p-kv_under__inner">
             <div class="c-inner">
                 <div class="p-kv_under__ttl">
-                    <div class="en">SEARCH</div>
-                    <div class="jp">検索結果</div>
+                    <div class="en"><?= get_post_type_object($post_type)->labels->name ?? '検索結果' ?></div>
+                    <div class="jp">「<?= $sq ?>」の検索結果</div>
                 </div>
             </div>
         </div>

@@ -1,6 +1,9 @@
 <?php
+$term = get_queried_object();
+$taxonomy = $term->taxonomy ?? null;
 $query = wpquery()
     ->setPostType('news')
+    ->setTaxQuery($taxonomy, $term->term_id, 'term_id')
     ->setPerPage(10)
     ->setOrderByDate()
     ->build();

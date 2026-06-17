@@ -11,16 +11,18 @@
                     // the_component('translate');
                     ?>
                     <ul class="l-gnavi__list">
-                        <li class="l-gnavi__item">
+                        <li class="l-gnavi__item ">
                             <a href="<?= url('home') ?>" class="l-gnavi__link">トップ</a>
                         </li>
                         <li class="l-gnavi__item">
-                            <a href="<?= url('news') ?>" class="l-gnavi__link">NEWS</a>
-                        </li>
-                        <li class="l-gnavi__item">
-                            <a href="<?= url('contact') ?>" class="l-gnavi__link">CONTACT</a>
+                            <a href="<?= url('news') ?>" class="l-gnavi__link">新着情報</a>
                         </li>
                     </ul>
+                    <div class="l-gnavi__btn">
+                        <a href="<?= url('contact') ?>" class="">
+                            ご相談・お問い合わせ
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

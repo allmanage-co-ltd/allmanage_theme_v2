@@ -2,7 +2,8 @@
   breadcrumb wrap
 --------------------------------------------*/
 .l-breadcrumb {
-  @include mq(sm) {}
+  @include mq(sm) {
+  }
 
   @include mq(xs) {
     display: none;
@@ -16,25 +17,29 @@
   display: flex;
   align-items: center;
 
-  >li {
+  > li {
     position: relative;
     display: flex;
     align-items: center;
     line-height: 1;
     font-size: 1.2rem;
 
-    &+* {
+    & + * {
       &::before {
         content: "";
-        width: 3.5px;
-        height: 6px;
+        width: 8.5px;
+        height: 15px;
         display: inline-block;
         margin-right: 0.66em;
-        background: url(../../assets/img/icon_chevron_right.svg) no-repeat center / contain;
+        background: url(../img/common/icon_chevron_right.svg) no-repeat center /
+          contain;
+        // background: url(../img/common/icon_chevron.svg) no-repeat center / contain;
+        // transform: rotate(85deg);
+        // margin-bottom: 1px;
       }
     }
 
-    >a {
+    > a {
       display: block;
       text-decoration: none;
       color: #212121;
@@ -49,13 +54,13 @@
     }
 
     &:first-child {
-      >a {
+      > a {
         color: #666666;
       }
     }
 
     &:last-child {
-      >a {
+      > a {
         text-decoration: none;
         pointer-events: none;
         color: $font;
@@ -69,5 +74,6 @@
     }
   }
 
-  @include mq(xs) {}
+  @include mq(xs) {
+  }
 }
