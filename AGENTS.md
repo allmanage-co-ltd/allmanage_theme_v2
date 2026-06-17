@@ -1,1 +1,1 @@
-../../dotfiles/packages/claude/.claude/CLAUDE.md
+./CLAUDE.md
