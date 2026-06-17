@@ -1,1 +1,1 @@
-../../dotfiles/packages/claude/.claude/CLAUDE.md
+/home/k-taniguchi/documents/dotfiles/packages/claude/.claude/CLAUDE.md
