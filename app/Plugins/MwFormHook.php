@@ -3,6 +3,7 @@
 namespace App\Plugins;
 
 use App\Interfaces\BootableWpHookInterface;
+use App\Services\Config;
 
 /**---------------------------------------------
  * MW WP Form 連携クラス
@@ -42,30 +43,10 @@ class MwFormHook implements BootableWpHookInterface
      */
     public function footerScript(): void
     {
-        if (is_page('contact')) {
-            echo <<<HTML
-        <script>
-        $(function() {
-            $('.c-form__agreement .mwform-checkbox-field-text').html(
-                '「<a href="/privacy" target="_blank" class="u-txt_ul">プライバシーポリシー</a>」に同意する'
-            );
-          });
-        </script>
-      HTML;
-        }
-
-        if (is_page(['confirm', 'thanks'])) {
-            echo <<<HTML
-        <script type="text/javascript">
-         $(function() {
-          if ($('.mw_wp_form_confirm, .mw_wp_form_complete').length) {
-            $('.c-form__notes').hide();
-            $('.c-form__privacy').hide();
-            $('.c-form__agreement').hide();
-          }
-        });
-        </script>
-      HTML;
+        foreach (Config::get('mwform.foot-script') as $item) {
+            if ($item['is_page']) {
+                echo $item['scriput'];
+            }
         }
 
         echo <<<HTML
@@ -85,16 +66,16 @@ class MwFormHook implements BootableWpHookInterface
      */
     public function validation($Validation, $data, $Data)
     {
-        if ($Data->get('hoge') == 'fuga') {
-            $Validation->set_rule('hoge', 'noEmpty', [
-                'message' => 'fugaは必須項目です。',
-            ]);
-        }
+        // if ($Data->get('hoge') == 'fuga') {
+        //     $Validation->set_rule('hoge', 'noEmpty', [
+        //         'message' => 'fugaは必須項目です。',
+        //     ]);
+        // }
 
-        $Validation->set_rule($Data->get('select'), 'in', [
-            'options' => ['select1', 'select2'],
-            'message' => 'selectを選択してください',
-        ]);
+        // $Validation->set_rule($Data->get('select'), 'in', [
+        //     'options' => ['select1', 'select2'],
+        //     'message' => 'selectを選択してください',
+        // ]);
 
         return $Validation;
     }
@@ -106,17 +87,17 @@ class MwFormHook implements BootableWpHookInterface
      */
     public function entryAutobackMyMail($Mail_raw, $values, $Data)
     {
-        switch ($Data->get('hoge')) {
-            case 'fuga':
-                $Mail_raw->to      = '';
-                $Mail_raw->bcc     = '';
-                $Mail_raw->subject = '';
-                // no break
-            default:
-                $Mail_raw->to      = '';
-                $Mail_raw->bcc     = '';
-                $Mail_raw->subject = '';
-        }
+        // switch ($Data->get('hoge')) {
+        //     case 'fuga':
+        //         $Mail_raw->to      = '';
+        //         $Mail_raw->bcc     = '';
+        //         $Mail_raw->subject = '';
+        //         // no break
+        //     default:
+        //         $Mail_raw->to      = '';
+        //         $Mail_raw->bcc     = '';
+        //         $Mail_raw->subject = '';
+        // }
         return $Mail_raw;
     }
 
@@ -253,6 +234,7 @@ EOF,
 
 ─送信内容の確認─────────────────
 
+[ ご来社日時 ]　{your_date}
 [ お名前 ]　{your_name}
 [ フリガナ ]　{your_name_kana}
 [ 性別 ]　{your_gender}

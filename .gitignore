@@ -1,3 +1,7 @@
 .*.cache
 **/*.log
 **/cache/
+.claude/logs
+CLAUDE.local.md
+.claude/settings.local.json
+.serena
