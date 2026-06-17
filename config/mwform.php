@@ -6,6 +6,7 @@ return [
      */
     'foot-script' => [
 
+        // プラポリチェックボックスのテキスト・リンク先を変更
         'agreement' => [
             'is_page' => ['contact'],
             'scriput' => <<<HTML
@@ -19,6 +20,7 @@ return [
           HTML,
         ],
 
+        // 確認画面で特定の要素を非表示
         'hidden-item' => [
             'is_page' => ['confirm', 'thanks'],
             'scriput' => <<<HTML
