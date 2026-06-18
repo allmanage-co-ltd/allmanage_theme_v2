@@ -2,9 +2,23 @@
 
 ---
 
-## [Unreleased] - 2026-06-17
+## [Unreleased] - 2026-06-18
+
+### Added
+- `config/plugin.php`: 必須プラグイン一覧設定ファイルを新規追加（SiteGuard / WPvivid / AIOSEO / MW WP Form / ACF / Post Types Order / Taxonomy Terms Order）
+- `app/Hooks/SetupTheme.php`: `adminNoticeRequiredPlugins` フックを追加（未インストールの必須プラグインを管理画面に通知）
 
 ### Changed
+- `app/Hooks/SetupTheme.php`: インデントを4スペースから2スペースに統一
+- `config/cms.php`: `csv-in-exporter` オプションページのコメントブロック追加・プロパティ順序を整理。`news` 投稿タイプの `show_in_rest` を `true` に変更。インデントを2スペースに統一
+- `config/searchform.php`: `news` フィルターに `acf_is_public` / `acf_check` / `acf_price` のカスタムフィールドキーを追加。インデントを2スペースに統一
+- `views/layout/footer.php`: HTML 構造をリファクタリング（会社情報・住所・電話番号ブロックを追加）。クッキーモーダルをコメントアウト。コンタクトページ判定ロジックを修正（否定条件に変更）
+- `views/page/search.php`: 投稿タイプ別の `switch` 文でコンポーネントを切り替える対応を追加
+- `assets/img/common/symbol-defs.svg`: `icon-arrow` SVG パスを更新
+- `.vscode/settings.json`: インデントを4スペースから2スペースに統一。ファイルネストパターンを調整
+- `assets/img/home/.keep`: `.gitkeep` にリネーム
+
+### Changed（2026-06-17）
 - `MwFormHook.php`: フッタースクリプトのページ判定ロジックを `config/mwform.php` の設定値へ委譲（`Config::get('mwform.foot-script')` 経由）。ハードコードを廃止
 - `MwFormHook.php`: バリデーション・自動返信メールのサンプルコードをコメントアウト（案件実装前の誤発火防止）
 - `MwFormHook.php`: 自動返信メール本文に「ご来社日時 `{your_date}`」フィールドを追加
