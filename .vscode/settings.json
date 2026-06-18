@@ -14,10 +14,10 @@
     // エディタ設定
     "editor.detectIndentation": false,
     "editor.insertSpaces": true,
-    "editor.tabSize": 4,
+    "editor.tabSize": 2,
     "editor.formatOnSave": true,
     "[php]": {
-        "editor.tabSize": 4,
+        "editor.tabSize": 2,
         "files.insertFinalNewline": true,
     },
     "[css]": {

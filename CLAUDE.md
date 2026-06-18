@@ -2,23 +2,23 @@
 
 # コア設定（全セッション必須）
 
-@./claude/rules/\_core/persona.md
-@./claude/rules/\_core/output-format.md
-@./claude/rules/\_core/session-start.md
-@./claude/rules/\_core/token-efficiency.md
+@./.claude/rules/_core/persona.md
+@./.claude/rules/_core/output-format.md
+@./.claude/rules/_core/session-start.md
+@./.claude/rules/_core/token-efficiency.md
 
 # Git 規約
 
-@./claude/rules/workflows/git-workflow.md
+@./.claude/rules/workflows/git-workflow.md
 
 # セキュリティ
 
-@./claude/rules/\_core/security.md
+@./.claude/rules/_core/security.md
 
 # 外部ツール連携
 
-@./claude/rules/tools/codex.md
-@./claude/rules/tools/gemini.md
+@./.claude/rules/tools/codex.md
+@./.claude/rules/tools/gemini.md
 
 ## 概要
 

@@ -27,7 +27,19 @@ $query = wpquery()
     <div class="l-content -under">
         <section class="p-news_archive">
             <div class="c-inner">
-                <?php the_component('news/c-card_news', ['query' => $query]); ?>
+                <?php
+                switch ($post_type) {
+                    case 'news':
+                        the_component('news/c-card_news', ['query' => $query]);
+                        break;
+                    // case 'works':
+                    //     the_component('works/c-card_works', ['query' => $query]);
+                    //     break;
+                    default:
+                        the_component('news/c-card_news', ['query' => $query]);
+                        break;
+                }
+                ?>
             </div>
         </section>
     </div>
