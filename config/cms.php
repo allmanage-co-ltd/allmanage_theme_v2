@@ -70,13 +70,10 @@ return [
    * オプションページの設定
    */
   'option_pages'      => [
+    /**
+     * CSVの一括出力、登録ページ
+     */
     'csv-in-expoter' => [
-      'show'       => true,
-      'page_title' => 'CSV',
-      'menu_title' => 'CSV',
-      'capability' => 'manage_options',
-      'slug'       => 'csv-in-expoter',
-      'view'       => 'csv-in-expoter.php',
       /**
        * CSVエクスポート・インポートクラス（csv-in-expoter独自定義）
        *
@@ -92,8 +89,13 @@ return [
         \App\Project\ImportNewsCsv::class,
         // \App\Project\ImportWorksCsv::class,
       ],
+      'show'       => true,
+      'page_title' => 'CSV',
+      'menu_title' => 'CSV',
+      'capability' => 'manage_options',
+      'slug'       => 'csv-in-expoter',
+      'view'       => 'csv-in-expoter.php',
     ],
-
     /**
      * 管理画面にmwformのお問い合わせ履歴ページを表示
      */
