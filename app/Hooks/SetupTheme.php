@@ -187,7 +187,7 @@ class SetupTheme implements BootableWpHookInterface
     }
 
     $missing = [];
-    foreach (Config::get('plugin') as $plugin) {
+    foreach (Config::get('plugin.musts') as $plugin) {
       if (is_plugin_active($plugin['slug'])) {
         continue;
       }
