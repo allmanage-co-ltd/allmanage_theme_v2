@@ -9,13 +9,13 @@ namespace App\Plugins;
  */
 class Welcart
 {
-    /**
-     * 商品情報をまとめて取得
-     */
-    public function item()
-    {
-        return [
-            '' => '',
-        ];
-    }
+  /**
+   * 商品情報をまとめて取得
+   */
+  public function item()
+  {
+    return [
+      '' => '',
+    ];
+  }
 }

@@ -13,5 +13,5 @@ namespace App\Interfaces;
  */
 interface BootableWpHookInterface
 {
-    public function boot(): void;
+  public function boot(): void;
 }

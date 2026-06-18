@@ -8,84 +8,84 @@ namespace App\Helpers;
  */
 class Html
 {
-    private static bool $styleLoaded = false;
+  private static bool $styleLoaded = false;
 
-    /**
-     * JSON整形出力
-     */
-    public static function pre(mixed $data): void
-    {
-        self::style();
+  /**
+   * JSON整形出力
+   */
+  public static function pre(mixed $data): void
+  {
+    self::style();
 
-        $json = \json_encode(
-            $data,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        );
+    $json = \json_encode(
+      $data,
+      JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+    );
 
-        if ($json === false) {
-            echo '<pre class="z-pre" style="color:red;">JSON encode error</pre>';
-            return;
-        }
-
-        echo '<pre class="z-pre">';
-        echo \htmlspecialchars($json, ENT_QUOTES, 'UTF-8');
-        echo '</pre>';
+    if ($json === false) {
+      echo '<pre class="z-pre" style="color:red;">JSON encode error</pre>';
+      return;
     }
 
-    /**
-     * dumpして終了
-     */
-    public static function dd(mixed $data): void
-    {
-        self::style();
+    echo '<pre class="z-pre">';
+    echo \htmlspecialchars($json, ENT_QUOTES, 'UTF-8');
+    echo '</pre>';
+  }
 
-        echo '<pre class="z-pre">';
-        echo \htmlspecialchars(var_export($data, true), ENT_QUOTES, 'UTF-8');
-        echo '</pre>';
+  /**
+   * dumpして終了
+   */
+  public static function dd(mixed $data): void
+  {
+    self::style();
 
-        exit;
+    echo '<pre class="z-pre">';
+    echo \htmlspecialchars(var_export($data, true), ENT_QUOTES, 'UTF-8');
+    echo '</pre>';
+
+    exit;
+  }
+
+  /**
+   * テーブル表示
+   */
+  public static function table(array $rows): void
+  {
+    self::style();
+
+    if (empty($rows)) {
+      echo '<p>データなし</p>';
+      return;
     }
 
-    /**
-     * テーブル表示
-     */
-    public static function table(array $rows): void
-    {
-        self::style();
+    echo '<table class="z-table">';
 
-        if (empty($rows)) {
-            echo '<p>データなし</p>';
-            return;
+    foreach ($rows as $row) {
+      echo '<tr>';
+      foreach ($row as $cell) {
+        if (\is_array($cell)) {
+          $cell = \json_encode($cell, JSON_UNESCAPED_UNICODE);
         }
-
-        echo '<table class="z-table">';
-
-        foreach ($rows as $row) {
-            echo '<tr>';
-            foreach ($row as $cell) {
-                if (\is_array($cell)) {
-                    $cell = \json_encode($cell, JSON_UNESCAPED_UNICODE);
-                }
-                echo '<td>' . \htmlspecialchars((string)$cell) . '</td>';
-            }
-            echo '</tr>';
-        }
-
-        echo '</table>';
+        echo '<td>' . \htmlspecialchars((string)$cell) . '</td>';
+      }
+      echo '</tr>';
     }
 
-    /**
-     * 共通スタイル出力（1回だけ）
-     */
-    private static function style(): void
-    {
-        if (self::$styleLoaded) {
-            return;
-        }
+    echo '</table>';
+  }
 
-        self::$styleLoaded = true;
+  /**
+   * 共通スタイル出力（1回だけ）
+   */
+  private static function style(): void
+  {
+    if (self::$styleLoaded) {
+      return;
+    }
 
-        echo <<<HTML
+    self::$styleLoaded = true;
+
+    echo <<<HTML
         <style>
         body{margin:0;}
 
@@ -119,5 +119,5 @@ class Html
         }
         </style>
         HTML;
-    }
+  }
 }

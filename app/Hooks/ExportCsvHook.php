@@ -14,33 +14,33 @@ use App\Services\Config;
  */
 class ExportCsvHook implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        add_action('init', $this->register(...), 20);
+  public function boot(): void
+  {
+    add_action('init', $this->register(...), 20);
+  }
+
+  private function register(): void
+  {
+    foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
+      if (!\is_string($class) || !\is_subclass_of($class, ExportCsvAbstract::class)) {
+        continue;
+      }
+
+      $param = $class::exportParam();
+
+      if (!isset($_GET[$param]) || $_GET[$param] !== $class::postType()) {
+        continue;
+      }
+
+      // パラメータが一致したがアクセス権限がない場合はエラーで停止する
+      if (!$class::isAllowed()) {
+        AppError::abort(new \RuntimeException('CSVエクスポートの権限がありません'));
+      }
+
+      /** @var ExportCsvAbstract $exporter */
+      $exporter = new $class();
+      $exporter->handle();
+      return;
     }
-
-    private function register(): void
-    {
-        foreach (Config::get('cms.option_pages.csv-in-expoter.exporter', []) as $class) {
-            if (!\is_string($class) || !\is_subclass_of($class, ExportCsvAbstract::class)) {
-                continue;
-            }
-
-            $param = $class::exportParam();
-
-            if (!isset($_GET[$param]) || $_GET[$param] !== $class::postType()) {
-                continue;
-            }
-
-            // パラメータが一致したがアクセス権限がない場合はエラーで停止する
-            if (!$class::isAllowed()) {
-                AppError::abort(new \RuntimeException('CSVエクスポートの権限がありません'));
-            }
-
-            /** @var ExportCsvAbstract $exporter */
-            $exporter = new $class();
-            $exporter->handle();
-            return;
-        }
-    }
+  }
 }

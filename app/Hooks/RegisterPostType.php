@@ -16,29 +16,29 @@ use App\Services\Config;
  */
 class RegisterPostType implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        add_action('init', $this->register(...));
-    }
+  public function boot(): void
+  {
+    add_action('init', $this->register(...));
+  }
 
-    /**
-     * カスタム投稿タイプ登録処理
-     *
-     * - Config::get('cms.post_types') に定義された内容を元に
-     *   register_post_type をループで実行する
-     *
-     * 想定される設定例：
-     * [
-     *   'news' => [...],
-     *   'case' => [...],
-     * ]
-     *
-     * - 管理画面構成を設定ファイル主導で管理するための仕組み
-     */
-    public function register(): void
-    {
-        foreach (Config::get('cms.post_types') ?? [] as $name => $args) {
-            register_post_type($name, $args);
-        }
+  /**
+   * カスタム投稿タイプ登録処理
+   *
+   * - Config::get('cms.post_types') に定義された内容を元に
+   *   register_post_type をループで実行する
+   *
+   * 想定される設定例：
+   * [
+   *   'news' => [...],
+   *   'case' => [...],
+   * ]
+   *
+   * - 管理画面構成を設定ファイル主導で管理するための仕組み
+   */
+  public function register(): void
+  {
+    foreach (Config::get('cms.post_types') ?? [] as $name => $args) {
+      register_post_type($name, $args);
     }
+  }
 }

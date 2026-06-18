@@ -14,58 +14,58 @@ use App\Helpers\Fmt;
  */
 class Cookie
 {
-    public function __construct(private $days = 365, private $link = '/privacy') {}
+  public function __construct(private $days = 365, private $link = '/privacy') {}
+
+  /**
+   * Cookie同意UIを生成する
+   */
+  public function render(): void
+  {
+    $link = Fmt::h($this->link);
+
+    // 使用するCookie名
+    $cookie_name = 'cookie_consent';
+
+    // ボタン押下状態の判定
+    $button_pressed = null;
+
+    // Cookie許可ボタンが押された場合
+    if (isset($_POST['accept_cookies'])) {
+      $button_pressed = 'accepted';
+
+      // Cookie拒否ボタンが押された場合
+    } elseif (isset($_POST['cancel_cookies'])) {
+      $button_pressed = 'rejected';
+    }
 
     /**
-     * Cookie同意UIを生成する
+     * 同意 or 拒否が確定した場合の処理
+     *
+     * - CookieをPHP側でセット
+     * - JS側でも max-age を指定して明示的に反映
+     * - リロードして即座に表示状態を更新
      */
-    public function render(): void
-    {
-        $link = Fmt::h($this->link);
-
-        // 使用するCookie名
-        $cookie_name = 'cookie_consent';
-
-        // ボタン押下状態の判定
-        $button_pressed = null;
-
-        // Cookie許可ボタンが押された場合
-        if (isset($_POST['accept_cookies'])) {
-            $button_pressed = 'accepted';
-
-            // Cookie拒否ボタンが押された場合
-        } elseif (isset($_POST['cancel_cookies'])) {
-            $button_pressed = 'rejected';
-        }
-
-        /**
-         * 同意 or 拒否が確定した場合の処理
-         *
-         * - CookieをPHP側でセット
-         * - JS側でも max-age を指定して明示的に反映
-         * - リロードして即座に表示状態を更新
-         */
-        if ($button_pressed) {
-            $expiry  = \time() + ($this->days * 24 * 60 * 60);
-            $max_age = $this->days * 24 * 60 * 60;
-            @\setcookie($cookie_name, $button_pressed, $expiry, '/');
-            echo "<script>
+    if ($button_pressed) {
+      $expiry  = \time() + ($this->days * 24 * 60 * 60);
+      $max_age = $this->days * 24 * 60 * 60;
+      @\setcookie($cookie_name, $button_pressed, $expiry, '/');
+      echo "<script>
       document.cookie = '{$cookie_name}={$button_pressed}; path=/; max-age={$max_age}';
       window.location.href = window.location.href;
     </script>";
-            exit;
-        }
+      exit;
+    }
 
-        /**
-         * 既に同意 or 拒否済みの場合
-         *
-         * - Cookieが存在すればUIは表示しない
-         */
-        if (isset($_COOKIE[$cookie_name])) {
-            return;
-        }
+    /**
+     * 既に同意 or 拒否済みの場合
+     *
+     * - Cookieが存在すればUIは表示しない
+     */
+    if (isset($_COOKIE[$cookie_name])) {
+      return;
+    }
 
-        echo <<<HTML
+    echo <<<HTML
 <div class="cookie-consent">
   <p>
     <span>当サイトではCookieを使用します。</span><br>
@@ -77,5 +77,5 @@ class Cookie
   </form>
 </div>
 HTML;
-    }
+  }
 }

@@ -9,64 +9,64 @@
  *  - app/Services/Logger/LogFieldResolver.php
  */
 return [
-    /**
-     * アプリケーションログ設定
-     */
-    'app'    => [
-        'use' => true,
-        'dir' => '/storage/logs/app/',
-    ],
+  /**
+   * アプリケーションログ設定
+   */
+  'app'    => [
+    'use' => true,
+    'dir' => '/storage/logs/app/',
+  ],
 
+  /**
+   * アクセスログ設定
+   */
+  'access' => [
+    'use'     => true, // アクセスを有効にするか
+    'dir'     => '/storage/logs/access/',
+    'channel' => 'access',
     /**
-     * アクセスログ設定
+     * アクセスログを記録するフックタイミング
      */
-    'access' => [
-        'use'     => true, // アクセスを有効にするか
-        'dir'     => '/storage/logs/access/',
-        'channel' => 'access',
-        /**
-         * アクセスログを記録するフックタイミング
-         */
-        'hooks'   => [
-            'template_redirect', // テンプレートページアクセス時
-            'admin_init', // 管理画面アクセス時
-        ],
-        /**
-         * ログを記録するコンテンツ
-         */
-        'content' => [
-            \App\Enums\LogFieldEnum::RequestId,
-            \App\Enums\LogFieldEnum::Ip,
-            \App\Enums\LogFieldEnum::Xff,
-            \App\Enums\LogFieldEnum::Method,
-            \App\Enums\LogFieldEnum::Uri,
-            \App\Enums\LogFieldEnum::Query,
-            \App\Enums\LogFieldEnum::Referer,
-            \App\Enums\LogFieldEnum::Ua,
-            \App\Enums\LogFieldEnum::UserId,
-            \App\Enums\LogFieldEnum::PostId,
-            \App\Enums\LogFieldEnum::PostType,
-            \App\Enums\LogFieldEnum::Status,
-            \App\Enums\LogFieldEnum::Is404,
-        ],
+    'hooks'   => [
+      'template_redirect', // テンプレートページアクセス時
+      'admin_init', // 管理画面アクセス時
     ],
+    /**
+     * ログを記録するコンテンツ
+     */
+    'content' => [
+      \App\Enums\LogFieldEnum::RequestId,
+      \App\Enums\LogFieldEnum::Ip,
+      \App\Enums\LogFieldEnum::Xff,
+      \App\Enums\LogFieldEnum::Method,
+      \App\Enums\LogFieldEnum::Uri,
+      \App\Enums\LogFieldEnum::Query,
+      \App\Enums\LogFieldEnum::Referer,
+      \App\Enums\LogFieldEnum::Ua,
+      \App\Enums\LogFieldEnum::UserId,
+      \App\Enums\LogFieldEnum::PostId,
+      \App\Enums\LogFieldEnum::PostType,
+      \App\Enums\LogFieldEnum::Status,
+      \App\Enums\LogFieldEnum::Is404,
+    ],
+  ],
 
-    /**
-     * エラーログ設定
-     */
-    'error'  => [
-        'use'     => true,
-        'dir'     => '/storage/logs/error/',
-        'content' => [
-            \App\Enums\LogFieldEnum::RequestId,
-            \App\Enums\LogFieldEnum::Ip,
-            \App\Enums\LogFieldEnum::Ua,
-            \App\Enums\LogFieldEnum::Xff,
-            \App\Enums\LogFieldEnum::Status,
-            \App\Enums\LogFieldEnum::Method,
-            \App\Enums\LogFieldEnum::Uri,
-            \App\Enums\LogFieldEnum::Query,
-            \App\Enums\LogFieldEnum::Referer,
-        ],
+  /**
+   * エラーログ設定
+   */
+  'error'  => [
+    'use'     => true,
+    'dir'     => '/storage/logs/error/',
+    'content' => [
+      \App\Enums\LogFieldEnum::RequestId,
+      \App\Enums\LogFieldEnum::Ip,
+      \App\Enums\LogFieldEnum::Ua,
+      \App\Enums\LogFieldEnum::Xff,
+      \App\Enums\LogFieldEnum::Status,
+      \App\Enums\LogFieldEnum::Method,
+      \App\Enums\LogFieldEnum::Uri,
+      \App\Enums\LogFieldEnum::Query,
+      \App\Enums\LogFieldEnum::Referer,
     ],
+  ],
 ];

@@ -14,15 +14,15 @@ use App\Services\Config;
  */
 class Metadata
 {
-    /**
-     * ベースのメタ情報
-     */
-    public static function getBase()
-    {
-        $img_uri = img_uri();
-        $favicon = Config::get('seo.favicon', img_uri() . '/favicon.ico');
+  /**
+   * ベースのメタ情報
+   */
+  public static function getBase()
+  {
+    $img_uri = img_uri();
+    $favicon = Config::get('seo.favicon', img_uri() . '/favicon.ico');
 
-        return <<<HTML
+    return <<<HTML
     <meta name="author" content="allmanage">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,22 +32,22 @@ class Metadata
     <link rel="icon" href="{$favicon}">
     <link rel="apple-touch-icon" href="{$img_uri}/apple-touch-icon.png">
     HTML;
-    }
+  }
 
-    /**
-     * headにメタデータを出力する
-     */
-    public static function getFull(): string
-    {
-        $title       = self::getTitle();
-        $description = self::getDescription();
-        $keywords    = Config::get('seo.keywords');
-        $ogp_image   = self::getOgp();
-        $current_url = home_url(add_query_arg([], $_SERVER['REQUEST_URI']));
-        $site_name   = Config::get('seo.name', get_bloginfo('name'));
-        $og_type     = is_front_page() || is_home() ? 'website' : 'article';
+  /**
+   * headにメタデータを出力する
+   */
+  public static function getFull(): string
+  {
+    $title       = self::getTitle();
+    $description = self::getDescription();
+    $keywords    = Config::get('seo.keywords');
+    $ogp_image   = self::getOgp();
+    $current_url = home_url(add_query_arg([], $_SERVER['REQUEST_URI']));
+    $site_name   = Config::get('seo.name', get_bloginfo('name'));
+    $og_type     = is_front_page() || is_home() ? 'website' : 'article';
 
-        $html = <<<HTML
+    $html = <<<HTML
 
     <title>{$title}</title>
     <meta name="description" content="{$description}">
@@ -68,176 +68,176 @@ class Metadata
     <meta name="twitter:image" content="{$ogp_image}">
     HTML;
 
-        if (is_single()) {
-            $published_time = get_the_date('c');
-            $modified_time  = get_the_modified_date('c');
+    if (is_single()) {
+      $published_time = get_the_date('c');
+      $modified_time  = get_the_modified_date('c');
 
-            $html .= <<<HTML
+      $html .= <<<HTML
 
     <meta property="article:published_time" content="{$published_time}">
     <meta property="article:modified_time" content="{$modified_time}">
     HTML;
-        }
+    }
 
-        $html .= <<<HTML
+    $html .= <<<HTML
 
 
     <link rel="canonical" href="{$current_url}">
     HTML;
 
-        return $html;
+    return $html;
+  }
+
+  /**
+   * タイトルを動的に取得する
+   */
+  public static function getTitle()
+  {
+    $name = Config::get('seo.title', get_bloginfo('name'));
+
+    switch (true) {
+      case is_front_page():
+        // トップページ
+        $title = $name;
+        break;
+
+      case is_single():
+        // シングルページ
+        $title = get_the_title() . ' | ' . $name;
+        break;
+
+      case is_search():
+        // 検索結果ページ
+        $search_query = get_search_query();
+        if ($search_query != '') {
+          $title = $search_query . 'の検索結果 | ' . $name;
+        } else {
+          $title = '検索結果ページ | ' . $name;
+        }
+        break;
+
+      case is_archive() || is_category() || is_tag() || is_tax():
+        // アーカイブ、カテゴリー、タグ、タクソノミーページ
+        $term_name = '';
+        if (is_category()) {
+          $term_name = single_cat_title('', false);
+        } elseif (is_tag()) {
+          $term_name = single_tag_title('', false);
+        } elseif (is_tax()) {
+          $term_name = single_term_title('', false);
+        } elseif (is_author()) {
+          $term_name = get_the_author();
+        } elseif (is_date()) {
+          if (is_year()) {
+            $term_name = get_the_date('Y年');
+          } elseif (is_month()) {
+            $term_name = get_the_date('Y年n月');
+          } elseif (is_day()) {
+            $term_name = get_the_date('Y年n月j日');
+          }
+        } else {
+          $term_name = post_type_archive_title('', false);
+        }
+        $title = $term_name . ' | ' . $name;
+        break;
+
+      case is_404():
+        // 404ページ
+        $title = 'お探しのページが見つかりません | ' . $name;
+        break;
+
+      default:
+        // 下層ページ（固定ページなど）
+        $title = get_the_title() . ' | ' . $name;
+        break;
     }
 
-    /**
-     * タイトルを動的に取得する
-     */
-    public static function getTitle()
-    {
-        $name = Config::get('seo.title', get_bloginfo('name'));
+    return $title ?? $name;
+  }
 
-        switch (true) {
-            case is_front_page():
-                // トップページ
-                $title = $name;
-                break;
 
-            case is_single():
-                // シングルページ
-                $title = get_the_title() . ' | ' . $name;
-                break;
+  /**
+   * ディスクリプションを動的に取得する
+   */
+  public static function getDescription()
+  {
+    $default = Config::get('seo.description', get_bloginfo('description'));
 
-            case is_search():
-                // 検索結果ページ
-                $search_query = get_search_query();
-                if ($search_query != '') {
-                    $title = $search_query . 'の検索結果 | ' . $name;
-                } else {
-                    $title = '検索結果ページ | ' . $name;
-                }
-                break;
+    switch (true) {
+      case is_front_page():
+        // トップページ
+        $description = $default;
+        break;
 
-            case is_archive() || is_category() || is_tag() || is_tax():
-                // アーカイブ、カテゴリー、タグ、タクソノミーページ
-                $term_name = '';
-                if (is_category()) {
-                    $term_name = single_cat_title('', false);
-                } elseif (is_tag()) {
-                    $term_name = single_tag_title('', false);
-                } elseif (is_tax()) {
-                    $term_name = single_term_title('', false);
-                } elseif (is_author()) {
-                    $term_name = get_the_author();
-                } elseif (is_date()) {
-                    if (is_year()) {
-                        $term_name = get_the_date('Y年');
-                    } elseif (is_month()) {
-                        $term_name = get_the_date('Y年n月');
-                    } elseif (is_day()) {
-                        $term_name = get_the_date('Y年n月j日');
-                    }
-                } else {
-                    $term_name = post_type_archive_title('', false);
-                }
-                $title = $term_name . ' | ' . $name;
-                break;
+      case is_single():
+        // シングルページ - 抜粋を100文字で取得
+        $post = get_post();
+        if (!empty($post->post_excerpt)) {
+          // 手動抜粋がある場合
+          $description = $post->post_excerpt;
+        } else {
+          // 自動抜粋を作成
+          $content     = \strip_tags($post->post_content);
+          $content     = \str_replace(["\r\n", "\r", "\n"], '', $content);
+          $description = \mb_substr($content, 0, 100);
+        }
+        break;
 
-            case is_404():
-                // 404ページ
-                $title = 'お探しのページが見つかりません | ' . $name;
-                break;
+      case is_search():
+        // 検索結果ページ
+        $description = $default;
+        break;
 
-            default:
-                // 下層ページ（固定ページなど）
-                $title = get_the_title() . ' | ' . $name;
-                break;
+      case is_archive() || is_category() || is_tag() || is_tax():
+        // アーカイブ、カテゴリー、タグ、タクソノミーページ
+        $term_description = '';
+        if (is_category() || is_tag() || is_tax()) {
+          $term_description = term_description() ?? $default;
         }
 
-        return $title ?? $name;
-    }
-
-
-    /**
-     * ディスクリプションを動的に取得する
-     */
-    public static function getDescription()
-    {
-        $default = Config::get('seo.description', get_bloginfo('description'));
-
-        switch (true) {
-            case is_front_page():
-                // トップページ
-                $description = $default;
-                break;
-
-            case is_single():
-                // シングルページ - 抜粋を100文字で取得
-                $post = get_post();
-                if (!empty($post->post_excerpt)) {
-                    // 手動抜粋がある場合
-                    $description = $post->post_excerpt;
-                } else {
-                    // 自動抜粋を作成
-                    $content     = \strip_tags($post->post_content);
-                    $content     = \str_replace(["\r\n", "\r", "\n"], '', $content);
-                    $description = \mb_substr($content, 0, 100);
-                }
-                break;
-
-            case is_search():
-                // 検索結果ページ
-                $description = $default;
-                break;
-
-            case is_archive() || is_category() || is_tag() || is_tax():
-                // アーカイブ、カテゴリー、タグ、タクソノミーページ
-                $term_description = '';
-                if (is_category() || is_tag() || is_tax()) {
-                    $term_description = term_description() ?? $default;
-                }
-
-                if (!empty($term_description)) {
-                    $description = \strip_tags($term_description);
-                    $description = \mb_substr($description, 0, 100);
-                } else {
-                    $description = $default;
-                }
-                break;
-
-            default:
-                // 下層ページ（固定ページなど）
-                $description = $default;
-                break;
+        if (!empty($term_description)) {
+          $description = \strip_tags($term_description);
+          $description = \mb_substr($description, 0, 100);
+        } else {
+          $description = $default;
         }
+        break;
 
-        return $description ?? $default;
+      default:
+        // 下層ページ（固定ページなど）
+        $description = $default;
+        break;
     }
 
+    return $description ?? $default;
+  }
 
-    /**
-     * OGP画像を取得する
-     */
-    public static function getOgp()
-    {
-        $default_image = Config::get('seo.ogp', img_uri() . '/ogp.jpg');
 
-        return match (true) {
-            is_single() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
-            is_page() && has_post_thumbnail()   => get_the_post_thumbnail_url(get_the_ID(), 'large'),
-            default                             => $default_image,
-        };
-    }
+  /**
+   * OGP画像を取得する
+   */
+  public static function getOgp()
+  {
+    $default_image = Config::get('seo.ogp', img_uri() . '/ogp.jpg');
 
-    /**
-     * headにGA4タグを出力する
-     */
-    public static function getGtags()
-    {
-        $gtags = Config::get('seo.gtags');
-        $html = '';
+    return match (true) {
+      is_single() && has_post_thumbnail() => get_the_post_thumbnail_url(get_the_ID(), 'large'),
+      is_page() && has_post_thumbnail()   => get_the_post_thumbnail_url(get_the_ID(), 'large'),
+      default                             => $default_image,
+    };
+  }
 
-        if (!empty($gtags && !is_local())) {
-            foreach ($gtags as $gtag) {
-                $html .= <<<HTML
+  /**
+   * headにGA4タグを出力する
+   */
+  public static function getGtags()
+  {
+    $gtags = Config::get('seo.gtags');
+    $html = '';
+
+    if (!empty($gtags && !is_local())) {
+      foreach ($gtags as $gtag) {
+        $html .= <<<HTML
 
     <!-- Google tag (gtag.js) -->
     <script async="" src="https://www.googletagmanager.com/gtag/js?id={$gtag}"></script>
@@ -253,65 +253,65 @@ class Metadata
     </script>
 
     HTML;
-            }
-        }
-
-        return $html;
+      }
     }
 
-    /**
-     * headにJSON-LD構造化データを出力する
-     */
-    public static function getJsonld()
-    {
-        $site_name = Config::get('seo.name', get_bloginfo('name'));
-        $site_url  = home_url();
-        $logo_url  = Config::get('seo.logo', img_uri() . '/logo.svg');
+    return $html;
+  }
 
-        if (is_front_page()) {
-            // トップページ用の組織情報
-            $json_ld = [
-                '@context'    => 'https://schema.org',
-                '@type'       => 'Organization',
-                'name'        => $site_name,
-                'url'         => $site_url,
-                'logo'        => $logo_url,
-                'description' => self::getDescription(),
-                'address'     => [
-                    '@type'          => 'PostalAddress',
-                    'addressCountry' => 'JP',
-                ],
-            ];
-        } elseif (is_single()) {
-            // 投稿ページ用の記事情報
-            $json_ld = [
-                '@context'      => 'https://schema.org',
-                '@type'         => 'Article',
-                'headline'      => self::getTitle(),
-                'description'   => self::getDescription(),
-                'image'         => self::getOgp(),
-                'datePublished' => get_the_date('c'),
-                'dateModified'  => get_the_modified_date('c'),
-                'author'        => [
-                    '@type' => 'Organization',
-                    'name'  => $site_name,
-                ],
-                'publisher'     => [
-                    '@type' => 'Organization',
-                    'name'  => $site_name,
-                    'logo'  => [
-                        '@type' => 'ImageObject',
-                        'url'   => $logo_url,
-                    ],
-                ],
-            ];
-        } else {
-            return;
-        }
+  /**
+   * headにJSON-LD構造化データを出力する
+   */
+  public static function getJsonld()
+  {
+    $site_name = Config::get('seo.name', get_bloginfo('name'));
+    $site_url  = home_url();
+    $logo_url  = Config::get('seo.logo', img_uri() . '/logo.svg');
 
-        $encoded_jsonld = \json_encode($json_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    if (is_front_page()) {
+      // トップページ用の組織情報
+      $json_ld = [
+        '@context'    => 'https://schema.org',
+        '@type'       => 'Organization',
+        'name'        => $site_name,
+        'url'         => $site_url,
+        'logo'        => $logo_url,
+        'description' => self::getDescription(),
+        'address'     => [
+          '@type'          => 'PostalAddress',
+          'addressCountry' => 'JP',
+        ],
+      ];
+    } elseif (is_single()) {
+      // 投稿ページ用の記事情報
+      $json_ld = [
+        '@context'      => 'https://schema.org',
+        '@type'         => 'Article',
+        'headline'      => self::getTitle(),
+        'description'   => self::getDescription(),
+        'image'         => self::getOgp(),
+        'datePublished' => get_the_date('c'),
+        'dateModified'  => get_the_modified_date('c'),
+        'author'        => [
+          '@type' => 'Organization',
+          'name'  => $site_name,
+        ],
+        'publisher'     => [
+          '@type' => 'Organization',
+          'name'  => $site_name,
+          'logo'  => [
+            '@type' => 'ImageObject',
+            'url'   => $logo_url,
+          ],
+        ],
+      ];
+    } else {
+      return;
+    }
 
-        return <<<HTML
+    $encoded_jsonld = \json_encode($json_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+    return <<<HTML
 
 
     <script type="application/ld+json">
@@ -319,5 +319,5 @@ class Metadata
     </script>
 
     HTML;
-    }
+  }
 }

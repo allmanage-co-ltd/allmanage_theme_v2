@@ -10,25 +10,25 @@ namespace App\Services\Csv\Actions;
  */
 class ExportGetTermSlugsAction
 {
-    /**
-     * タームスラッグをカンマ区切りで返す
-     *
-     * - taxonomy が存在しない場合は空文字を返す
-     * - タームが取得できない場合や WP_Error の場合も空文字を返す
-     * - slug は CSVへ戻しやすいよう urldecode して返す
-     */
-    public function __invoke(int $post_id, string $taxonomy): string
-    {
-        if (!taxonomy_exists($taxonomy)) {
-            return '';
-        }
-
-        $terms = get_the_terms($post_id, $taxonomy);
-
-        if (is_wp_error($terms) || empty($terms)) {
-            return '';
-        }
-
-        return \implode(',', \array_map(fn($t) => \urldecode($t->slug), $terms));
+  /**
+   * タームスラッグをカンマ区切りで返す
+   *
+   * - taxonomy が存在しない場合は空文字を返す
+   * - タームが取得できない場合や WP_Error の場合も空文字を返す
+   * - slug は CSVへ戻しやすいよう urldecode して返す
+   */
+  public function __invoke(int $post_id, string $taxonomy): string
+  {
+    if (!taxonomy_exists($taxonomy)) {
+      return '';
     }
+
+    $terms = get_the_terms($post_id, $taxonomy);
+
+    if (is_wp_error($terms) || empty($terms)) {
+      return '';
+    }
+
+    return \implode(',', \array_map(fn($t) => \urldecode($t->slug), $terms));
+  }
 }

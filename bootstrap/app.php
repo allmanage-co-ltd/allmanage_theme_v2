@@ -13,20 +13,20 @@ use App\Hooks\Core\HooksAutoLoader;
  */
 class App
 {
-    /**
-     * 各 WordPress 起動クラスを初期化
-     *
-     * app/ 配下でBootableWpHookInterface を実装したクラスが
-     * HooksAutoLoader::handle() により自動 Boot される
-     *
-     * HooksAutoLoader::handle() 内で起きた例外をAppError::abort() で一括して安全停止する
-     */
-    public function boot(): void
-    {
-        try {
-            HooksAutoLoader::handle();
-        } catch (\Throwable $throwable) {
-            AppError::abort($throwable);
-        }
+  /**
+   * 各 WordPress 起動クラスを初期化
+   *
+   * app/ 配下でBootableWpHookInterface を実装したクラスが
+   * HooksAutoLoader::handle() により自動 Boot される
+   *
+   * HooksAutoLoader::handle() 内で起きた例外をAppError::abort() で一括して安全停止する
+   */
+  public function boot(): void
+  {
+    try {
+      HooksAutoLoader::handle();
+    } catch (\Throwable $throwable) {
+      AppError::abort($throwable);
     }
+  }
 }

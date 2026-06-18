@@ -9,5 +9,5 @@ namespace App\Interfaces;
  */
 interface AbortAppErrorInterface
 {
-    public static function abort(\Throwable $throwable): never;
+  public static function abort(\Throwable $throwable): never;
 }

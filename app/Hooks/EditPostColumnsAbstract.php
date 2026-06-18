@@ -12,30 +12,30 @@ use App\Plugins\Acf;
  */
 abstract class EditPostColumnsAbstract implements BootableWpHookInterface
 {
-    abstract protected function postType(): string;
+  abstract protected function postType(): string;
 
-    abstract protected function useAcf(): bool;
+  abstract protected function useAcf(): bool;
 
-    abstract protected function columns(): array;
+  abstract protected function columns(): array;
 
-    abstract public function edit($column, $postId): void;
+  abstract public function edit($column, $postId): void;
 
-    public function boot(): void
-    {
-        if ($this->useAcf() && !Acf::isActive()) {
-            return;
-        }
-
-        add_filter("manage_{$this->postType()}_posts_columns", $this->register(...));
-        add_action("manage_{$this->postType()}_posts_custom_column", $this->edit(...), 10, 2);
+  public function boot(): void
+  {
+    if ($this->useAcf() && !Acf::isActive()) {
+      return;
     }
 
-    public function register($columns)
-    {
-        foreach ($this->columns() as $key => $label) {
-            $columns[$key] = $label;
-        }
+    add_filter("manage_{$this->postType()}_posts_columns", $this->register(...));
+    add_action("manage_{$this->postType()}_posts_custom_column", $this->edit(...), 10, 2);
+  }
 
-        return $columns;
+  public function register($columns)
+  {
+    foreach ($this->columns() as $key => $label) {
+      $columns[$key] = $label;
     }
+
+    return $columns;
+  }
 }

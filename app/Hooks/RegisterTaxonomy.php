@@ -17,36 +17,36 @@ use App\Services\Config;
  */
 class RegisterTaxonomy implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        add_action('init', $this->register(...));
-    }
+  public function boot(): void
+  {
+    add_action('init', $this->register(...));
+  }
 
-    /**
-     * カスタムタクソノミー登録処理
-     *
-     * - Config::get('cms.taxonomies') に定義された設定を元に
-     *   register_taxonomy をループで実行する
-     *
-     * 想定される設定例：
-     * [
-     *   'news_cat' => [
-     *     'post_type' => ['news'],
-     *     'hierarchical' => true,
-     *     ...
-     *   ],
-     * ]
-     *
-     * - post_type は register_taxonomy の第2引数として使用するため
-     *   $args からは除外している
-     */
-    public function register(): void
-    {
-        foreach (Config::get('cms.taxonomies') ?? [] as $name => $args) {
-            $post_type = $args['post_type'];
-            unset($args['post_type']);
+  /**
+   * カスタムタクソノミー登録処理
+   *
+   * - Config::get('cms.taxonomies') に定義された設定を元に
+   *   register_taxonomy をループで実行する
+   *
+   * 想定される設定例：
+   * [
+   *   'news_cat' => [
+   *     'post_type' => ['news'],
+   *     'hierarchical' => true,
+   *     ...
+   *   ],
+   * ]
+   *
+   * - post_type は register_taxonomy の第2引数として使用するため
+   *   $args からは除外している
+   */
+  public function register(): void
+  {
+    foreach (Config::get('cms.taxonomies') ?? [] as $name => $args) {
+      $post_type = $args['post_type'];
+      unset($args['post_type']);
 
-            register_taxonomy($name, $post_type, $args);
-        }
+      register_taxonomy($name, $post_type, $args);
     }
+  }
 }

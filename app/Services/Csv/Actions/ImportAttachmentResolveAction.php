@@ -16,62 +16,62 @@ namespace App\Services\Csv\Actions;
  */
 class ImportAttachmentResolveAction
 {
-    /**
-     * URLから attachment_id を解決して返す
-     *
-     * - 空文字の場合は 0 を返す
-     * - すべての方法で解決できない場合は 0 を返す
-     */
-    public function __invoke(string $url): int
-    {
-        $url = \trim($url);
+  /**
+   * URLから attachment_id を解決して返す
+   *
+   * - 空文字の場合は 0 を返す
+   * - すべての方法で解決できない場合は 0 を返す
+   */
+  public function __invoke(string $url): int
+  {
+    $url = \trim($url);
 
-        if ($url === '') {
-            return 0;
-        }
+    if ($url === '') {
+      return 0;
+    }
 
-        // 1. 完全URL一致（最速・最確実）
-        $id = attachment_url_to_postid($url);
+    // 1. 完全URL一致（最速・最確実）
+    $id = attachment_url_to_postid($url);
 
-        if ($id) {
-            return $id;
-        }
+    if ($id) {
+      return $id;
+    }
 
-        global $wpdb;
-        /** @var \wpdb $wpdb */
+    global $wpdb;
+    /** @var \wpdb $wpdb */
 
-        // 2. 相対パス一致（同ドメイン時の環境差吸収）
-        $upload   = wp_get_upload_dir();
-        $relative = \str_replace($upload['baseurl'] . '/', '', $url);
+    // 2. 相対パス一致（同ドメイン時の環境差吸収）
+    $upload   = wp_get_upload_dir();
+    $relative = \str_replace($upload['baseurl'] . '/', '', $url);
 
-        if ($relative !== $url) {
-            $id = (int) $wpdb->get_var($wpdb->prepare(
-                "SELECT post_id FROM {$wpdb->postmeta}
+    if ($relative !== $url) {
+      $id = (int) $wpdb->get_var($wpdb->prepare(
+        "SELECT post_id FROM {$wpdb->postmeta}
                  WHERE meta_key = '_wp_attached_file'
                  AND meta_value = %s
                  LIMIT 1",
-                $relative
-            ));
+        $relative
+      ));
 
-            if ($id) {
-                return $id;
-            }
-        }
+      if ($id) {
+        return $id;
+      }
+    }
 
-        // 3. ファイル名後方一致（ドメイン違い・環境移行時の救済）
-        //    _wp_attached_file の値は "2026/02/filename.png" 形式で保存される。
-        //    URLの末尾ファイル名で LIKE 検索することで、異なるドメインや
-        //    ディレクトリ構成が変わっていても一致させることができる。
-        $filename = \basename($url);
+    // 3. ファイル名後方一致（ドメイン違い・環境移行時の救済）
+    //    _wp_attached_file の値は "2026/02/filename.png" 形式で保存される。
+    //    URLの末尾ファイル名で LIKE 検索することで、異なるドメインや
+    //    ディレクトリ構成が変わっていても一致させることができる。
+    $filename = \basename($url);
 
-        $id = (int) $wpdb->get_var($wpdb->prepare(
-            "SELECT post_id FROM {$wpdb->postmeta}
+    $id = (int) $wpdb->get_var($wpdb->prepare(
+      "SELECT post_id FROM {$wpdb->postmeta}
              WHERE meta_key = '_wp_attached_file'
              AND meta_value LIKE %s
              LIMIT 1",
-            '%/' . $wpdb->esc_like($filename)
-        ));
+      '%/' . $wpdb->esc_like($filename)
+    ));
 
-        return $id ?: 0;
-    }
+    return $id ?: 0;
+  }
 }

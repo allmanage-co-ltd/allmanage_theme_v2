@@ -13,28 +13,28 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class EditAdministratorMenu implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        if (!$this->role()) {
-            return;
-        }
-
-        $this->hiddenAdminBar();
+  public function boot(): void
+  {
+    if (!$this->role()) {
+      return;
     }
 
-    /**
-     * 対象ユーザー判定
-     */
-    public function role(): bool
-    {
-        return current_user_can('administrator');
-    }
+    $this->hiddenAdminBar();
+  }
 
-    /**
-     * 管理バー非表示処理
-     */
-    public function hiddenAdminBar(): void
-    {
-        show_admin_bar(false);
-    }
+  /**
+   * 対象ユーザー判定
+   */
+  public function role(): bool
+  {
+    return current_user_can('administrator');
+  }
+
+  /**
+   * 管理バー非表示処理
+   */
+  public function hiddenAdminBar(): void
+  {
+    show_admin_bar(false);
+  }
 }

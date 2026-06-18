@@ -15,53 +15,53 @@ use App\Presenters\Metadata;
  */
 class AddHeadMetadata implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        add_filter('option_blog_public', $this->defaultLocalNoindex(...));
-        add_filter('wp_robots', $this->addNoindex(...));
-        add_action('wp_head', $this->addMetadata(...));
+  public function boot(): void
+  {
+    add_filter('option_blog_public', $this->defaultLocalNoindex(...));
+    add_filter('wp_robots', $this->addNoindex(...));
+    add_action('wp_head', $this->addMetadata(...));
+  }
+
+  /**
+   * 本番以外は管理画面のnoindex設定をnoindexに固定
+   */
+  public function defaultLocalNoindex($value)
+  {
+    if (Runtime::isLocal()) {
+      return 0;
     }
 
-    /**
-     * 本番以外は管理画面のnoindex設定をnoindexに固定
-     */
-    public function defaultLocalNoindex($value)
-    {
-        if (Runtime::isLocal()) {
-            return 0;
-        }
+    return $value;
+  }
 
-        return $value;
+  /**
+   * 本番以外はnoindex設定
+   */
+  public function addNoindex($robots): array
+  {
+    if (Runtime::isLocal()) {
+      return \array_merge($robots, [
+        'noindex'  => true,
+        'nofollow' => true,
+      ]);
     }
 
-    /**
-     * 本番以外はnoindex設定
-     */
-    public function addNoindex($robots): array
-    {
-        if (Runtime::isLocal()) {
-            return \array_merge($robots, [
-                'noindex'  => true,
-                'nofollow' => true,
-            ]);
-        }
+    return $robots;
+  }
 
-        return $robots;
+  /**
+   * headを設定
+   */
+  public function addMetadata(): void
+  {
+    echo Metadata::getBase();
+
+    // AIOSEOが有効ならバッティングするため出力しない
+    if (!Config::get('seo.use_all_in_one_seo')) {
+      echo Metadata::getFull();
+      echo Metadata::getJsonld();
     }
 
-    /**
-     * headを設定
-     */
-    public function addMetadata(): void
-    {
-        echo Metadata::getBase();
-
-        // AIOSEOが有効ならバッティングするため出力しない
-        if (!Config::get('seo.use_all_in_one_seo')) {
-            echo Metadata::getFull();
-            echo Metadata::getJsonld();
-        }
-
-        echo Metadata::getGtags();
-    }
+    echo Metadata::getGtags();
+  }
 }

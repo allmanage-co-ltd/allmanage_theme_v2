@@ -11,10 +11,10 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class AcfHook implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        if (!\class_exists('ACF') || !\class_exists('acf_pro')) {
-            return;
-        }
+  public function boot(): void
+  {
+    if (!\class_exists('ACF') || !\class_exists('acf_pro')) {
+      return;
     }
+  }
 }

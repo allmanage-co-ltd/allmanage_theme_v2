@@ -4,57 +4,57 @@
  * app/Hooks/AssetsEnqueuer.phpで参照
  */
 return [
-    /**
-     * アセットのバージョン（任意）
-     */
-    'version'   => '1.0.0',
+  /**
+   * アセットのバージョン（任意）
+   */
+  'version'   => '1.0.0',
 
-    /**
-     * フロントCSS
-     */
-    'css'       => [
-        // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
-        'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
-        // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
-        // 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css',
-        theme_uri() . '/assets/css/style.css',
-        theme_uri() . '/assets/css/include.css',
-        // theme_uri() . '/assets/css/welcart.css',
-    ],
+  /**
+   * フロントCSS
+   */
+  'css'       => [
+    // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
+    'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
+    // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
+    // 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css',
+    theme_uri() . '/assets/css/style.css',
+    theme_uri() . '/assets/css/include.css',
+    // theme_uri() . '/assets/css/welcart.css',
+  ],
 
-    /**
-     * フロントJS
-     */
-    'js'        => [
-        'https://cdn.jsdelivr.net/npm/flatpickr',
-        'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js',
-        // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
-        'https://yubinbango.github.io/yubinbango/yubinbango.js',
-        theme_uri() . '/assets/js/scripts.js',
-        theme_uri() . '/assets/js/scripts_add.js',
-        // theme_uri() . '/assets/js/welcart.js',
-    ],
+  /**
+   * フロントJS
+   */
+  'js'        => [
+    'https://cdn.jsdelivr.net/npm/flatpickr',
+    'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js',
+    // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+    'https://yubinbango.github.io/yubinbango/yubinbango.js',
+    theme_uri() . '/assets/js/scripts.js',
+    theme_uri() . '/assets/js/scripts_add.js',
+    // theme_uri() . '/assets/js/welcart.js',
+  ],
 
-    /**
-     * フロントのjQuery
-     *
-     * - 無しの場合はデフォルトが読み込まれる
-     * - 管理画面はデフォルトjQueryで固定しています
-     */
-    'jquery'    => 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+  /**
+   * フロントのjQuery
+   *
+   * - 無しの場合はデフォルトが読み込まれる
+   * - 管理画面はデフォルトjQueryで固定しています
+   */
+  'jquery'    => 'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
 
-    /**
-     * 管理画面CSS
-     */
-    'admin-css' => [
-        theme_uri() . '/assets/css/admin.css',
-    ],
+  /**
+   * 管理画面CSS
+   */
+  'admin-css' => [
+    theme_uri() . '/assets/css/admin.css',
+  ],
 
-    /**
-     * 管理画面JS
-     */
-    'admin-js'  => [
-        theme_uri() . '/assets/js/admin.js',
-    ],
+  /**
+   * 管理画面JS
+   */
+  'admin-js'  => [
+    theme_uri() . '/assets/js/admin.js',
+  ],
 
 ];

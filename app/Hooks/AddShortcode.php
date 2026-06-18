@@ -13,11 +13,11 @@ use App\Interfaces\BootableWpHookInterface;
  */
 class AddShortcode implements BootableWpHookInterface
 {
-    public function boot(): void
-    {
-        add_shortcode('home', 'home');
-        add_shortcode('theme_uri', 'theme_uri');
-        add_shortcode('theme_dir', 'theme_dir');
-        add_shortcode('img_uri', 'img_uri');
-    }
+  public function boot(): void
+  {
+    add_shortcode('home', 'home');
+    add_shortcode('theme_uri', 'theme_uri');
+    add_shortcode('theme_dir', 'theme_dir');
+    add_shortcode('img_uri', 'img_uri');
+  }
 }

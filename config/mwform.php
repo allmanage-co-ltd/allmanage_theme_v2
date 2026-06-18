@@ -1,15 +1,15 @@
 <?php
 
 return [
-    /**
-     * app/Plugins/MwFormHook.phpで参照
-     */
-    'foot-script' => [
+  /**
+   * app/Plugins/MwFormHook.phpで参照
+   */
+  'foot-script' => [
 
-        // プラポリチェックボックスのテキスト・リンク先を変更
-        'agreement' => [
-            'is_page' => ['contact'],
-            'scriput' => <<<HTML
+    // プラポリチェックボックスのテキスト・リンク先を変更
+    'agreement' => [
+      'is_page' => ['contact'],
+      'scriput' => <<<HTML
             <script>
             $(function() {
                 $('.c-form__agreement .mwform-checkbox-field-text').html(
@@ -18,12 +18,12 @@ return [
             });
             </script>
           HTML,
-        ],
+    ],
 
-        // 確認画面で特定の要素を非表示
-        'hidden-item' => [
-            'is_page' => ['confirm', 'thanks'],
-            'scriput' => <<<HTML
+    // 確認画面で特定の要素を非表示
+    'hidden-item' => [
+      'is_page' => ['confirm', 'thanks'],
+      'scriput' => <<<HTML
             <script type="text/javascript">
             $(function() {
             if ($('.mw_wp_form_confirm, .mw_wp_form_complete').length) {
@@ -34,6 +34,6 @@ return [
             });
             </script>
           HTML,
-        ],
     ],
+  ],
 ];

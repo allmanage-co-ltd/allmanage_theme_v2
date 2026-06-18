@@ -14,41 +14,41 @@ use App\Helpers\Path;
  */
 class Config
 {
-    /**
-     * 設定値取得
-     *
-     * - 第1階層はファイル名（config/{file}.php）
-     * - 第2階層以降は配列キーをドット区切りで指定
-     * - 存在しない場合は $default を返す
-     */
-    public static function get(string $key, mixed $default = null): mixed
-    {
-        static $configs = [];
+  /**
+   * 設定値取得
+   *
+   * - 第1階層はファイル名（config/{file}.php）
+   * - 第2階層以降は配列キーをドット区切りで指定
+   * - 存在しない場合は $default を返す
+   */
+  public static function get(string $key, mixed $default = null): mixed
+  {
+    static $configs = [];
 
-        $parts = \explode('.', $key, 2);
-        $file  = $parts[0] ?? null;
-        $path  = $parts[1] ?? null;
+    $parts = \explode('.', $key, 2);
+    $file  = $parts[0] ?? null;
+    $path  = $parts[1] ?? null;
 
-        if (!$file) {
-            return $default;
-        }
-
-        if (!\array_key_exists($file, $configs)) {
-            $configPath = Path::config("{$file}.php");
-
-            if (!\file_exists($configPath)) {
-                return $default;
-            }
-
-            $loaded = require $configPath;
-
-            if (!\is_array($loaded)) {
-                return $default;
-            }
-
-            $configs[$file] = $loaded;
-        }
-
-        return Arr::get($configs[$file], $path, $default);
+    if (!$file) {
+      return $default;
     }
+
+    if (!\array_key_exists($file, $configs)) {
+      $configPath = Path::config("{$file}.php");
+
+      if (!\file_exists($configPath)) {
+        return $default;
+      }
+
+      $loaded = require $configPath;
+
+      if (!\is_array($loaded)) {
+        return $default;
+      }
+
+      $configs[$file] = $loaded;
+    }
+
+    return Arr::get($configs[$file], $path, $default);
+  }
 }
