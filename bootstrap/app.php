@@ -25,6 +25,7 @@ class App
   {
     try {
       HooksAutoLoader::handle();
+      require_once __DIR__ . '/hooks.php';
     } catch (\Throwable $throwable) {
       AppError::abort($throwable);
     }
