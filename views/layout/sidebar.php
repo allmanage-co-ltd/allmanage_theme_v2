@@ -15,7 +15,7 @@ $news_cat = get_terms([
 
     <?php if (!empty($news_cat) && !is_wp_error($news_cat)): ?>
       <div class="l-sidebar__item">
-        <div class="l-sidebar__ttl c-ttl_bd">経営課題から探す</div>
+        <div class="l-sidebar__ttl c-ttl_bd">カテゴリー</div>
         <ul class="l-sidebar__catList">
           <?php foreach ($news_cat as $nc): ?>
             <li class="l-sidebar__cat"><a href="<?php echo esc_url(get_term_link($nc)); ?>"><?php echo esc_html($nc->name); ?></a></li>

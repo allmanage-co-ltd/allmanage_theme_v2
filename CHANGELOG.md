@@ -2,13 +2,17 @@
 
 ---
 
-## [Unreleased] - 2026-06-18
+## [Unreleased] - 2026-06-24
 
 ### Added
+- `bootstrap/hooks.php`: クラス化するほどでもない小さな Hook の仮置き場を新規追加。`bootstrap/app.php` から自動読み込み
 - `config/plugin.php`: 必須プラグイン一覧設定ファイルを新規追加（SiteGuard / WPvivid / AIOSEO / MW WP Form / ACF / Post Types Order / Taxonomy Terms Order）
 - `app/Hooks/SetupTheme.php`: `adminNoticeRequiredPlugins` フックを追加（未インストールの必須プラグインを管理画面に通知）
 
 ### Changed
+- `bootstrap/functions.php`: コメントブロックの閉じタグ修正（`/` → `*/`）。案件ごとの追加関数セクションに「上から追加してください」の説明を追記
+- `views/component/searchform.php`: `post_type` を `$args['post_type']` から取得できるよう対応（呼び出し元から上書き可能に）
+- `views/layout/sidebar.php`: サイドバーカテゴリーの見出しテキストを「経営課題から探す」→「カテゴリー」に変更
 - `app/Hooks/SetupTheme.php`: インデントを4スペースから2スペースに統一
 - `config/cms.php`: `csv-in-exporter` オプションページのコメントブロック追加・プロパティ順序を整理。`news` 投稿タイプの `show_in_rest` を `true` に変更。インデントを2スペースに統一
 - `config/searchform.php`: `news` フィルターに `acf_is_public` / `acf_check` / `acf_price` のカスタムフィールドキーを追加。インデントを2スペースに統一

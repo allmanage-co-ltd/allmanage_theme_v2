@@ -1,6 +1,10 @@
+<?php
+$post_type = $args['post_type'] ?? get_post_type();
+?>
+
 <form class="c-searchform" method="get" action="<?= home() ?>">
   <div class="c-searchform__input">
-    <input type="hidden" name="post_type" value="<?= esc_attr(get_post_type() ?: '') ?>">
+    <input type="hidden" name="post_type" value="<?= esc_attr($post_type) ?>">
     <input type="text" name="s" value="<?= get_search_query() ?>" placeholder="キーワードで検索">
   </div>
   <div class="c-searchform__btn">
