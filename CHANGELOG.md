@@ -2,6 +2,23 @@
 
 ---
 
+## [Unreleased] - 2026-06-25
+
+### Added
+- `app/Services/Query/MyWpQuery.php`: `setPostNotIn` / `setDateAfter` / `setDateBefore` / `setDateBetween` / `setTaxRelation` / `setMetaRelation` メソッドを追加
+- `app/Services/Query/MyWpQuery.php`: `forArchive` / `forTaxArchive` ファクトリメソッドを追加
+- `bootstrap/functions.php`: `wpquery_archive` / `wpquery_tax` / `get_post_term` グローバル関数を追加
+- `views/taxonomy/news_tag.php`: タグアーカイブテンプレートを新規追加
+
+### Changed
+- `bootstrap/hooks.php`: サンプルをタイトル省略フィルター（`the_title`）のコメント例に更新
+- `views/archive/news.php`: `wpquery_archive` ショートハンドに移行、変数名を `$news_query` に統一
+- `views/taxonomy/news_cat.php`: `wpquery_tax` ショートハンドに移行、変数名を `$news_query` に統一
+- `views/component/news/c-card_news.php`: `$query` → `$news_query` に変数名統一、`get_post_term` ヘルパーを使うよう簡略化
+- `views/single/news.php`: `get_post_term` ヘルパーを使うよう簡略化
+- `views/page/search.php`: `wpquery_archive` ショートハンドに移行
+- `CLAUDE.md`: CHANGELOG 記録ルールを追記
+
 ## [Unreleased] - 2026-06-24
 
 ### Added
