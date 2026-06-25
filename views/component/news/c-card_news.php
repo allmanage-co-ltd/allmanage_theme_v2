@@ -1,11 +1,11 @@
 <?php
-$query = $args['news_query'];
+$news_query = $args['news_query'];
 ?>
 
-<?php if ($query->have_posts()): ?>
+<?php if ($news_query->have_posts()): ?>
   <ul class="c-card_news">
-    <?php while ($query->have_posts()): ?>
-      <?php $query->the_post(); ?>
+    <?php while ($news_query->have_posts()): ?>
+      <?php $news_query->the_post(); ?>
       <?php
       /**
        * ループ内変数
@@ -32,7 +32,7 @@ $query = $args['news_query'];
   </ul>
   <?php
   the_pagination(
-    $query,
+    $news_query,
     range: 5,
     prev_text: "←",
     next_text: "→"

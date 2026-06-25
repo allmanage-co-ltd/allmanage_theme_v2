@@ -1,11 +1,11 @@
 <?php
-// $query = wpquery()
+// $news_query = wpquery()
 //   ->setPostType('news')
 //   ->setPerPage(10)
 //   ->setOrderByDate()
 //   ->build();
 
-$query = wpquery_archive('news', 10)->build();
+$news_query = wpquery_archive('news', 10)->build();
 ?>
 
 <main class="p-news -archive">
@@ -26,7 +26,7 @@ $query = wpquery_archive('news', 10)->build();
   <div class="l-content -under">
     <section class="p-news_archive">
       <div class="c-inner">
-        <?php the_component('news/c-card_news', ['news_query' => $query]); ?>
+        <?php the_component('news/c-card_news', ['news_query' => $news_query]); ?>
       </div>
     </section>
   </div>
