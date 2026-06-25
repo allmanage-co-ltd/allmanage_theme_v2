@@ -11,11 +11,20 @@ declare(strict_types=1);
  */
 
 /**
- * サンプル
+ * サンプルで消さずに置いています。
+ *
+ * 50文字以上の記事タイトルを省略
+ * 管理画面、投稿詳細ページを除く
  */
-// add_filter('the_content', function (string $content): string {
-//   if (!is_single()) {
-//     return $content;
+// function mb_substr_title(string $title)
+// {
+//   $limit = 50;
+//   $exclusion = is_admin() || is_single() || is_singular();
+
+//   if ($exclusion) return $title;
+//   if (mb_strlen($title) > $limit) {
+//     return mb_substr($title, 0, $limit) . '[...]';
 //   }
-//   return $content . '<p class="article-footer-note">※この記事は〇〇です</p>';
-// });
+//   return $title;
+// }
+// add_filter('the_title', 'mb_substr_title');

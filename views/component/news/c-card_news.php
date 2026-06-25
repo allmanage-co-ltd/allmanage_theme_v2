@@ -1,6 +1,5 @@
 <?php
-$query = $args['query'];
-$post_cat_slug = 'news_cat';
+$query = $args['news_query'];
 ?>
 
 <?php if ($query->have_posts()): ?>
@@ -11,9 +10,8 @@ $post_cat_slug = 'news_cat';
       /**
        * ループ内変数
        */
-      $post_id  = get_the_ID();
-      $post_cat = get_the_terms($post_id, $post_cat_slug);
-      $cat_name = (!is_wp_error($post_cat) && !empty($post_cat)) ? $post_cat[0]->name : 'お知らせ';
+      $cat = get_post_term('news_cat');
+      $cat_name = $cat?->name ?? 'お知らせ';
       ?>
       <li class="c-card_news__item">
         <a href="<?php the_permalink(); ?>" class="c-card_news__link">

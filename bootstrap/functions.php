@@ -26,7 +26,6 @@
  *--------------------------------------------- */
 
 
-
 /**
  * ACF一括取得クラスのインスタンス
  * 使用する際は定義元のクラスメソッドをカスタムしてください。
@@ -85,20 +84,6 @@ function img_uri(): string
 }
 
 /**
- * WP_Query ビルダー取得
- *
- * デバッグをするには->debug()を呼ぶとargsの中身が見れます
- *
- * 使用例:
- *   wpquery()->setPostType(...)->setPerPage(...)->build();
- *   wpquery()->setPostType(...)->setPerPage(...)->debug();
- */
-function wpquery(): \App\Services\Query\MyWpQuery
-{
-  return \App\Services\Query\MyWpQuery::new();
-}
-
-/**
  * 設定値取得
  *
  * 使用例:
@@ -118,6 +103,98 @@ function config(string $key, $default = null)
 function url(string $slug): string
 {
   return \App\Services\Config::get("permalink.{$slug}", '/');
+}
+
+/**
+ * WP_Query ビルダー取得
+ *
+ * デバッグをするには->debug()を呼ぶとargsの中身が見れます
+ *
+ * 使用例:
+ *   wpquery()->setPostType(...)->setPerPage(...)->build();
+ *   wpquery()->setPostType(...)->setPerPage(...)->debug();
+ */
+function wpquery(): \App\Services\Query\MyWpQuery
+{
+  return \App\Services\Query\MyWpQuery::new();
+}
+
+/**
+ * アーカイブ用 WP_Query ビルダー取得
+ *
+ * 使用例:
+ *   wpquery_archive('news')->build();
+ *   wpquery_archive('news', 20)->build();
+ */
+function wpquery_archive(string|array $post_type, int $per_page = 10): \App\Services\Query\MyWpQuery
+{
+  return \App\Services\Query\MyWpQuery::forArchive($post_type, $per_page);
+}
+
+/**
+ * タクソノミーアーカイブ用 WP_Query ビルダー取得
+ *
+ * get_queried_object() から taxonomy / term_id を自動取得し、
+ * post_type と件数だけ指定すれば使えるショートハンド
+ *
+ * 使用例:
+ *   wpquery_tax('assignment')->build();
+ *   wpquery_tax('assignment', 20)->build();
+ *   wpquery_tax('assignment')->setPostNotIn([1, 2, 3])->build();
+ */
+function wpquery_tax(string|array $post_type, int $per_page = 10): \App\Services\Query\MyWpQuery
+{
+  return \App\Services\Query\MyWpQuery::forTaxArchive($post_type, $per_page);
+}
+
+/**
+ * 現在のタクソノミースラッグを取得
+ *
+ * 使用例:
+ *   get_tax_slug(); // 'assignment_cat'
+ */
+function get_tax_slug(): ?string
+{
+  $term = get_queried_object();
+  return ($term instanceof \WP_Term) ? $term->taxonomy : null;
+}
+
+/**
+ * 現在のタクソノミータームIDを取得
+ *
+ * 使用例:
+ *   get_tax_term_id(); // 12
+ */
+function get_tax_term_id(): ?int
+{
+  $term = get_queried_object();
+  return ($term instanceof \WP_Term) ? $term->term_id : null;
+}
+
+/**
+ * 現在のタクソノミーターム名を取得
+ *
+ * 使用例:
+ *   get_tax_name(); // '経営戦略'
+ */
+function get_tax_name(): ?string
+{
+  $term = get_queried_object();
+  return ($term instanceof \WP_Term) ? $term->name : null;
+}
+
+/**
+ * 現在の投稿の指定タクソノミーの最初のタームを取得
+ *
+ * 使用例:
+ *   get_post_first_term('news_cat');        // WP_Term|null
+ *   get_post_first_term('news_cat')->name;  // 'お知らせ'
+ */
+function get_post_term(string $taxonomy, int $post_id = 0): ?\WP_Term
+{
+  $post_id = $post_id ?: get_the_ID();
+  $terms   = get_the_terms($post_id, $taxonomy);
+  return (!empty($terms) && !is_wp_error($terms)) ? $terms[0] : null;
 }
 
 /**

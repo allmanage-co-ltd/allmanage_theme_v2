@@ -96,6 +96,63 @@ class MyWpQuery
   }
 
   /**
+   * 除外する投稿を指定
+   */
+  public function setPostNotIn(array|int $id): self
+  {
+    if (!empty($id)) {
+      $this->args['post__not_in'] = is_array($id) ? $id : [$id];
+    }
+    return $this;
+  }
+
+  /**
+   * 指定日付以降
+   */
+  public function setDateAfter(string $date, bool $inclusive = true): self
+  {
+    $this->args['date_query'][] = [
+      'after'     => $date,
+      'inclusive' => $inclusive,
+    ];
+    return $this;
+  }
+
+  /**
+   * 指定日付以前
+   */
+  public function setDateBefore(string $date, bool $inclusive = true): self
+  {
+    $this->args['date_query'][] = [
+      'before'    => $date,
+      'inclusive' => $inclusive,
+    ];
+    return $this;
+  }
+
+  /**
+   * 指定期間
+   */
+  public function setDateBetween(string $after, string $before, bool $inclusive = true): self
+  {
+    $this->args['date_query'][] = [
+      'after'     => $after,
+      'before'    => $before,
+      'inclusive' => $inclusive,
+    ];
+    return $this;
+  }
+
+  /**
+   * タクソノミークエリのリレーションを指定
+   */
+  public function setTaxRelation(string $relation): self
+  {
+    $this->args['tax_query']['relation'] = $relation;
+    return $this;
+  }
+
+  /**
    * タクソノミークエリ追加
    */
   public function setTaxQuery(
@@ -110,6 +167,54 @@ class MyWpQuery
       'terms'    => (array) $terms,
       'operator' => $operator,
     ];
+    return $this;
+  }
+
+  /**
+   * タクソノミーアーカイブ用クエリのファクトリ
+   *
+   * - post_type と tax_query だけ指定して後は固定
+   */
+  public static function forTaxArchive(
+    string|array $post_type,
+    int $per_page = 10
+  ): self {
+    $term     = get_queried_object();
+    $taxonomy = $term->taxonomy ?? null;
+
+    return self::new()
+      ->setPostType($post_type)
+      ->setTaxQuery($taxonomy, $term->term_id, 'term_id')
+      ->setPerPage($per_page)
+      ->setOrderByDate();
+  }
+
+  /**
+   * アーカイブ用クエリのファクトリ
+   *
+   * post_type と件数だけ指定すれば日付降順で取得できるショートハンド
+   *
+   * 使用例:
+   *   MyWpQuery::forArchive('news')->build();
+   *   MyWpQuery::forArchive('news', 20)->build();
+   *   MyWpQuery::forArchive('news')->setPostNotIn([1, 2, 3])->build();
+   */
+  public static function forArchive(
+    string|array $post_type,
+    int $per_page = 10
+  ): self {
+    return self::new()
+      ->setPostType($post_type)
+      ->setPerPage($per_page)
+      ->setOrderByDate();
+  }
+
+  /**
+   * メタクエリのリレーションを指定
+   */
+  public function setMetaRelation(string $relation): self
+  {
+    $this->args['meta_query']['relation'] = $relation;
     return $this;
   }
 
@@ -154,7 +259,7 @@ class MyWpQuery
   {
     $this->args['meta_key'] = $meta_key;
     $this->args['orderby']  = 'meta_value';
-    $this->args['order']    = $order;
+    $this->args['order']    = \strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
     return $this;
   }
 }

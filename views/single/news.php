@@ -1,10 +1,10 @@
 <?php
 $post_id  = get_the_ID();
-$post_cat = get_the_terms($post_id, 'news_cat');
-$cat_slug = (!is_wp_error($post_cat) && !empty($post_cat)) ? $post_cat[0]->slug : '';
-$cat_name = (!is_wp_error($post_cat) && !empty($post_cat)) ? $post_cat[0]->name : 'お知らせ';
-$sample_fields = get_acf_fields($post_id, config('acf.news'));
-d($sample_fields);
+$cat      = get_post_term('news_cat');
+$cat_slug = $cat?->slug ?? '';
+$cat_name = $cat?->name ?? 'お知らせ';
+$fields   = get_acf_fields($post_id, config('acf.news'));
+// d($fields);
 ?>
 
 <main class="p-news -single">

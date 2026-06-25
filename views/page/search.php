@@ -1,11 +1,8 @@
 <?php
 $post_type = $_GET['post_type'] ?? 'news';
 $sq    = get_search_query();
-$query = wpquery()
-  ->setPostType([$post_type])
+$query = wpquery_archive([$post_type], 10)
   ->setSearchQuery($sq)
-  ->setPerPage(10)
-  ->setOrderByDate()
   ->build();
 ?>
 
@@ -33,7 +30,7 @@ $query = wpquery()
             the_component('news/c-card_news', ['query' => $query]);
             break;
           // case 'works':
-          //     the_component('works/c-card_works', ['query' => $query]);
+          //     the_component('works/c-card_works', ['works_query' => $query]);
           //     break;
           default:
             the_component('news/c-card_news', ['query' => $query]);
