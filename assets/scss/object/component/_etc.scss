@@ -210,6 +210,15 @@
     background: url(../../assets/img/icon_arrow.svg) no-repeat center / contain;
   }
 
+  svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2rem;
+    height: 2rem;
+  }
+
   @include mq(sm-) {
     &:hover {
       opacity: 0.7;

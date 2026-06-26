@@ -361,7 +361,7 @@ EOT;
                             </th>
                             <td>
                                 <div class="c-form__field">
-                                  〒[mwform_text name="your_postal" class="p-postal-code c-form__input -text"  show_error="false" size="8"]
+                                  [mwform_text name="your_postal" class="p-postal-code c-form__input -text"  show_error="false" size="8"]
                                 </div>
                             </td>
                         </tr>

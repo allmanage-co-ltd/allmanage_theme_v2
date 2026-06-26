@@ -10,6 +10,9 @@
           <?php
           // the_component('translate');
           ?>
+          <?php
+          the_component('searchform');
+          ?>
           <ul class="l-gnavi__list">
             <li class="l-gnavi__item ">
               <a href="<?= url('home') ?>" class="l-gnavi__link">トップ</a>
@@ -20,7 +23,7 @@
           </ul>
           <div class="l-gnavi__btn">
             <a href="<?= url('contact') ?>" class="">
-              ご相談・お問い合わせ
+              お問い合わせ
             </a>
           </div>
         </div>

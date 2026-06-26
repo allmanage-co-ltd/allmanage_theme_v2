@@ -27,13 +27,13 @@ $query = wpquery_archive([$post_type], 10)
         <?php
         switch ($post_type) {
           case 'news':
-            the_component('news/c-card_news', ['query' => $query]);
+            the_component('news/c-card_news', ['news_query' => $query]);
             break;
           // case 'works':
           //     the_component('works/c-card_works', ['works_query' => $query]);
           //     break;
           default:
-            the_component('news/c-card_news', ['query' => $query]);
+            the_component('news/c-card_news', ['news_query' => $query]);
             break;
         }
         ?>

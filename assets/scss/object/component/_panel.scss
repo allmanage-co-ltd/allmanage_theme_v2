@@ -4,7 +4,9 @@
 .c-panel_contact {
   $amp: &;
   padding: 10rem 0;
-  background: url(../../assets/img/bg_contact.jpg) no-repeat center / cover;
+  // background: url(../img/common/bg_contact.jpg) no-repeat center / cover;
+  background: gray;
+  margin-top: 6rem;
 
   .c-ttl_sup {
     margin-bottom: 4rem;
@@ -13,7 +15,7 @@
   &__box {
     background: #fff;
     border-radius: 2rem;
-    padding: 7.5rem 8.6rem 7rem 12rem;
+    padding: 5.5rem 8.6rem 7rem 5rem;
     display: flex;
   }
 
@@ -63,8 +65,21 @@
     font-weight: 400;
   }
 
+  &__btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+
+    @include mq(sm) {
+      gap: 1rem;
+      flex-direction: column;
+    }
+  }
+
   &__btn {
     margin-top: 3rem;
+    width: min(100%, 40rem);
 
     a {
       display: block;
@@ -75,7 +90,7 @@
       background: $main;
       border: 1px solid $main;
       line-height: 1;
-      padding: 1em 0;
+      padding: .8em 0;
       text-align: center;
 
       span {
@@ -164,8 +179,12 @@
       margin-top: 0.5em;
     }
 
-    &__btn {
+    &__btns {
       margin-top: 2rem;
+    }
+
+    &__btn {
+      margin-top: 0;
 
       a {
         font-size: 1.8rem;

@@ -1,6 +1,28 @@
 /*--------------------------------------------
   search
 --------------------------------------------*/
+.c-searchform {
+  position: relative;
+
+  &__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 1em;
+
+    svg {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  &__input {
+    input {
+      padding: .8em 1em;
+    }
+  }
+}
+
 .c-search_keyword {
   display: flex;
   align-items: center;
@@ -20,7 +42,7 @@
       width: 600px;
       background: #fff;
       border-radius: 30px;
-      padding: 1.15em;
+      padding: .6em 1em;
     }
 
     button {

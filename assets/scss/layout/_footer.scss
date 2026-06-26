@@ -12,30 +12,21 @@
 .l-footer {
   $amp:&;
   position: relative;
-  padding: 4rem 0;
+  padding: 6rem 0 3rem;
   &__inner{
     display: flex;
     justify-content: space-between;
+    position: relative;
   }
-  &__address{
-    margin-top: 2rem;
+  &__logo{
+    margin-bottom: 3.5rem;
   }
-  &__mark{
-    margin-top: 2rem;
+  &__info{
+    line-height: 1.6;
+    width: 26%;
   }
   &__navi{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding-top: 2rem;
-    a{
-      @include mq(sm-){
-        &:hover{
-          opacity: 0.7;
-        }
-      }
-    }
+    width: 74%;
   }
   &__menu{
     display: flex;
@@ -45,11 +36,33 @@
   }
   &__menuItem{
     margin-bottom: 1em;
+    font-size: 1.5rem;
     &:not(:first-child){
-      margin-left: 3rem;
+      margin-left: 1rem;
+      &:before{
+        content: '｜';
+        display: inline-block;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+      }
+    }
+    a{
+      @include mq(sm-){
+        &:hover{
+          opacity: 0.7;
+        }
+      }
     }
   }
   &__copyright{
+    font-size: 1.4rem;
+    text-align: center;
+  }
+  &__privacy{
+    position: absolute;
+    font-size: 1.4rem;
+    right: 0;
+    bottom: 0;
   }
 
   @include mq(xl){
@@ -64,21 +77,19 @@
     &__inner{
       display: block;
     }
-    padding: 2rem 0;
+    &__info{
+      width: 100%;
+    }
+    &__copyright{
+      margin-top: 2rem;
+    }
   }
   @include mq(xs) {
 
   }
   @include mq(ss) {
     &__logo{
-      max-width: 50%;
-    }
-    &__mark{
-      max-width: 35%;
-    }
-    &__copyright{
-      font-size: 1.2rem;
-      line-height: 1.2;
+      width: 50%;
     }
   }
 }

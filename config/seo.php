@@ -14,7 +14,7 @@ return [
 
   'logo'               => img_uri() . '/common/logo.svg',
   'logo_white'         => img_uri() . '/common/logo_white.svg',
-  'logo_ft'            => img_uri() . '/common/logo_ft.png',
+  'logo_ft'            => img_uri() . '/common/logo_ft.svg',
 
   'favicon'            => img_uri() . '/common/favicon.png',
   'ogp'                => img_uri() . '/common/ogp.jpg',

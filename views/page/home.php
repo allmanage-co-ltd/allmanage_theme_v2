@@ -1,7 +1,5 @@
 <main class="p-home">
-  <?php
-  the_component('searchform');
-  ?>
+
   <!-- <div class="p-home_kv">
         <div class="p-home_kv__img">
             <picture class="img c-ofi">

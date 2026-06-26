@@ -8,37 +8,34 @@
   HOME>COMMON
 --------------------------------------------*/
 .p-home {
-  @include mq(xl) {
 
-  }
-  @include mq(lg) {
+  height: 40vw;
 
-  }
-  @include mq(sm){
+  @include mq(xl) {}
 
-  }
-  @include mq(xs) {
-  }
-  @include mq(ss) {
-  }
+  @include mq(lg) {}
+
+  @include mq(sm) {}
+
+  @include mq(xs) {}
+
+  @include mq(ss) {}
 }
+
 /*--------------------------------------------
   key
 --------------------------------------------*/
 
 .p-home_kv {
+  @include mq(xl) {}
 
-  @include mq(xl){
-  }
-  @include mq(lg){
-  }
-  @include mq(md) {
-  }
-  @include mq(sm) {
-  }
-  @include mq(xs) {
+  @include mq(lg) {}
 
-  }
-  @include mq(ss) {
-  }
+  @include mq(md) {}
+
+  @include mq(sm) {}
+
+  @include mq(xs) {}
+
+  @include mq(ss) {}
 }

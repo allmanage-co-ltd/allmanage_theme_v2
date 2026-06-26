@@ -9,19 +9,63 @@
   KV > UNDER
 -------------------------------*/
 .p-kv_under {
-  $amp:&;
+  $amp: &;
+  padding-top: 9.6rem;
+  padding-bottom: 11rem;
+  // background: url(../img/common/img_bg_kv.jpg) no-repeat center / cover;
+  background: gray;
+  margin-bottom: 12px;
 
-  @include mq(xl){
-  }
+  @include mq(xl) {}
 
   @include mq(sm) {
-
+    padding-top: 7rem;
+    padding-bottom: 8rem;
   }
-  @include mq(xs) {
 
-  }
+  @include mq(xs) {}
+
   @include mq(ss) {
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+  }
 
-    
+  &__ttl {
+    line-height: 1;
+
+    .jp {
+      margin-bottom: 1.6rem;
+      font-size: 4.4rem;
+      color: #fff;
+
+      @include mq(sm) {
+        font-size: 4.4rem;
+      }
+
+      @include mq(ss) {
+        font-size: 3.5rem;
+        margin-bottom: 0.75em;
+      }
+    }
+
+    .en {
+      font-family: "Barlow Semi Condensed",
+        sans-serif;
+      color: #fff;
+      line-height: 0.8;
+      font-weight: 700;
+      font-size: 2.2rem;
+
+      margin-bottom: 0.2em;
+      margin-left: 0.2em;
+
+      @include mq(sm) {
+        font-size: 1.8rem;
+      }
+
+      @include mq(ss) {
+        font-size: 1.6rem;
+      }
+    }
   }
 }

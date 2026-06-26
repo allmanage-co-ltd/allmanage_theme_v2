@@ -7,18 +7,29 @@
 ============================================*/
 .l-gnavi {
   $amp: &;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  &__navi{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
 
-  &__menu {
+  &__list {
     display: flex;
     align-items: center;
   }
 
   &__item {
     &:not(:first-child) {
-      margin-left: 3rem;
+      margin-left: 1rem;
+      &:before{
+        content: '｜';
+        font-weight: 500;
+        display: inline-block;
+        margin-right: 1rem;
+        @include mq(lg-) {
+          font-size: 0.83vw;
+        }
+      }
     }
 
     @include mq(sm-) {}
@@ -26,11 +37,13 @@
 
   &__link {
     line-height: 1;
-    display: block;
+    display: inline-block;
     position: relative;
     text-align: center;
-    font-weight: 700;
-
+    font-weight: 500;
+    @include mq(lg-) {
+      font-size: 0.83vw;
+    }
     //font-size: 0.89vw;
     @include mq(sm-) {
 
@@ -40,77 +53,79 @@
       }
     }
   }
-
-  &__tel {
-    margin-left: 2.8rem;
+  &__top{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
-  &__num {
-    font-weight: 700;
-    font-size: 4.6rem;
-    font-size: 2.39vw;
-    line-height: 0.85;
-    font-family: $ff_num;
-    display: block;
-    padding-left: 1.13em;
-    position: relative;
-
-    &:before {
-      content: '';
-      width: 1em;
-      height: 1em;
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      background: url(../../assets/img/icon_tel.svg) no-repeat center / contain;
+  &__tel {
+    margin-left: 3rem;
+    color: $main;
+    font-family: $ff_en;
+    line-height: 1;
+    display: flex;
+    align-items: flex-end;
+    span{
+      margin-bottom: 3px;
+    }
+    @include mq(lg-) {
+      font-size: 0.83vw;
+    }
+    .num{
+      display: inline-block;
+      color: $main;
+      font-size: 3.6rem;
+      margin-left: 4px;
+      @include mq(lg-) {
+        font-size: 1.875vw;
+      }
     }
   }
 
+
   &__btn {
-    margin-left: 2rem;
-    width: 13.58%;
+    margin-left: 1.5rem;
+    width: 19.4rem;
 
     a {
       display: block;
-      border-radius: 3rem;
+      border-radius: 10rem;
       background: $main;
       border: 1px solid $main;
       color: #fff;
       font-weight: 700;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       line-height: 1;
-      padding: 0.93em 0;
+      padding: 1.19em 0;
       text-align: center;
-
+      box-shadow: 0px 8px 8px 0px rgba(0, 159, 232, 0.2);
+      .icon{
+        fill: #fff;
+        width: 1em;
+        height: 1em;
+        margin-right: 8px;
+        vertical-align: middle;
+        margin-bottom: 2px;
+      }
       @include mq(sm-) {
         &:hover {
           color: $main;
           background: #fff;
+          .icon{
+            fill: $main;
+          }
         }
       }
     }
   }
 
   @include mq(xl) {
-    &__btn {
-      a {
-        font-size: 1.6rem;
-      }
+    &__tel{
+      margin-left: 1.5rem;
     }
-
-    &__item {
-      &:not(:first-child) {
-        margin-left: 2rem;
-      }
-    }
-
-    &__num {
-      font-size: 2vw;
-    }
-
-    &__link {
-      font-size: 1.5rem;
+    &__btn{
+      width: 14rem;
     }
 
   }
@@ -118,151 +133,93 @@
   @media screen and (max-width:1500px) {}
 
   @include mq(lg) {
-    &__item {
-      &:not(:first-child) {
-        margin-left: 2rem;
-      }
+    &__navi{
+      flex-direction: column-reverse;
+      align-items: flex-end;
+    }
+    &__link{
+      font-size: 1.6rem;
+    }
+    &__top{
+      margin-bottom: 1rem;
+    }
+    &__tel{
+      margin-left: 0;
+    }
+    &__btn{
+      margin-left: 3rem;
+      width: 19.4rem;
     }
 
-    &__link {
-      font-size: 1.5rem;
-    }
-
-    &__btns {
-      margin-left: 2.5rem;
-    }
   }
 
   @include mq(md) {}
 
-  @include mq(md) {
-    display: block;
-
-    &__logo {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-
-    &__menu {
-      flex-wrap: wrap;
-      //justify-content: space-between;
-    }
-
-    &__item {
-      text-align: center;
-      width: 100%;
-
-      &:not(:first-child) {
-        margin-left: 0;
-      }
-    }
-
-    &__link {
-      padding: 1.25em 1em;
-      display: block;
-      font-size: 1.6rem;
-      color: #fff;
-    }
-
-    &__btn {
-      a {}
-    }
-
-    &__tel {
-      margin-top: 2rem;
-      margin-left: 0;
-      text-align: center;
-    }
-
-    &__btn {
-      width: 80%;
-      margin: 2rem auto 0;
-
-      a {
-        background: #fff;
-        color: $main;
-      }
-    }
-
-    &__num {
-      font-size: 3rem;
-      display: inline-block;
-    }
-  }
 
   @include mq(sm) {
+    &__navi{
+      flex-direction: column;
+    }
+    &__list{
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+    }
+    &__item{
+      width: 48%;
+      border-bottom: 1px solid $main;
+      &:not(:first-child){
+        margin-left: 0;
+        &:before{
+          display: none;
+        }
+      }
+    }
+    &__link{
+      display: block;
+      padding: 1em;
+    }
     &__privacy {
       text-align: center;
-      margin-top: 2rem;
+      margin-top: 3rem;
+      width: 100%;
     }
 
     &__logo {
       width: 50%;
-      margin: 0 auto 4rem;
+      margin: 0 auto 3rem;
+    }
+    &__top{
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 0;
+      margin-top: 2rem;
+    }
+    &__btn{
+      margin-left: 0;
+      margin-top: 2rem;
     }
 
-    &__menu {
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
 
-    &__item {
-      width: 48%;
-      border-bottom: 1px solid $main;
-    }
+  }
 
-    &__link {
-      color: $font;
-      font-weight: 500;
-      padding: 1.25em 0;
+  @include mq(xs) {
+    &__item{
+      width: 100%;
     }
-
-    &__tel {
-      margin-top: 4rem;
-    }
-
-    &__btn {
-      a {
-        background: $main;
-        color: #fff;
-      }
+    &__btn{
+      width: 70%;
     }
   }
 
-  @include mq(xs) {}
-
   @include mq(ss) {
-    &__num {
-      a {
-        font-size: 3rem;
-
-        .num {
-          font-size: 4rem;
-        }
+    &__btn{
+      width: 80%;
+    }
+    &__tel{
+      .num{
+        font-size: 2.8rem;
       }
     }
-
-    &__btns {
-      justify-content: space-between;
-    }
-
-    &__btn {
-      width: 48%;
-
-      a {
-        width: 100%;
-      }
-    }
-
-    &__menu {
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    &__item {
-      width: 48%;
-    }
-
-    &__link {}
   }
 }

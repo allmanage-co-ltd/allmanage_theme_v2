@@ -16,17 +16,17 @@
     //background: rgba(255,255,255,0.8);
     @include mq(sm-) {
     }
-    
+
   }
   &__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
     transition: all 0.4s;
-    padding: 3.4rem 3.6vw 2.2rem 5.6vw;
+    padding: 2.2rem 2.6vw;
   }
   &__logo {
-    width: 13%;
+    width: 18.13%;
     img{
     }
     a {
@@ -38,7 +38,7 @@
     }
   }
   &__navi{
-    width: 87%;
+    width: 81.87%;
     // display: flex;
     // justify-content: flex-end;
   }
@@ -91,12 +91,12 @@
         &:before{
           transform:rotate(45deg);
           width: 70%;
-          background: #fff;
+          background: $main;
         }
         &:after{
           transform:rotate(-45deg);
           width: 70%;
-          background: #fff;
+          background: $main;
         }
       }
     }
@@ -110,19 +110,22 @@
   @include mq(xl) {
   }
   @include mq(lg) {
-    
+    &__logo {
+      width: 22%;
+    }
+    &__navi{
+      width: 78%;
+    }
   }
   @include mq(md) {
-    &__logo {
-      width: 20%;
-    }
+
   }
   @include mq(sm) {
     &__inner {
       padding: 1rem 3vw;
     }
     &__logo{
-      width: 30%;
+      width: 40%;
     }
     &__navi{
       width: auto;
@@ -148,7 +151,7 @@
   }
   @include mq(ss) {
     &__logo{
+      width: 50%;
     }
   }
 }
-
