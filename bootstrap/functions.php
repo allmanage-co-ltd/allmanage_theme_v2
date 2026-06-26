@@ -21,27 +21,11 @@
 
 /**---------------------------------------------
  *
- * 案件ごとの追加関数はここから（上から追加してください）
+ * 案件ごとの追加関数はここから
  *
  *--------------------------------------------- */
 
 
-/**
- * ACF一括取得クラスのインスタンス
- * 使用する際は定義元のクラスメソッドをカスタムしてください。
- *
- * 使用例:
- *   // $sample = get_acf_fields( get_the_ID(), ['acf_is_public', 'acf_check', 'acf_price'] );
- *   $sample = get_acf_fields( get_the_ID(), config('acf.news') );
- *   echo $sampe['acf_price'];
- *
- * カスタムフィールドが集約した配列が返ります。
- * 配列のキーはそのままカスタムフィールドのキーです。
- */
-function get_acf_fields(int $post_id, array $keys): array
-{
-  return \App\Plugins\Acf::getByKeys($post_id, $keys);
-}
 
 /**---------------------------------------------
  *
@@ -103,6 +87,23 @@ function config(string $key, $default = null)
 function url(string $slug): string
 {
   return \App\Services\Config::get("permalink.{$slug}", '/');
+}
+
+/**
+ * ACF一括取得クラスのインスタンス
+ * 使用する際は定義元のクラスメソッドをカスタムしてください。
+ *
+ * 使用例:
+ *   // $sample = get_acf_fields( get_the_ID(), ['acf_is_public', 'acf_check', 'acf_price'] );
+ *   $sample = get_acf_fields( get_the_ID(), config('acf.news') );
+ *   echo $sampe['acf_price'];
+ *
+ * カスタムフィールドが集約した配列が返ります。
+ * 配列のキーはそのままカスタムフィールドのキーです。
+ */
+function get_acf_fields(int $post_id, array $keys): array
+{
+  return \App\Plugins\Acf::getByKeys($post_id, $keys);
 }
 
 /**
