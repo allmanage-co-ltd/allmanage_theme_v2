@@ -2,6 +2,17 @@
 
 ---
 
+## [Unreleased] - 2026-07-08 (2)
+
+### Added
+- `app/Presenters/Metadata.php`: `getGtmHead()` / `getGtmBody()` を追加。`config/seo.gtm` のラベルキー付き連想配列から head/body スニペットを出力。ローカル環境はスキップ
+- `app/Hooks/AddHeadMetadata.php`: `wp_body_open` アクションに `addGtmBody()` を追加
+- `views/layout/header.php`: `<body>` 直後に `wp_body_open()` 呼び出しを追加
+
+### Changed
+- `app/Presenters/Metadata.php`: `getGtags()` をラベルキー付き連想配列・複数 ID 対応に修正（`['label' => ['G-XXXX', 'G-YYYY']]` 形式）。ローカル環境スキップを追加
+- `config/seo.php`: `gtags` / `gtm` をラベルキー付き連想配列に変更（例: `'allmanage' => [...]`）。GTM サンプルスニペットを追加
+
 ## [Unreleased] - 2026-07-08
 
 ### Added
