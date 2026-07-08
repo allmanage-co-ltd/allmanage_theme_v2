@@ -10,39 +10,39 @@ namespace App\Services\Csv;
  */
 class CsvReader
 {
-  public function __construct(
-    private readonly string $delimiter = ',',
-    private readonly string $enclosure = '"',
-    private readonly string $escape = '\\',
-  ) {
-    //
-  }
-
-  /**
-   * CSVファイルを配列として読み込む
-   */
-  public function execute(string $path): array
-  {
-    if (!\file_exists($path)) {
-      throw new \RuntimeException("Csvファイルが存在しません: {$path}");
+    public function __construct(
+        private readonly string $delimiter = ',',
+        private readonly string $enclosure = '"',
+        private readonly string $escape = '\\',
+    ) {
+        //
     }
 
-    $fp = \fopen($path, 'r');
+    /**
+     * CSVファイルを配列として読み込む
+     */
+    public function execute(string $path): array
+    {
+        if (!\file_exists($path)) {
+            throw new \RuntimeException("Csvファイルが存在しません: {$path}");
+        }
 
-    if (!$fp) {
-      throw new \RuntimeException("Csvを開けません: {$path}");
+        $fp = \fopen($path, 'r');
+
+        if (!$fp) {
+            throw new \RuntimeException("Csvを開けません: {$path}");
+        }
+
+        try {
+            $rows = [];
+
+            while (($data = \fgetcsv($fp, 0, $this->delimiter, $this->enclosure, $this->escape)) !== false) {
+                $rows[] = $data;
+            }
+
+            return $rows;
+        } finally {
+            \fclose($fp);
+        }
     }
-
-    try {
-      $rows = [];
-
-      while (($data = \fgetcsv($fp, 0, $this->delimiter, $this->enclosure, $this->escape)) !== false) {
-        $rows[] = $data;
-      }
-
-      return $rows;
-    } finally {
-      \fclose($fp);
-    }
-  }
 }

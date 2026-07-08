@@ -78,6 +78,15 @@ class MyWpQuery
   /**
    * 1ページあたりの表示件数指定
    */
+  public function setPostStatus(string $status): self
+  {
+    $this->args['post_status'] = $status;
+    return $this;
+  }
+
+  /**
+   * 1ページあたりの表示件数指定
+   */
   public function setPerPage(int $per_page): self
   {
     $this->args['posts_per_page'] = $per_page;

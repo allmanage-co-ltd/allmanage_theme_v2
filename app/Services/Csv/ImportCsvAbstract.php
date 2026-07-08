@@ -56,15 +56,93 @@ abstract class ImportCsvAbstract
 
   final public function handle(): void
   {
+    $isDryRun = isset($_REQUEST[static::dryRunParam()]);
+
+    // Ajax リクエスト時はストリーミングで進捗を返す
+    if ($this->isAjax()) {
+      $this->handleStreaming($isDryRun);
+      return;
+    }
+
     try {
       (new ImportRunAction(
         reader: new CsvReader(),
         postType: static::postType(),
         map: $this->map(),
-        isDryRun: isset($_REQUEST[static::dryRunParam()]),
+        isDryRun: $isDryRun,
       ))->run();
     } catch (\Throwable $throwable) {
       AppError::abort($throwable);
     }
+  }
+
+  /**
+   * Ajax インポート：ndjson ストリームで進捗を逐次出力する
+   *
+   * - 1行処理するたびに {"processed":N,"total":M,"row":{...}} を出力する
+   * - 完了時は {"done":true,"redirectUrl":"..."} を出力する
+   * - dryRun 時は {"done":true,"dryRun":true,"log":[...]} を出力する
+   */
+  private function handleStreaming(bool $isDryRun): void
+  {
+    \ob_implicit_flush(true);
+
+    // 出力バッファをすべてフラッシュしてストリーミングを開始する
+    while (\ob_get_level() > 0) {
+      \ob_end_flush();
+    }
+
+    \header('Content-Type: application/x-ndjson; charset=utf-8');
+    \header('X-Accel-Buffering: no');
+    \header('Cache-Control: no-cache');
+
+    $log = [];
+
+    $onProgress = function (array $progress) use ($isDryRun, &$log): void {
+      if ($isDryRun) {
+        $log[] = $progress['row'];
+        return;
+      }
+
+      echo \json_encode([
+        'processed' => $progress['processed'],
+        'total'     => $progress['total'],
+        'title'     => $progress['row']['title'] ?? '',
+        'post_id'   => $progress['row']['post_id'] ?? 0,
+      ]) . "\n";
+
+      \flush();
+    };
+
+    try {
+      (new ImportRunAction(
+        reader: new CsvReader(),
+        postType: static::postType(),
+        map: $this->map(),
+        isDryRun: $isDryRun,
+        onProgress: $onProgress,
+      ))->run();
+    } catch (\Throwable $throwable) {
+      echo \json_encode(['error' => $throwable->getMessage()]) . "\n";
+      \flush();
+      exit;
+    }
+
+    if ($isDryRun) {
+      echo \json_encode(['done' => true, 'dryRun' => true, 'log' => $log]) . "\n";
+    } else {
+      echo \json_encode(['done' => true, 'redirectUrl' => static::redirectUrl()]) . "\n";
+    }
+
+    \flush();
+    exit;
+  }
+
+  /**
+   * Ajax リクエスト判定（X-Requested-With ヘッダーで判断）
+   */
+  private function isAjax(): bool
+  {
+    return ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest';
   }
 }

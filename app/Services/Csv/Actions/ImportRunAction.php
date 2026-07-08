@@ -31,6 +31,8 @@ class ImportRunAction
     private readonly string $postType,
     private readonly array  $map,
     private readonly bool   $isDryRun,
+    /** @var callable(array): void|null */
+    private readonly mixed  $onProgress = null,
   ) {
     //
   }
@@ -43,33 +45,40 @@ class ImportRunAction
       throw new \RuntimeException('CSVファイルが空です');
     }
 
-    $header = array_shift($rows);
+    $rawHeader = array_shift($rows);
+    $header    = $this->normalize($rawHeader ?? []);
 
-    if (!$this->isValidHeader($header ?? [])) {
+    if (!$this->isValidHeader($header)) {
       throw new \RuntimeException('CSVヘッダーが一致しません');
     }
+
+    // 空行を除いた実行対象行数を事前計算する
+    $total = \count(\array_filter($rows, fn(array $r) => !$this->isEmptyRow($r)));
 
     $save      = new ImportPostSaveAction($this->postType, $this->map, $this->isDryRun);
     $action    = new ImportColumnAction($this->isDryRun);
     $converter = new ImportValueConvertAction();
-    $resolver  = new ImportAttachmentResolveAction();
+    $resolver  = new ImportAttachmentResolveAction($this->isDryRun);
 
-    $log = [];
+    $log      = [];
+    $processed = 0;
 
     foreach ($rows as $index => $row) {
 
-      $row = $this->mapRow($row);
+      $row = $this->mapRow($row, $header);
 
       if ($row === null) {
         continue;
       }
 
+      $processed++;
       $post_id = $save($row);
 
       $rowLog  = [
-        'row' => $index + 1,
+        'row'     => $index + 1,
         'post_id' => $post_id,
-        'data' => [],
+        'title'   => $row['post_title'] ?? '',
+        'data'    => [],
         'thumbnail' => null,
       ];
 
@@ -99,9 +108,18 @@ class ImportRunAction
       }
 
       $log[] = $rowLog;
+
+      // 1行処理するたびに進捗コールバックを呼ぶ
+      if ($this->onProgress !== null) {
+        ($this->onProgress)([
+          'processed' => $processed,
+          'total'     => $total,
+          'row'       => $rowLog,
+        ]);
+      }
     }
 
-    if ($this->isDryRun) {
+    if ($this->isDryRun && $this->onProgress === null) {
       Html::pre($log);
       exit;
     }
@@ -134,10 +152,11 @@ class ImportRunAction
    * - map() に定義されたすべてのキーがCSVヘッダーに存在するか確認する
    * - 順番は問わない
    */
+  /**
+   * 正規化済みヘッダーにmap()の全キーが含まれるか確認する
+   */
   private function isValidHeader(array $header): bool
   {
-    $header = $this->normalize($header);
-
     foreach (\array_keys($this->map) as $key) {
       if (!\in_array($key, $header, true)) {
         return false;
@@ -148,28 +167,35 @@ class ImportRunAction
   }
 
   /**
-   * データ行をmapに合わせて整形する
+   * データ行をCSVヘッダー順でキー付け連想配列に変換する
    *
    * - 空行はスキップ（null を返す）
-   * - カラム数が不足している場合は空文字で補う
-   * - カラム数が多い場合は切り捨てる
-   * - ヘッダーキーと対応付けた連想配列で返す
+   * - CSVのヘッダー行を基準に列を対応付けるため、map()のキー順に依存しない
+   * - map()に存在しないCSVカラムは無視する
    */
-  private function mapRow(array $row): ?array
+  private function mapRow(array $row, array $csvHeader): ?array
   {
     if ($this->isEmptyRow($row)) {
       return null;
     }
 
-    $headers    = \array_keys($this->map);
     $normalized = $this->normalize($row);
-    $adjusted   = \array_slice(
-      \array_pad($normalized, \count($headers), ''),
-      0,
-      \count($headers)
-    );
+    $adjusted   = \array_pad($normalized, \count($csvHeader), '');
 
-    return \array_combine($headers, $adjusted) ?: null;
+    // CSVヘッダー順でキー付け
+    $keyed = \array_combine($csvHeader, \array_slice($adjusted, 0, \count($csvHeader)));
+
+    if ($keyed === false) {
+      return null;
+    }
+
+    // map()に定義されたキーのみ抽出して返す
+    $result = [];
+    foreach (\array_keys($this->map) as $key) {
+      $result[$key] = $keyed[$key] ?? '';
+    }
+
+    return $result;
   }
 
   /**

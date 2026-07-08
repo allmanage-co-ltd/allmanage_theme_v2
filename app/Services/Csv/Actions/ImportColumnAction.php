@@ -83,7 +83,7 @@ class ImportColumnAction
       return;
     }
 
-    $id = (new ImportAttachmentResolveAction())($value);
+    $id = (new ImportAttachmentResolveAction($this->isDryRun))($value);
 
     if ($id) {
       set_post_thumbnail($post_id, $id);

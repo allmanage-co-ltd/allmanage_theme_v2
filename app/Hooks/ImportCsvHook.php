@@ -45,6 +45,7 @@ class ImportCsvHook implements BootableWpHookInterface
       $importer = new $class();
       $importer->handle();
 
+      // Ajax リクエスト時は handle() 内で exit するためここには到達しない
       $redirectUrl = add_query_arg($class::successParam(), 1, $class::redirectUrl());
       wp_redirect($redirectUrl);
       exit;

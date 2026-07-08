@@ -16,6 +16,12 @@ namespace App\Services\Csv\Actions;
  */
 class ImportAttachmentResolveAction
 {
+  public function __construct(
+    private readonly bool $isDryRun = false,
+  ) {
+    //
+  }
+
   /**
    * URLから attachment_id を解決して返す
    *
@@ -72,6 +78,26 @@ class ImportAttachmentResolveAction
       '%/' . $wpdb->esc_like($filename)
     ));
 
-    return $id ?: 0;
+    if ($id) {
+      return $id;
+    }
+
+    // 4. 外部URLからダウンロードしてメディアライブラリにインポート
+    //    1〜3で解決できなかった場合（別ドメイン等）にサイドロードする。
+    //    dryRun時は実際にダウンロードしないためスキップする。
+    //    media_sideload_image() は wp-admin/includes が必要なため手動ロードする。
+    if ($this->isDryRun) {
+      return 0;
+    }
+
+    if (!\function_exists('media_sideload_image')) {
+      require_once ABSPATH . 'wp-admin/includes/media.php';
+      require_once ABSPATH . 'wp-admin/includes/file.php';
+      require_once ABSPATH . 'wp-admin/includes/image.php';
+    }
+
+    $id = media_sideload_image($url, 0, null, 'id');
+
+    return ($id instanceof \WP_Error || !\is_int($id)) ? 0 : $id;
   }
 }

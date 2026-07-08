@@ -2,6 +2,32 @@
 
 ---
 
+## [Unreleased] - 2026-07-08
+
+### Added
+- `app/Services/Csv/ImportCsvAbstract.php`: Ajax リクエスト時に ndjson ストリームで進捗を逐次返す `handleStreaming()` を追加。1行処理ごとに `{"processed":N,"total":M,...}` を出力し、完了時に `{"done":true,...}` を送信
+- `app/Services/Csv/ExportCsvAbstract.php`: `filenameParam()` を追加。エクスポートファイル名を GET パラメータで指定できるように変更
+- `views/app/admin/csv-in-expoter.php`: インポート進捗バー UI（`#csv-progress`）を追加。Ajax ストリームを受信してリアルタイムに進捗表示するスクリプトを追加
+- `views/app/admin/csv-in-expoter.php`: エクスポートフォームにファイル名入力欄を追加。投稿タイプ切替時にデフォルト値を自動更新
+- `config/recaptcha.php`: Turnstile 設定ファイルを新規追加
+
+### Changed
+- `app/Services/Csv/ImportCsvAbstract.php`: `handle()` を Ajax 対応に拡張。`X-Requested-With: XMLHttpRequest` ヘッダーがあればストリーミングモードで処理
+- `app/Services/Csv/ExportCsvAbstract.php`: `handle()` でファイル名を `filenameParam()` の GET 値から取得するよう変更。インデントを4スペースに統一
+- `app/Services/Csv/CsvWriter.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/CsvReader.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/Actions/ImportRunAction.php`: `onProgress` コールバックを受け取れるよう拡張。各行処理後にコールバックを呼び出す
+- `app/Services/Csv/Actions/ImportPostSaveAction.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/Actions/ImportValueConvertAction.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/Actions/ImportAttachmentResolveAction.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/Actions/ImportColumnAction.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Services/Csv/Actions/ExportGetTermSlugsAction.php`: インデントを4スペースに統一（動作変更なし）
+- `app/Plugins/MwFormHook.php`: `use_add_turnstile` が `true` のとき Cloudflare Turnstile ウィジェットをフォーム末尾に挿入する処理を追加。郵便番号フィールドに `〒` プレフィックスを追加
+- `app/Project/ExportNewsCsv.php`: `get_fields()` を `get_post_meta()` に変更（ACF 依存を除去）。`setPostStatus('any')` を追加して全ステータスの投稿を対象に
+- `app/Services/Query/MyWpQuery.php`: `setPostStatus()` メソッドを追加
+- `app/Hooks/ImportCsvHook.php`: Ajax リクエスト時は `handle()` 内で `exit` するため到達しない旨のコメントを追加
+- `views/app/admin/csv-in-expoter.php`: エクスポートの `<option>` に `esc_attr` / `esc_html` を適用
+
 ## [Unreleased] - 2026-06-25
 
 ### Added

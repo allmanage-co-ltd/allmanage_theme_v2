@@ -89,13 +89,13 @@ final class ExportNewsCsv extends ExportCsvAbstract
   protected function data(): iterable
   {
     $query = MyWpQuery::new()
-      ->setPostType('news')
+      ->setPostType(self::postType())
+      ->setPostStatus('any')
       ->setPerPage(-1)
       ->setOrderByDate()
       ->build();
 
     foreach ($query->posts as $post) {
-      $acf = get_fields($post->ID);
       yield [
         $post->ID,
         $post->post_status,
@@ -104,9 +104,9 @@ final class ExportNewsCsv extends ExportCsvAbstract
         get_the_date('Y-m-d H:i:s', $post),
         get_the_post_thumbnail_url($post->ID),
         $this->getTermSlugs($post->ID, 'news_cat'),
-        $acf['acf_is_public'] ?? '',
-        $acf['acf_price'] ?? '',
-        $acf['acf_check'] ?? '',
+        get_post_meta($post->ID, 'acf_is_public', true),
+        get_post_meta($post->ID, 'acf_price', true),
+        get_post_meta($post->ID, 'acf_check', true),
       ];
     }
   }

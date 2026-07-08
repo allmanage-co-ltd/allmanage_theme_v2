@@ -256,6 +256,7 @@ EOT;
    *
    * - MW WP Form のショートコードを用いた
    *   HTMLフォーム構造を定義
+   * - use_add_turnstile が true なら Turnstile ウィジェットを末尾に追加
    */
   public function defaultContent(string $content): string
   {
@@ -361,7 +362,7 @@ EOT;
                             </th>
                             <td>
                                 <div class="c-form__field">
-                                  [mwform_text name="your_postal" class="p-postal-code c-form__input -text"  show_error="false" size="8"]
+                                  〒[mwform_text name="your_postal" class="p-postal-code c-form__input -text"  show_error="false" size="8"]
                                 </div>
                             </td>
                         </tr>
@@ -439,7 +440,16 @@ EOT;
         </div>
     </div>
     <div class="u-ta_center">[mwform_error keys="your_agreement"]</div>
-    <div class="u-ta_center">[mwform_hidden name="recaptcha-v3" value="false"][mwform_error keys="recaptcha-v3"]</div>
+</div>
+HTML;
+
+    if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
+      $sitekey = Config::get('recaptcha.turnstile.sitekey') ?? '';
+      $html    = Config::get('recaptcha.turnstile.mwform.html') ?? '';
+      echo \str_replace('{{sitekey}}', \esc_attr($sitekey), $html);
+    }
+
+    echo <<<HTML
     <div class="c-form__button">
         [mwform_bsubmit name="btn_submit" class="c-form__btn c-btn -submit" value="submit"]送信する[/mwform_bsubmit]
         [mwform_bconfirm class="c-form__btn c-btn -confirm" value="confirm"]確認画面へ[/mwform_bconfirm]
@@ -447,6 +457,7 @@ EOT;
     </div>
 </div>
 HTML;
+
     return \ob_get_clean();
   }
 }
