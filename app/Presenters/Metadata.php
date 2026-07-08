@@ -228,29 +228,83 @@ class Metadata
   }
 
   /**
-   * headにGA4タグを出力する
+   * headにGTMタグを出力する（<head>内 script タグ）
    */
-  public static function getGtags()
+  public static function getGtmHead(): string
   {
-    $gtags = Config::get('seo.gtags');
+    $gtm_list = Config::get('seo.gtm', []);
     $html = '';
 
-    if (!empty($gtags && !is_local())) {
-      foreach ($gtags as $gtag) {
+    if (empty($gtm_list)) {
+      return $html;
+    }
+
+    foreach ($gtm_list as $gtm) {
+      $head = $gtm['head'] ?? '';
+
+      if ($head === '') {
+        continue;
+      }
+
+      $html .= $head . "\n";
+    }
+
+    return $html;
+  }
+
+  /**
+   * bodyにGTMタグを出力する（<body>直後 noscript タグ）
+   */
+  public static function getGtmBody(): string
+  {
+    $gtm_list = Config::get('seo.gtm', []);
+    $html = '';
+
+    if (empty($gtm_list)) {
+      return $html;
+    }
+
+    foreach ($gtm_list as $gtm) {
+      $body = $gtm['body'] ?? '';
+
+      if ($body === '') {
+        continue;
+      }
+
+      $html .= $body . "\n";
+    }
+
+    return $html;
+  }
+
+  /**
+   * headにGA4タグを出力する
+   *
+   * - gtags はラベルキー付きの連想配列（例: ['allmanage' => ['G-XXXXXXXX']]）
+   * - ラベルは任意の識別子で、出力には使用しない
+   */
+  public static function getGtags(): string
+  {
+    $gtags_map = Config::get('seo.gtags', []);
+    $html = '';
+
+    if (empty($gtags_map)) {
+      return $html;
+    }
+
+    foreach ($gtags_map as $ids) {
+      foreach ((array) $ids as $gtag) {
         $html .= <<<HTML
 
     <!-- Google tag (gtag.js) -->
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id={$gtag}"></script>
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id={$gtag}"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        public static function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', "{$gtag}");
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', "{$gtag}");
     </script>
+    <!-- End Google tag (gtag.js) -->
 
     HTML;
       }

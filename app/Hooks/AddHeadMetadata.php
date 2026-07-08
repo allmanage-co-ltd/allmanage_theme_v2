@@ -20,6 +20,7 @@ class AddHeadMetadata implements BootableWpHookInterface
     add_filter('option_blog_public', $this->defaultLocalNoindex(...));
     add_filter('wp_robots', $this->addNoindex(...));
     add_action('wp_head', $this->addMetadata(...));
+    add_action('wp_body_open', $this->addGtmBody(...));
   }
 
   /**
@@ -63,5 +64,14 @@ class AddHeadMetadata implements BootableWpHookInterface
     }
 
     echo Metadata::getGtags();
+    echo Metadata::getGtmHead();
+  }
+
+  /**
+   * <body>直後にGTMのnoscriptタグを出力する
+   */
+  public function addGtmBody(): void
+  {
+    echo Metadata::getGtmBody();
   }
 }

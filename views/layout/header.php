@@ -6,6 +6,7 @@
 </head>
 
 <body class="<?= esc_attr(implode(' ', get_body_class())) ?> <?= !is_home() || !is_front_page() ? '-under' : ''; ?>">
+  <?php wp_body_open(); ?>
   <?php if (file_exists(theme_dir() . '/assets/img/common/symbol-defs.svg')) {
     include_once(theme_dir() . '/assets/img/common/symbol-defs.svg');
   } ?>
