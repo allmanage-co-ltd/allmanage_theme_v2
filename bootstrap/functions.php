@@ -264,6 +264,17 @@ function is_local(): bool
 }
 
 /**
+ * Xserver確認用URL環境判定
+ *
+ * 使用例:
+ *   if (is_check_url()) {...}
+ */
+function is_check_url(): bool
+{
+  return \App\Services\Http\Runtime::isCheckUrl();
+}
+
+/**
  * モバイル判定
  *
  * 使用例:

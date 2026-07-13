@@ -1,4 +1,6 @@
 <?php
+
+/** @var WP_Query | array $args */
 $news_query = $args['news_query'];
 ?>
 
@@ -32,10 +34,10 @@ $news_query = $args['news_query'];
   </ul>
   <?php
   the_pagination(
-    $news_query,
-    range: 5,
-    prev_text: "←",
-    next_text: "→"
+    $news_query, // WP_Query本体
+    range: 5, // ページネーションの番号を表示する長さ
+    prev_text: "←", // 戻るボタンのテキスト
+    next_text: "→" // 進むボタンのテキスト
   );
   ?>
 <?php endif; ?>

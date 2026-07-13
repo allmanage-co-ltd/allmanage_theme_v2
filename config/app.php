@@ -4,7 +4,7 @@ return [
   /**
    * ルートディレクトリ
    */
-  'root'    => __DIR__ . '/..',
+  'root'              => __DIR__ . '/..',
 
   /**
    * app/Hooks/Core/HooksAutoLoader.phpで参照
@@ -25,14 +25,17 @@ return [
    *
    * 実行環境判定
    */
-  'runtime' => [
-    'local'  => [
+  'runtime'           => [
+    'local'     => [
       'localhost',
       '127.0.0.1',
       'web-checker',
       '.local',
     ],
-    'mobile' => [
+    'check_url' => [
+      '/\.check-xserver\.jp$/',
+    ],
+    'mobile'    => [
       'iPhone',
       'iPod',
       'Android',
@@ -43,7 +46,7 @@ return [
       'incognito',
       'webmate',
     ],
-    'robots' => [
+    'robots'    => [
       'Googlebot',
       'bingbot',
       'AhrefsBot',

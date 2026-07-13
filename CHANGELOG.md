@@ -2,6 +2,20 @@
 
 ---
 
+## [Unreleased] - 2026-07-13
+
+### Added
+- `app/Services/Http/Runtime.php`: `isCheckUrl()` を追加。Xserver確認用URL（`.check-xserver.jp`）環境の判定メソッド
+- `bootstrap/functions.php`: `is_check_url()` グローバル関数を追加（`Runtime::isCheckUrl()` のラッパー）
+- `config/app.php`: `runtime.check_url` に `.check-xserver.jp` の正規表現パターンを追加
+
+### Changed
+- `config/menu.php`: 管理メニューの `post_type` 表示設定を `config('cms.post_types')` から動的生成に変更
+- `config/plugin.php`: Advanced Custom Fields をプラグイン必須リストからコメントアウト（無効化）
+- `config/mwform.php`: インデント・配列フォーマットを整形（動作変更なし）
+- `docker-compose.yaml`: `WORDPRESS_DEBUG` をコメントアウト（開発時のみ有効化する運用に変更）
+- `views/component/news/c-card_news.php`: 型ヒントコメント追加・`the_pagination()` 引数にインラインコメントを追加
+
 ## [Unreleased] - 2026-07-08 (2)
 
 ### Added

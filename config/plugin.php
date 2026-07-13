@@ -31,11 +31,11 @@ return [
       'slug' => 'mw-wp-form/mw-wp-form.php',
       'repo' => 'mw-wp-form',
     ],
-    [
-      'name' => 'Advanced Custom Fields',
-      'slug' => 'advanced-custom-fields/acf.php',
-      'repo' => 'advanced-custom-fields',
-    ],
+    // [
+    //   'name' => 'Advanced Custom Fields',
+    //   'slug' => 'advanced-custom-fields/acf.php',
+    //   'repo' => 'advanced-custom-fields',
+    // ],
     [
       'name' => 'Post Types Order',
       'slug' => 'post-types-order/post-types-order.php',

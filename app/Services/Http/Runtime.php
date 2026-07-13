@@ -73,6 +73,26 @@ class Runtime
   }
 
   /**
+   * Xserver確認用URL環境判定
+   */
+  public static function isCheckUrl(): bool
+  {
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+
+    if ($host === '') {
+      return false;
+    }
+
+    foreach (Config::get('app.runtime.check_url', []) as $checkurl) {
+      if (preg_match((string) $checkurl, (string) $host)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * モバイル判定
    */
   public static function isMobile(): bool
