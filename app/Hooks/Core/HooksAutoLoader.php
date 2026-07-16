@@ -266,7 +266,7 @@ class HooksAutoLoader
    * キャッシュファイルパスをconfigから取得する
    *
    * config例:
-   * cms.hooks_auto_loader.cache_path
+   * app.hooks_auto_loader.cache_path
    */
   private static function cachePath(): string
   {

@@ -50,7 +50,7 @@ final class EditNewsPostColumns extends EditPostColumnsAbstract
   protected function columns(): array
   {
     return [
-      'acf_is_public' => '公開状況',
+      // 'acf_is_public' => '公開状況',
     ];
   }
 

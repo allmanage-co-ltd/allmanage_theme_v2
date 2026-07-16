@@ -45,7 +45,7 @@ class MwFormHook implements BootableWpHookInterface
   {
     foreach (Config::get('mwform.foot-script') as $item) {
       if ($item['is_page']) {
-        echo $item['scriput'];
+        echo $item['script'];
       }
     }
 

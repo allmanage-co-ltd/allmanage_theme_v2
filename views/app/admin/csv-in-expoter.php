@@ -4,8 +4,8 @@ use App\Services\Csv\ExportCsvAbstract;
 use App\Services\Csv\ImportCsvAbstract;
 use App\Services\Config;
 
-$exporters = Config::get('cms.option_pages.csv-in-expoter.exporter');
-$importers  = Config::get('cms.option_pages.csv-in-expoter.importer');
+$exporters = Config::get('cms.option_pages.csv-in-exporter.exporter');
+$importers  = Config::get('cms.option_pages.csv-in-exporter.importer');
 ?>
 
 <div class="wrap">

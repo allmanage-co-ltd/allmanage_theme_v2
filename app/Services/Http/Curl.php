@@ -50,7 +50,7 @@ class Curl
    */
   public static function request(string $method, string $url, array $options = []): self
   {
-    return self::excute($method, $url, $options);
+    return self::execute($method, $url, $options);
   }
 
   /**
@@ -102,7 +102,7 @@ class Curl
   /**
    * 内部リクエスト処理
    */
-  private static function excute(
+  private static function execute(
     string $method,
     string $url,
     array $options = []

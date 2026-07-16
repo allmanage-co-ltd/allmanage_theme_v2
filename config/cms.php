@@ -73,9 +73,9 @@ return [
     /**
      * CSVの一括出力、登録ページ
      */
-    'csv-in-expoter' => [
+    'csv-in-exporter' => [
       /**
-       * CSVエクスポート・インポートクラス（csv-in-expoter独自定義）
+       * CSVエクスポート・インポートクラス（csv-in-exporter独自定義）
        *
        * - exporter: ExportCsvAbstract を継承したクラス
        * - importer: ImportCsvAbstract を継承したクラス
@@ -93,8 +93,8 @@ return [
       'page_title' => 'CSV',
       'menu_title' => 'CSV',
       'capability' => 'manage_options',
-      'slug'       => 'csv-in-expoter',
-      'view'       => 'csv-in-expoter.php',
+      'slug'       => 'csv-in-exporter',
+      'view'       => 'csv-in-exporter.php',
     ],
     /**
      * 管理画面にmwformのお問い合わせ履歴ページを表示

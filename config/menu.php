@@ -33,7 +33,7 @@ return [
       'option'    => [
         'usc-e-shop/usc-e-shop.php', // ウェルカート
         'usces_orderlist',           // ウェルカート
-        'csv-in-expoter',            // CSVダウンロード
+        'csv-in-exporter',            // CSVダウンロード
         'inquiry-history',           // お問い合わせ履歴（mw form）
       ],
     ],

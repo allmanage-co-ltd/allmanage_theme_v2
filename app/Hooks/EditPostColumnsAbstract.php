@@ -30,7 +30,7 @@ abstract class EditPostColumnsAbstract implements BootableWpHookInterface
     add_action("manage_{$this->postType()}_posts_custom_column", $this->edit(...), 10, 2);
   }
 
-  public function register($columns)
+  public function register(array $columns): array
   {
     foreach ($this->columns() as $key => $label) {
       $columns[$key] = $label;

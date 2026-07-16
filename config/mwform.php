@@ -11,7 +11,7 @@ return [
       'is_page' => [
         'contact',
       ],
-      'scriput' => <<<HTML
+      'script' => <<<HTML
             <script>
             $(function() {
                 $('.c-form__agreement .mwform-checkbox-field-text').html(
@@ -28,7 +28,7 @@ return [
         'confirm',
         'thanks',
       ],
-      'scriput' => <<<HTML
+      'script' => <<<HTML
             <script type="text/javascript">
             $(function() {
               if ($('.mw_wp_form_confirm, .mw_wp_form_complete').length) {

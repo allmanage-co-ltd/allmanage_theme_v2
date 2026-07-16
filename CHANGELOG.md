@@ -2,6 +2,38 @@
 
 ---
 
+## [Unreleased] - 2026-07-16 (2)
+
+### Changed
+- `app/Hooks/Core/HooksAutoLoader.php`: `cachePath()` docblock のキー名を `cms.` → `app.` に修正（コメントのみ）
+- `app/Services/Query/MyWpQuery.php`: `setPostStatus()` docblock のコピペ誤りを修正（「1ページあたりの表示件数」→「投稿ステータスの指定」）
+- `app/Services/Http/Curl.php`: メソッド名タイポ `excute` → `execute` に修正（呼び出し側も更新）
+- `app/Hooks/EditPostColumnsAbstract.php`: `register()` に型ヒント `array $columns): array` を追加
+- `app/Hooks/SetupTheme.php`: `adminNoticeRequiredPlugins()` にアクセス修飾子 `public` を明示
+- `config/mwform.php`: キー名タイポ `scriput` → `script` に修正
+- `app/Plugins/MwFormHook.php`: `$item['scriput']` → `$item['script']` に修正（config/mwform.php 変更に対応）
+- `config/cms.php`: コメント内の `csv-in-exporter独自定義` → `csv-in-exporter独自定義` に修正（コメントのみ）
+- `Makefile`: コメント内タイポ `type=icnlude` → `type=include` に修正
+- `rector.php`: ターゲット PHP バージョンを `PHP_83` → `PHP_82` に統一（`composer.json` の `8.2.0` と一致）
+- `.gitignore`: `storage/cache/` を追加（HooksAutoLoader キャッシュを git 管理外に）
+
+### Added
+- `storage/logs/phpstan/.gitkeep`: `make stan` のログ出力先ディレクトリを git 管理に追加
+- `storage/logs/rector/.gitkeep`: `make rector` のログ出力先ディレクトリを git 管理に追加
+
+---
+
+## [Unreleased] - 2026-07-16
+
+### Changed
+- `README.md`: テーマ変更履歴リンクを `VERSION.md` → `CHANGELOG.md` に修正
+- `README.md`: 対応 PHP バージョンを `8.0+` → `8.2+` に修正（composer.json の require と一致させた）
+- `README.md`: よく使うコマンド一覧を `composer run` 形式から `make` コマンドに統一
+- `bootstrap/README.md`: `hooks.php` の役割説明を追記
+- `views/README.md`: コード例の配置先を `app/UseCase/` → `app/Project/` に修正（実在ディレクトリと整合）
+
+---
+
 ## [Unreleased] - 2026-07-13
 
 ### Added
@@ -32,8 +64,8 @@
 ### Added
 - `app/Services/Csv/ImportCsvAbstract.php`: Ajax リクエスト時に ndjson ストリームで進捗を逐次返す `handleStreaming()` を追加。1行処理ごとに `{"processed":N,"total":M,...}` を出力し、完了時に `{"done":true,...}` を送信
 - `app/Services/Csv/ExportCsvAbstract.php`: `filenameParam()` を追加。エクスポートファイル名を GET パラメータで指定できるように変更
-- `views/app/admin/csv-in-expoter.php`: インポート進捗バー UI（`#csv-progress`）を追加。Ajax ストリームを受信してリアルタイムに進捗表示するスクリプトを追加
-- `views/app/admin/csv-in-expoter.php`: エクスポートフォームにファイル名入力欄を追加。投稿タイプ切替時にデフォルト値を自動更新
+- `views/app/admin/csv-in-exporter.php`: インポート進捗バー UI（`#csv-progress`）を追加。Ajax ストリームを受信してリアルタイムに進捗表示するスクリプトを追加
+- `views/app/admin/csv-in-exporter.php`: エクスポートフォームにファイル名入力欄を追加。投稿タイプ切替時にデフォルト値を自動更新
 - `config/recaptcha.php`: Turnstile 設定ファイルを新規追加
 
 ### Changed
@@ -51,7 +83,7 @@
 - `app/Project/ExportNewsCsv.php`: `get_fields()` を `get_post_meta()` に変更（ACF 依存を除去）。`setPostStatus('any')` を追加して全ステータスの投稿を対象に
 - `app/Services/Query/MyWpQuery.php`: `setPostStatus()` メソッドを追加
 - `app/Hooks/ImportCsvHook.php`: Ajax リクエスト時は `handle()` 内で `exit` するため到達しない旨のコメントを追加
-- `views/app/admin/csv-in-expoter.php`: エクスポートの `<option>` に `esc_attr` / `esc_html` を適用
+- `views/app/admin/csv-in-exporter.php`: エクスポートの `<option>` に `esc_attr` / `esc_html` を適用
 
 ## [Unreleased] - 2026-06-25
 

@@ -25,7 +25,7 @@ class ImportCsvHook implements BootableWpHookInterface
       return;
     }
 
-    foreach (Config::get('cms.option_pages.csv-in-expoter.importer', []) as $class) {
+    foreach (Config::get('cms.option_pages.csv-in-exporter.importer', []) as $class) {
       if (!\is_string($class) || !\is_subclass_of($class, ImportCsvAbstract::class)) {
         continue;
       }

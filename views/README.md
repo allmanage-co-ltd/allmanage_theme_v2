@@ -168,10 +168,11 @@ viewsにロジックを書くとテンプレートがスパゲッティ化し、
 修正コストが急激に増えるため。
 
 ```php
-# app/UseCase/GetNewsCards.php
+# app/Project/GetNewsCards.php
+# ※まず app/Project/ に置き、他案件でも使えそうなら app/Services/ や app/Hooks/ へ切り出す
 
 /**
- * ニュースカード一覧取得UseCase
+ * ニュースカード一覧取得クラス
  *
  * news投稿タイプから指定件数の記事を取得し、
  * viewsで描画しやすい形式の配列へ整形して返す
@@ -236,7 +237,7 @@ class GetNewsCards
  */
 function get_news_cards(): array
 {
-  return (new \App\Project\GetNewsCards())->execute();
+  return (new \App\Project\GetNewsCards())->execute(); // app/Project/ 配置の例
 }
 ```
 

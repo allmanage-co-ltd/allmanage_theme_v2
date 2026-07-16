@@ -4,7 +4,7 @@
 
 - **この README は、全体像や基本ルール、動作環境等を把握するために必ず一読し、各ディレクトリの README も必ず一読してから実装に入ってください。**
 
-- **テーマの変更履歴は`VERSION.md`に記載しています**
+- **テーマの変更履歴は`CHANGELOG.md`に記載しています**
 
 - **※コメントは 80%ほど AI に書いてもらっていますので、一部おかしい部分があるかもしれません。違和感のあるコメントはご指摘ください。**
 
@@ -40,7 +40,7 @@ views/
 ## テーマドキュメント一覧
 
 - [テーマについて（本ドキュメント）](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/README.md)
-- [テーマ変更履歴](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/VERSION.md)
+- [テーマ変更履歴](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/CHANGELOG.md)
 - [VIEWS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/views/README.md)
 - [SASS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
 - [app ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
@@ -48,9 +48,11 @@ views/
 
 ## 対応バージョン
 
-- PHP：8.0+
+- PHP：8.2+
 
 - Wordpress：6.0+
+
+**このバージョン以下で使用する場合は`rector`でソースコードを一括ダウングレードしてください**
 
 ## Sass について
 
@@ -65,38 +67,11 @@ make dev type=style    # → style.scss をコンパイル監視
 make dev type=include  # → include.scss をコンパイル監視
 ```
 
-## 推奨プラグインについて
-
-- `MW WP Form`
-
-  - お問い合わせフォーム作成
-
-- `WPvivid Backup Plugin`
-
-  - バックアップ・データ移行
-
-- `Advanced Custom Fields Pro`
-
-  - 各種カスタムフィールド・オプションページ
-  - `\\IODATA-35a52a\disk1\【顧客情報】\■Allmanage自社関連情報\●各種サービス・システム関係\Advanced Custom Fields Pro（ACF）`
-
-- `All In One SEO`
-
-  - 主に AIO 対策を意識した SEO 対策として導入
-
-- `XML Sitemap Generator for Google`
-
-  - サイトマップ生成（`All In One SEO`有効時は不要）
-
-- `Website LLMs.txt`
-
-  - AIO 対策のため導入（`All In One SEO`有効時は不要）
-
 ## Composer について
 
 Composer 環境でで構成されていますので、本番、テストに関わらず、テーマを動かすには`Composer`環境および`composer install`でインストールされる依存ライブラリ`vendor`の配置が**必須**です。
 
-テーマ直下に`vendor`がなければテーマが動きませんが、git 管理の許容範囲かつ、着手ハードルを下げるため、`vendor`も git 管理に含めており、クローンもしくは zip で展開した段階から動くようになっています。
+テーマ直下に`vendor`がなければテーマが動きませんが、ハードルを下げるため、`vendor`も git 管理に含めており、クローンもしくは zip で展開した段階から動くようになっています。
 
 > #### `Composer`とは
 >
@@ -117,20 +92,17 @@ Composer 環境でで構成されていますので、本番、テストに関�
 composer install
 ```
 
-### よく使う Composer スクリプト
+### よく使う Make コマンド
 
 ```bash
-# 静的解析、エラー個所やエラーになりうる危険なコードをチェックできる
-composer run analyse      # PHPStan
+# 静的解析、エラー箇所やエラーになりうる危険なコードをチェックできる
+make stan           # PHPStan（結果: storage/logs/phpstan/phpstan.log）
 
-# PHPバージョンアップ時のソースコード自動修正
-composer run rector       # Rector (実行せず結果を確認)
+# PHPバージョンアップ時のソースコード自動修正（確認のみ）
+make rector         # Rector dry-run（結果: storage/logs/rector/rector.log）
 
-# PHPバージョンアップ時のソースコード自動修正
-composer run rector-fix   # Rector （実行）
-
-# Pestで書いたテストファイルを実行する
-composer test
+# PHPバージョンアップ時のソースコード自動修正（適用）
+make rector-fix     # Rector 適用（結果: storage/logs/rector/rector-fix.log）
 ```
 
 ## Docker について

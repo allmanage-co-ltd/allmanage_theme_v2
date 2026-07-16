@@ -32,7 +32,7 @@ PROXY := $(shell wp option get home --skip-plugins --skip-themes --quiet)
 # PROXY := localhost:8888
 
 .PHONY: dev
-dev: ## SCSSコンパイル監視 + ブラウザ自動リロード（例: make dev type=icnlude）
+dev: ## SCSSコンパイル監視 + ブラウザ自動リロード（例: make dev type=include）
 	@test -n "$(type)" || (echo "Error: type required [ make dev type=style | make dev type=include ]" && exit 1)
 	npx concurrently \
 		"npx sass --watch assets/scss/$(type).scss:assets/css/$(type).css" \

@@ -76,7 +76,7 @@ class MyWpQuery
   }
 
   /**
-   * 1ページあたりの表示件数指定
+   * 投稿ステータスの指定
    */
   public function setPostStatus(string $status): self
   {

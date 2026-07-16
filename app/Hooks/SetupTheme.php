@@ -176,7 +176,7 @@ class SetupTheme implements BootableWpHookInterface
   /**
    * 必須プラグインの通知
    */
-  function adminNoticeRequiredPlugins(): void
+  public function adminNoticeRequiredPlugins(): void
   {
     if (! current_user_can('activate_plugins')) {
       return;

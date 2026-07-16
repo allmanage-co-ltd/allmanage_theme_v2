@@ -66,7 +66,7 @@ final class ImportNewsCsv extends ImportCsvAbstract
    */
   public static function redirectUrl(): string
   {
-    return admin_url('admin.php?page=' . Config::get('cms.option_pages.csv-in-expoter.slug'));
+    return admin_url('admin.php?page=' . Config::get('cms.option_pages.csv-in-exporter.slug'));
   }
 
   /**

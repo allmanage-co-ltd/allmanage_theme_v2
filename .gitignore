@@ -5,3 +5,6 @@
 CLAUDE.local.md
 .claude/settings.local.json
 .serena
+
+# HooksAutoLoader キャッシュ（環境依存・git管理外）
+storage/cache/
