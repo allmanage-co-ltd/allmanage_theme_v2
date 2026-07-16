@@ -2,6 +2,13 @@
 
 ---
 
+## [Unreleased] - 2026-07-16 (3)
+
+### Fixed
+- `config/cms.php`: `view` キーを `csv-in-exporter.php` → `csv-in-expoter.php` に戻した（実ファイル名と一致させ、管理画面の CSV ページが表示されない問題を修正）
+
+---
+
 ## [Unreleased] - 2026-07-16 (2)
 
 ### Changed
