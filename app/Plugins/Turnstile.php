@@ -202,30 +202,27 @@ class Turnstile implements BootableWpHookInterface
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
+    // nofalse ルール: empty("0")=true なので hidden value="0" のままでブロックできる
+    // noempty->Data が別インスタンスのため $Data->set() は届かない
+    // 成功時のみ POST 値を "1" に書き換えて noempty/nofalse を通過させる
+    $form_key    = \str_replace('mwform_validation_', '', \current_filter());
+    $shared_Data = \MW_WP_Form_Data::connect($form_key);
+
     if (empty($token)) {
-      // noempty は空文字でもエラーになる（required は null のみエラー）
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_no_token]);
-      \error_log('[Turnstile] Data spl_id=' . spl_object_id($Data));
-      // Validation_Rules シングルトンが持つ noempty オブジェクトの Data インスタンスIDを確認
-      $form_key = \str_replace('mwform_validation_', '', \current_filter());
-      $vRules   = \MW_WP_Form_Validation_Rules::instantiation($form_key);
-      $rules    = $vRules->get_validation_rules();
-      if (isset($rules['noempty'])) {
-        $noempty_data = (new \ReflectionProperty(\MW_WP_Form_Abstract_Validation_Rule::class, 'Data'))->getValue($rules['noempty']);
-        \error_log('[Turnstile] noempty->Data spl_id=' . ($noempty_data ? spl_object_id($noempty_data) : 'null'));
-        \error_log('[Turnstile] noempty->Data->get=' . var_export($noempty_data ? $noempty_data->get('turnstile-check') : 'N/A', true));
-      }
+      $shared_Data->set('turnstile-check', '0');
+      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg_no_token]);
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_failed]);
+      $shared_Data->set('turnstile-check', '0');
+      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg_failed]);
       return $Validation;
     }
+    // 検証成功: nofalse を通過させるため "1" にセット＆セッションに保存
+    $shared_Data->set('turnstile-check', '1');
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
