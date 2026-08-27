@@ -142,6 +142,11 @@ class Turnstile implements BootableWpHookInterface
    */
   public function validateMwForm(mixed $Validation, mixed $data, mixed $Data): mixed
   {
+    if (\current_user_can('manage_options')) {
+      $condition = \is_object($Data) ? $Data->get_post_condition() : 'NO_DATA_OBJECT';
+      echo '<pre style="background:#00f;color:#fff;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile validateMwForm] filter=' . \esc_html(\current_filter()) . ' condition=' . \esc_html($condition) . '</pre>';
+    }
+
     if (empty($data) || !\is_object($Data)) {
       return $Validation;
     }
