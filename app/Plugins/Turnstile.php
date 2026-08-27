@@ -232,6 +232,7 @@ class Turnstile implements BootableWpHookInterface
     }
     // 検証成功: nofalse を通過させるため "1" にセット＆セッションに保存
     $shared_Data->set('turnstile-check', '1');
+    \error_log('[Turnstile] set "1" → get=' . var_export($shared_Data->get('turnstile-check'), true));
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
