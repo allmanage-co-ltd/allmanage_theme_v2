@@ -343,10 +343,8 @@ class Turnstile implements BootableWpHookInterface
 
     unset($_SESSION['turnstile_error_flash']);
 
-    $message = '<div class="turnstile-error" style="padding:16px;margin-bottom:24px;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
-      . Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。'
-      . '</div>';
-
+    $message = '<div class="turnstile-error" style="padding:16px;margin:24px 0;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
+      . Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。</div>';
     return $message . $content;
   }
 
