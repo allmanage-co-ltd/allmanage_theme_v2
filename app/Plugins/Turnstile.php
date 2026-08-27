@@ -48,9 +48,13 @@ class Turnstile implements BootableWpHookInterface
 
       // カスタムバリデーションルール: turnstile-check フィールドの値が "1" でなければエラー
       // hidden フィールドは value="0" がデフォルトで、検証成功時のみ "1" にセットされる
-      \add_filter('mwform_validate_turnstile_check', function (mixed $result, mixed $value, array $params): bool {
+      // フィールド名 "turnstile-check" のハイフンがフィルタ名でどう扱われるか両方登録する
+      $turnstile_check_validator = function (mixed $result, mixed $value, array $params): bool {
+        \error_log('[Turnstile] mwform_validate called, value=' . print_r($value, true));
         return $value === '1';
-      }, 10, 3);
+      };
+      \add_filter('mwform_validate_turnstile_check', $turnstile_check_validator, 10, 3);
+      \add_filter('mwform_validate_turnstile-check', $turnstile_check_validator, 10, 3);
 
       foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
         $form_key = 'mw-wp-form-' . $form_id;
@@ -209,14 +213,17 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
+      \error_log('[Turnstile] no token, setting rule');
       // hidden の値を "0" のまま維持し、カスタムルール turnstile_check でエラー表示させる
       $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_no_token]);
+      \error_log('[Turnstile] rule set done');
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
+      \error_log('[Turnstile] api failed, setting rule');
       $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_failed]);
       return $Validation;
     }
