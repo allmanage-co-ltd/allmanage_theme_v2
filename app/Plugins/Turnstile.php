@@ -134,6 +134,8 @@ class Turnstile implements BootableWpHookInterface
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
 
+    \error_log('[Turnstile] validateMwForm called: post_condition=' . $post_condition . ' session_id=' . \session_id() . ' blocked=' . (isset($_SESSION['turnstile_blocked']) ? 'true' : 'false'));
+
     // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
       unset($_SESSION[$session_key]);
@@ -185,9 +187,10 @@ class Turnstile implements BootableWpHookInterface
   /**
    * confirm 遷移時の Turnstile API 検証 + セッション保存
    *
-   * バリデーションフィルタでのエラー表示ではなく、検証失敗時は即リダイレクトフラグを立てる。
-   * MW WP Form の hidden フィールドが常に POST 値を持つため、$Data->set() による
-   * 空値セットが効かないケースへの対策として、H ライン（template_redirect）に委譲する。
+   * 検証失敗時は turnstile_blocked フラグをセッションに立て、
+   * template_redirect（H ライン）で入力ページへリダイレクトする。
+   * MW WP Form の hidden フィールドは常に POST 値を持つため
+   * $Data->set() による空値セットでは required を通過させられない。
    *
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
    * @param string $session_key セッションキー
@@ -195,34 +198,29 @@ class Turnstile implements BootableWpHookInterface
    */
   private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
-    $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
-    $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
-
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
-    // nofalse ルール: empty("0")=true なので hidden value="0" のままでブロックできる
-    // noempty->Data が別インスタンスのため $Data->set() は届かない
-    // 成功時のみ POST 値を "1" に書き換えて noempty/nofalse を通過させる
-    $form_key    = \str_replace('mwform_validation_', '', \current_filter());
-    $shared_Data = \MW_WP_Form_Data::connect($form_key);
+    \error_log('[Turnstile] verifyAndSaveSession: token=' . (empty($token) ? 'empty' : 'present'));
 
     if (empty($token)) {
-      $shared_Data->set('turnstile-check', '0');
-      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg_no_token]);
+      \error_log('[Turnstile] no token → set blocked');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
+    \error_log('[Turnstile] API result=' . \json_encode($result));
 
     if ($result === null || !$result['success']) {
-      $shared_Data->set('turnstile-check', '0');
-      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg_failed]);
+      \error_log('[Turnstile] API fail → set blocked');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
-    // 検証成功: nofalse を通過させるため "1" にセット＆セッションに保存
-    $shared_Data->set('turnstile-check', '1');
+
+    // 検証成功: セッションに保存して確認画面へ進む
+    \error_log('[Turnstile] success → save session key=' . $session_key);
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
