@@ -33,12 +33,14 @@ $news_query = $args['news_query'];
     <?php endwhile; ?>
   </ul>
   <?php
-  the_pagination(
-    $news_query, // WP_Query本体
-    range: 5, // ページネーションの番号を表示する長さ
-    prev_text: "←", // 戻るボタンのテキスト
-    next_text: "→" // 進むボタンのテキスト
-  );
+  if (!is_front_page() && !is_home()) {
+    the_pagination(
+      $news_query, // WP_Query本体
+      range: 5, // ページネーションの番号を表示する長さ
+      prev_text: "←", // 戻るボタンのテキスト
+      next_text: "→" // 進むボタンのテキスト
+    );
+  }
   ?>
 <?php endif; ?>
 <?php wp_reset_postdata(); ?>
