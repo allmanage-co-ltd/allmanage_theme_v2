@@ -168,20 +168,16 @@ class Turnstile implements BootableWpHookInterface
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'required', [
-        'message' => '認証情報を確認できませんでした。お手数ですが最初からやり直してください。',
-      ]);
+      \error_log('[Turnstile] complete: セッションなし → blocked フラグをセット');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'required', [
-        'message' => '認証の有効期限が切れました。お手数ですが最初からやり直してください。',
-      ]);
+      \error_log('[Turnstile] complete: セッション期限切れ → blocked フラグをセット');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
@@ -191,31 +187,31 @@ class Turnstile implements BootableWpHookInterface
   /**
    * confirm 遷移時の Turnstile API 検証 + セッション保存
    *
-   * 検証成功時はセッションに verified フラグと検証時刻を保存する
+   * バリデーションフィルタでのエラー表示ではなく、検証失敗時は即リダイレクトフラグを立てる。
+   * MW WP Form の hidden フィールドが常に POST 値を持つため、$Data->set() による
+   * 空値セットが効かないケースへの対策として、H ライン（template_redirect）に委譲する。
    *
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
    * @param string $session_key セッションキー
+   * @param mixed  $Data        MW WP Form Data オブジェクト
    */
   private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
-    $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
-    $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
-
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
     if (empty($token)) {
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_no_token]);
+      \error_log('[Turnstile] トークンなし: confirm を blocked としてリダイレクトへ');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      $Data->set('turnstile-check', '');
-      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_failed]);
+      \error_log('[Turnstile] API 検証失敗: blocked フラグをセット');
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
@@ -299,10 +295,11 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
-   * H: メール停止フラグが立っていれば入力ページへリダイレクト
+   * H: blocked フラグが立っていれば入力ページへリダイレクト
    *
-   * mwform_complete_url_ は完了画面URL未設定時に発火しないため
-   * template_redirect で自前リダイレクトする。
+   * confirm 時の Turnstile 検証失敗・complete 時のセッション不正の両方をここで捌く。
+   * template_redirect はバリデーションフィルタ後・テンプレート出力前に発火するため、
+   * 確認画面が表示される前に入力ページへ戻せる。
    */
   public function redirectOnBlocked(): void
   {
@@ -312,8 +309,15 @@ class Turnstile implements BootableWpHookInterface
 
     unset($_SESSION['turnstile_blocked']);
 
-    $referer   = \wp_get_referer();
-    $input_url = $referer ?: \home_url('/');
+    // is_page() で現在のフォームページ URL を特定する（POST中でも利用可）
+    $input_url = null;
+    foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
+      if (\is_page($page_id)) {
+        $input_url = \get_permalink($page_id);
+        break;
+      }
+    }
+    $input_url ??= \wp_get_referer() ?: \home_url('/');
 
     \wp_safe_redirect(\add_query_arg('turnstile_error', '1', $input_url));
     exit;

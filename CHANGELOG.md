@@ -4,13 +4,20 @@
 
 ## [Unreleased] - 2026-08-27
 
+### Fixed
+- `app/Plugins/Turnstile.php`: confirm 時に Turnstile チェックなしで確認画面に進める問題を修正
+  - MW WP Form の `[mwform_hidden]` が常に POST 値を持つため `$Data->set()` でのバリデーションが効かない問題を解消
+  - `verifyAndSaveSession()` / `validateSessionOnComplete()` をバリデーションエラーではなく `$_SESSION['turnstile_blocked']` フラグに変更
+  - `redirectOnBlocked()` を H ライン（`template_redirect`）で一元管理 — confirm/complete 両方の失敗をリダイレクトで制御
+  - `is_page()` でフォームページ URL を特定し、リダイレクト先を正確に解決するよう改善
+
 ### Changed
 - `app/Plugins/Turnstile.php`: MW WP Form バリデーションをセッション管理方式に改修
   - `validateMwForm()` を3引数化し `$Data->get_post_condition()` で遷移状態を正確に判定
   - `confirm` 時に Turnstile API 検証 → 成功時にセッションへ `verified` フラグを保存
-  - `complete` 時にセッションフラグを検証 → 未保持の場合はバリデーションエラーで送信ブロック
+  - `complete` 時にセッションフラグを検証 → なければ blocked フラグをセットしてリダイレクト
   - `back` 時はセッションフラグを破棄
-  - `SESSION_TTL`（5分）を定数化し、期限切れ時は自動クリア＆エラーを返すように
+  - `SESSION_TTL`（5分）を定数化し、期限切れ時は自動クリア＆リダイレクト
   - `boot()` 内で `init` フックに `session_start()` を追加
   - バリデーション hook 登録を `10, 2` → `10, 3` に変更（`$Data` を受け取るため）
   - 旧 `verify()` メソッドを削除し `verifyAndSaveSession()` / `validateSessionOnComplete()` に分割
