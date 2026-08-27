@@ -43,6 +43,18 @@ class Turnstile implements BootableWpHookInterface
       }
     }, 1);
 
+    // DEBUG: boot() が呼ばれているか確認
+    \add_action('wp_footer', function (): void {
+      $forms   = Config::get('recaptcha.turnstile.mwform.forms') ?? [];
+      $ids     = $this->resolveMwFormIds();
+      $enabled = Config::get('recaptcha.turnstile.mwform.use_add_turnstile');
+      echo '<pre style="background:#111;color:#0f0;padding:10px;z-index:9999;position:fixed;bottom:0;left:0;right:0;font-size:12px">'
+        . '[Turnstile boot] enabled=' . \esc_html((string)(int)$enabled)
+        . ' forms_config=' . \esc_html(\print_r($forms, true))
+        . ' resolved_ids=' . \esc_html(\print_r($ids, true))
+        . '</pre>';
+    });
+
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
