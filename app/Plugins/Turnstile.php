@@ -43,21 +43,6 @@ class Turnstile implements BootableWpHookInterface
       }
     }, 1);
 
-    // DEBUG: boot() が呼ばれているか確認（管理者のみ表示）
-    \add_action('wp_footer', function (): void {
-      if (!\current_user_can('manage_options')) {
-        return;
-      }
-      $forms   = Config::get('recaptcha.turnstile.mwform.forms') ?? [];
-      $ids     = $this->resolveMwFormIds();
-      $enabled = Config::get('recaptcha.turnstile.mwform.use_add_turnstile');
-      echo '<pre style="background:#111;color:#0f0;padding:10px;z-index:9999;position:fixed;bottom:0;left:0;right:0;font-size:12px">'
-        . '[Turnstile boot] enabled=' . \esc_html((string)(int)$enabled)
-        . ' forms_config=' . \esc_html(\print_r($forms, true))
-        . ' resolved_ids=' . \esc_html(\print_r($ids, true))
-        . '</pre>';
-    });
-
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
@@ -142,11 +127,6 @@ class Turnstile implements BootableWpHookInterface
    */
   public function validateMwForm(mixed $Validation, mixed $data, mixed $Data): mixed
   {
-    if (\current_user_can('manage_options')) {
-      $condition = \is_object($Data) ? $Data->get_post_condition() : 'NO_DATA_OBJECT';
-      echo '<pre style="background:#00f;color:#fff;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile validateMwForm] filter=' . \esc_html(\current_filter()) . ' condition=' . \esc_html($condition) . '</pre>';
-    }
-
     if (empty($data) || !\is_object($Data)) {
       return $Validation;
     }
@@ -185,10 +165,6 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
   {
-    if (\current_user_can('manage_options')) {
-      echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile complete] session_id=' . \esc_html(\session_id()) . ' key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key] ?? 'NONE', true)) . '</pre>';
-    }
-
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
@@ -247,10 +223,6 @@ class Turnstile implements BootableWpHookInterface
       'verified_at' => \time(),
     ];
 
-    if (\current_user_can('manage_options')) {
-      echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile confirm] session_id=' . \esc_html(\session_id()) . ' key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key], true)) . '</pre>';
-    }
-
     return $Validation;
   }
 
@@ -308,10 +280,6 @@ class Turnstile implements BootableWpHookInterface
       \current_filter()
     );
     $session_key = self::SESSION_PREFIX . \md5($validation_key);
-
-    if (\current_user_can('manage_options')) {
-      echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile blockMail] session_id=' . \esc_html(\session_id()) . ' validation_key=' . \esc_html($validation_key) . ' session_key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key] ?? 'NONE', true)) . '</pre>';
-    }
 
     if (!empty($_SESSION[$session_key]['verified'])) {
       return $Mail;
