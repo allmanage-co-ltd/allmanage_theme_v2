@@ -46,16 +46,6 @@ class Turnstile implements BootableWpHookInterface
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
-      // カスタムバリデーションルール: turnstile-check フィールドの値が "1" でなければエラー
-      // hidden フィールドは value="0" がデフォルトで、検証成功時のみ "1" にセットされる
-      // フィールド名 "turnstile-check" のハイフンがフィルタ名でどう扱われるか両方登録する
-      $turnstile_check_validator = function (mixed $result, mixed $value, array $params): bool {
-        \error_log('[Turnstile] mwform_validate called, value=' . print_r($value, true));
-        return $value === '1';
-      };
-      \add_filter('mwform_validate_turnstile_check', $turnstile_check_validator, 10, 3);
-      \add_filter('mwform_validate_turnstile-check', $turnstile_check_validator, 10, 3);
-
       foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
         $form_key = 'mw-wp-form-' . $form_id;
 
@@ -213,26 +203,19 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
-      // $_POST を直接空にして required ルールに引っかけるのだ
-      $_POST['turnstile-check'] = '';
+      // noempty は空文字でもエラーになる（required は null のみエラー）
       $Data->set('turnstile-check', '');
-      \error_log('[Turnstile] no token, POST cleared, value=' . print_r($Data->get('turnstile-check'), true));
-      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_no_token]);
+      $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_no_token]);
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      $_POST['turnstile-check'] = '';
       $Data->set('turnstile-check', '');
-      \error_log('[Turnstile] api failed, POST cleared');
-      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_failed]);
+      $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_failed]);
       return $Validation;
     }
-
-    // 検証成功: セッションにのみ保存（フィールド値はそのまま）
-    \error_log('[Turnstile] verify success');
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
