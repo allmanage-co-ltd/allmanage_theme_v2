@@ -165,6 +165,8 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
   {
+    \error_log('[Turnstile] complete check. session_id=' . \session_id() . ' key=' . $session_key . ' session=' . \print_r($_SESSION[$session_key] ?? 'NONE', true));
+
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
@@ -222,6 +224,8 @@ class Turnstile implements BootableWpHookInterface
       'verified'    => true,
       'verified_at' => \time(),
     ];
+
+    \error_log('[Turnstile] confirm verified. session_id=' . \session_id() . ' key=' . $session_key . ' session=' . \print_r($_SESSION[$session_key], true));
 
     return $Validation;
   }
@@ -281,11 +285,13 @@ class Turnstile implements BootableWpHookInterface
     );
     $session_key = self::SESSION_PREFIX . \md5($validation_key);
 
+    \error_log('[Turnstile] blockMail check. session_id=' . \session_id() . ' validation_key=' . $validation_key . ' session_key=' . $session_key . ' session=' . \print_r($_SESSION[$session_key] ?? 'NONE', true));
+
     if (!empty($_SESSION[$session_key]['verified'])) {
       return $Mail;
     }
 
-    \error_log('Turnstile: verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
+    \error_log('[Turnstile] verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
 
     $Mail->to  = '';
     $Mail->cc  = '';
