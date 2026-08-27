@@ -46,6 +46,12 @@ class Turnstile implements BootableWpHookInterface
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
+      // カスタムバリデーションルール: turnstile-check フィールドの値が "1" でなければエラー
+      // hidden フィールドは value="0" がデフォルトで、検証成功時のみ "1" にセットされる
+      \add_filter('mwform_validate_turnstile_check', function (mixed $result, mixed $value, array $params): bool {
+        return $value === '1';
+      }, 10, 3);
+
       foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
         $form_key = 'mw-wp-form-' . $form_id;
 
@@ -168,7 +174,6 @@ class Turnstile implements BootableWpHookInterface
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
-      \error_log('[Turnstile] complete: セッションなし → blocked フラグをセット');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
@@ -176,7 +181,6 @@ class Turnstile implements BootableWpHookInterface
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
-      \error_log('[Turnstile] complete: セッション期限切れ → blocked フラグをセット');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
@@ -197,25 +201,28 @@ class Turnstile implements BootableWpHookInterface
    */
   private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
+    $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
+    $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
+
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
     if (empty($token)) {
-      \error_log('[Turnstile] トークンなし: confirm を blocked としてリダイレクトへ');
-      $_SESSION['turnstile_blocked'] = true;
+      // hidden の値を "0" のまま維持し、カスタムルール turnstile_check でエラー表示させる
+      $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_no_token]);
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      \error_log('[Turnstile] API 検証失敗: blocked フラグをセット');
-      $_SESSION['turnstile_blocked'] = true;
+      $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_failed]);
       return $Validation;
     }
 
-    // 検証成功: セッションに保存
+    // 検証成功: フィールドを "1" にセットしてカスタムルールを通過させ、セッションにも保存
+    $Data->set('turnstile-check', '1');
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),

@@ -6,10 +6,10 @@
 
 ### Fixed
 - `app/Plugins/Turnstile.php`: confirm 時に Turnstile チェックなしで確認画面に進める問題を修正
-  - MW WP Form の `[mwform_hidden]` が常に POST 値を持つため `$Data->set()` でのバリデーションが効かない問題を解消
-  - `verifyAndSaveSession()` / `validateSessionOnComplete()` をバリデーションエラーではなく `$_SESSION['turnstile_blocked']` フラグに変更
-  - `redirectOnBlocked()` を H ライン（`template_redirect`）で一元管理 — confirm/complete 両方の失敗をリダイレクトで制御
-  - `is_page()` でフォームページ URL を特定し、リダイレクト先を正確に解決するよう改善
+  - `[mwform_hidden value="0"]` + カスタムルール `turnstile_check` の組み合わせでバリデーションエラーを確実に表示
+  - 検証成功時のみ `$Data->set('turnstile-check', '1')` でフィールドを書き換えてルールを通過させる
+  - `mwform_validate_turnstile_check` フィルタを登録し、値が `"1"` でなければエラーとするカスタムルールを実装
+- `config/recaptcha.php`: テンプレート html の hidden フィールドを `value="0"` に変更（管理画面のフォーム設定も合わせて変更が必要）
 
 ### Changed
 - `app/Plugins/Turnstile.php`: MW WP Form バリデーションをセッション管理方式に改修

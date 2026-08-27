@@ -69,7 +69,7 @@ return [
 
       // MWFORMのデフォHTMLに挿入する（プラポリチェック直下）
       'html'              => <<<HTML
-      <div class="u-ta_center">[mwform_hidden name="turnstile-check" value="1"][mwform_error keys="turnstile-check"]</div>
+      <div class="u-ta_center">[mwform_hidden name="turnstile-check" value="0"][mwform_error keys="turnstile-check"]</div>
       <div
         class="cf-turnstile"
         style="
