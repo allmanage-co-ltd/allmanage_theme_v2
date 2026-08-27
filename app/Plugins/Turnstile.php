@@ -134,7 +134,6 @@ class Turnstile implements BootableWpHookInterface
 
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
-    \error_log('[Turnstile] post_condition=' . var_export($post_condition, true));
 
     // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
@@ -223,7 +222,6 @@ class Turnstile implements BootableWpHookInterface
     }
 
     $result = $this->callVerifyApi($token);
-    \error_log('[Turnstile] api result=' . var_export($result, true));
 
     if ($result === null || !$result['success']) {
       $shared_Data->set('turnstile-check', '0');
@@ -232,20 +230,6 @@ class Turnstile implements BootableWpHookInterface
     }
     // 検証成功: nofalse を通過させるため "1" にセット＆セッションに保存
     $shared_Data->set('turnstile-check', '1');
-    \error_log('[Turnstile] set "1" → get=' . var_export($shared_Data->get('turnstile-check'), true) . ' spl_id=' . \spl_object_id($shared_Data));
-
-    // nofalse が参照している Data の spl_id を確認
-    $rules = \MW_WP_Form_Validation_Rules::instantiation($form_key);
-    $validation_rules = $rules->get_validation_rules();
-    if (isset($validation_rules['nofalse'])) {
-      $nf = $validation_rules['nofalse'];
-      // リフレクションで $this->Data を取得
-      $ref = new \ReflectionObject($nf);
-      $prop = $ref->getProperty('Data');
-      $prop->setAccessible(true);
-      $nf_data = $prop->getValue($nf);
-      \error_log('[Turnstile] nofalse->Data spl_id=' . \spl_object_id($nf_data) . ' turnstile-check=' . var_export($nf_data->get('turnstile-check'), true));
-    }
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
@@ -313,7 +297,7 @@ class Turnstile implements BootableWpHookInterface
       return $Mail;
     }
 
-    \error_log('[Turnstile] verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
+    \error_log('[Turnstile] blockMail: verified フラグなし (' . \current_filter() . ')');
 
     $Mail->to  = '';
     $Mail->cc  = '';
