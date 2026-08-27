@@ -5,15 +5,14 @@
 ## [Unreleased] - 2026-08-27
 
 ### Changed
-- `app/Plugins/Turnstile.php`: Turnstile バイパス問題を `mwform_redirect_url_` フィルタ方式に全面刷新
-  - MW WP Form が同一リクエストで `mwform_validation_` フィルタを2回呼ぶ問題を回避
-  - 失敗時: `turnstile_error_flash` セッションフラグをセットし `mwform_redirect_url_` フィルタで入力ページへ戻す
+- `app/Plugins/Turnstile.php`: Turnstile バイパス問題を根本解決
+  - 失敗時: `MW_WP_Form_Data::connect()->set_validation_error()` でバリデーションエラーを直接セット
+    - MW WP Form が `is_valid() = false` と判断し入力ページへ戻す（`view_flg = 'input'` のまま）
+    - `mwform_redirect_url_` フィルタは保険として残置
   - 成功時: セッションに `verified` フラグを保存して確認画面へ進む
-  - `template_redirect` による自前リダイレクトを廃止し MW WP Form のリダイレクト処理に委譲
+  - `setMwFormValidationError()` メソッドを追加 — `current_filter()` から form_key を抽出し Data シングルトンにエラーをセット
+  - `template_redirect` による自前リダイレクトを廃止
   - デバッグログ（`error_log`）をすべて削除
-  - static プロパティ `$verified_in_request` を廃止（セッションフラグで代替）
-  - `filterRedirectUrl()` メソッドを追加 — `mwform_redirect_url_` フィルタで入力ページURLを返す
-  - `redirectOnBlocked()` を削除（`filterRedirectUrl()` に統合）
 
 ---
 

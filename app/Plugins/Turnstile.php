@@ -188,8 +188,8 @@ class Turnstile implements BootableWpHookInterface
   /**
    * confirm 遷移時の Turnstile API 検証 + セッション保存
    *
-   * 失敗時: turnstile_error_flash をセッションに立てる
-   *        → mwform_redirect_url_ フィルタで入力ページへ戻す
+   * 失敗時: MW_WP_Form_Data にバリデーションエラーを直接セットして
+   *        MW WP Form 自身に入力ページへ戻させる（view_flg = 'input' のまま保持）
    * 成功時: セッションに verified フラグを保存して確認画面へ進む
    *
    * MW WP Form が同一リクエストで複数回バリデーションを呼ぶ場合があるため、
@@ -205,16 +205,14 @@ class Turnstile implements BootableWpHookInterface
       return $Validation;
     }
 
-    // error_flash が既に立っていれば再検証不要
-    if (!empty($_SESSION['turnstile_error_flash'])) {
-      return $Validation;
-    }
-
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
+    $error_message = Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。';
+
     if (empty($token)) {
+      $this->setMwFormValidationError($session_key, $error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
@@ -222,6 +220,7 @@ class Turnstile implements BootableWpHookInterface
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
+      $this->setMwFormValidationError($session_key, $error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
@@ -236,11 +235,34 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
+   * MW_WP_Form_Data シングルトンにバリデーションエラーをセットする
+   *
+   * current_filter() から form_key を抽出して Data::connect() でシングルトンを取得する。
+   * clone された $Data（フィルタ第3引数）ではなくシングルトンを使うことで
+   * is_valid() の判定に反映される。
+   *
+   * @param string $session_key セッションキー（フィールド名として使用）
+   * @param string $message     エラーメッセージ
+   */
+  private function setMwFormValidationError(string $session_key, string $message): void
+  {
+    // current_filter() = 'mwform_validation_mw-wp-form-{id}' から form_key を抽出
+    $form_key = (string) \str_replace('mwform_validation_', '', \current_filter());
+
+    if (empty($form_key) || !\class_exists('MW_WP_Form_Data')) {
+      return;
+    }
+
+    $SharedData = \MW_WP_Form_Data::connect($form_key);
+    $SharedData->set_validation_error('cf-turnstile-response', 'turnstile', $message);
+  }
+
+  /**
    * mwform_redirect_url_ フィルタ
    *
    * turnstile_error_flash が立っていれば入力ページへリダイレクトさせる。
-   * MW WP Form の内部リダイレクト処理に割り込む形で動作するため、
-   * template_redirect を使った自前リダイレクトが不要になる。
+   * verifyAndSaveSession で MW WP Form のバリデーションエラーをセットするため
+   * MW WP Form は自力で入力ページに戻るが、万一 URL が確認ページになった場合の保険。
    *
    * @param string $url  MW WP Form が決定したリダイレクト先 URL
    * @param mixed  $Data MW WP Form Data オブジェクト
@@ -344,7 +366,7 @@ class Turnstile implements BootableWpHookInterface
     unset($_SESSION['turnstile_error_flash']);
 
     $message = '<div class="turnstile-error" style="padding:16px;margin:24px 0;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
-      . Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。</div>';
+      . Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。' . '</div>';
     return $message . $content;
   }
 
