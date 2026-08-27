@@ -4,26 +4,16 @@
 
 ## [Unreleased] - 2026-08-27
 
-### Fixed
-- `app/Plugins/Turnstile.php`: confirm 時に Turnstile チェックなしで確認画面に進める問題を修正
-  - `[mwform_hidden value="0"]` + カスタムルール `turnstile_check` の組み合わせでバリデーションエラーを確実に表示
-  - 検証成功時のみ `$Data->set('turnstile-check', '1')` でフィールドを書き換えてルールを通過させる
-  - `mwform_validate_turnstile_check` フィルタを登録し、値が `"1"` でなければエラーとするカスタムルールを実装
-- `config/recaptcha.php`: テンプレート html の hidden フィールドを `value="0"` に変更（管理画面のフォーム設定も合わせて変更が必要）
-
 ### Changed
-- `app/Plugins/Turnstile.php`: MW WP Form バリデーションをセッション管理方式に改修
-  - `validateMwForm()` を3引数化し `$Data->get_post_condition()` で遷移状態を正確に判定
-  - `confirm` 時に Turnstile API 検証 → 成功時にセッションへ `verified` フラグを保存
-  - `complete` 時にセッションフラグを検証 → なければ blocked フラグをセットしてリダイレクト
-  - `back` 時はセッションフラグを破棄
-  - `SESSION_TTL`（5分）を定数化し、期限切れ時は自動クリア＆リダイレクト
-  - `boot()` 内で `init` フックに `session_start()` を追加
-  - バリデーション hook 登録を `10, 2` → `10, 3` に変更（`$Data` を受け取るため）
-  - 旧 `verify()` メソッドを削除し `verifyAndSaveSession()` / `validateSessionOnComplete()` に分割
-  - G: `blockMail()` を追加 — セッション未検証時はメール宛先を空にして送信を完全ブロック
-  - H: `redirectOnBlocked()` を追加 — `template_redirect` で入力ページへ `wp_safe_redirect()`
-  - I: `showBlockedError()` を追加 — `?turnstile_error=1` クエリ付きURLでエラーバナーを表示
+- `app/Plugins/Turnstile.php`: Turnstile バイパス問題を `mwform_redirect_url_` フィルタ方式に全面刷新
+  - MW WP Form が同一リクエストで `mwform_validation_` フィルタを2回呼ぶ問題を回避
+  - 失敗時: `turnstile_error_flash` セッションフラグをセットし `mwform_redirect_url_` フィルタで入力ページへ戻す
+  - 成功時: セッションに `verified` フラグを保存して確認画面へ進む
+  - `template_redirect` による自前リダイレクトを廃止し MW WP Form のリダイレクト処理に委譲
+  - デバッグログ（`error_log`）をすべて削除
+  - static プロパティ `$verified_in_request` を廃止（セッションフラグで代替）
+  - `filterRedirectUrl()` メソッドを追加 — `mwform_redirect_url_` フィルタで入力ページURLを返す
+  - `redirectOnBlocked()` を削除（`filterRedirectUrl()` に統合）
 
 ---
 

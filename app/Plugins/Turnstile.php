@@ -18,8 +18,11 @@ use WP_Post;
  *
  * セッション管理フロー:
  * - confirm: Turnstile API 検証 → 成功時にセッションへ verified フラグを保存
- * - complete: セッションの verified フラグを確認 → なければバリデーションエラー
+ *            失敗時は turnstile_error_flash をセッションに立てる
+ * - mwform_redirect_url_: turnstile_error_flash があれば入力ページへ戻す
+ * - the_content: フラッシュメッセージがあればエラー表示して削除
  * - back: セッションの verified フラグを破棄
+ * - complete: セッションの verified フラグ確認 → なければメール送信停止
  */
 class Turnstile implements BootableWpHookInterface
 {
@@ -28,9 +31,6 @@ class Turnstile implements BootableWpHookInterface
 
   /** 検証済みフラグの有効期限（秒） */
   private const SESSION_TTL = 300;
-
-  /** 同一リクエスト内での検証済みフラグ（セッション書き込み前の二重呼び出し対策） */
-  private static array $verified_in_request = [];
 
   /**
    * 初期化処理
@@ -49,9 +49,10 @@ class Turnstile implements BootableWpHookInterface
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
-      foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
+      foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
         $form_key = 'mw-wp-form-' . $form_id;
 
+        // confirm: Turnstile 検証 / back: セッション破棄
         \add_filter(
           'mwform_validation_' . $form_key,
           $this->validateMwForm(...),
@@ -59,14 +60,18 @@ class Turnstile implements BootableWpHookInterface
           3
         );
 
+        // Turnstile 未検証なら入力ページへリダイレクトさせる
+        \add_filter(
+          'mwform_redirect_url_' . $form_key,
+          $this->filterRedirectUrl(...),
+          10,
+          2
+        );
+
         // G: バリデーションをすり抜けた場合の最終防衛ライン（メール送信停止）
         \add_filter('mwform_mail_' . $form_key, $this->blockMail(...), 10, 3);
         \add_filter('mwform_auto_mail_' . $form_key, $this->blockMail(...), 10, 3);
       }
-
-      // H: メール停止フラグが立っていれば入力ページへリダイレクト
-      // MWF の _template_redirect (priority 10000) より前に実行する
-      \add_action('template_redirect', $this->redirectOnBlocked(...), 9999);
 
       // I: 入力ページ上部にエラーメッセージを表示
       \add_filter('the_content', $this->showBlockedError(...), 20);
@@ -120,10 +125,9 @@ class Turnstile implements BootableWpHookInterface
   /**
    * MW WP Form バリデーション処理
    *
-   * MW WP Form の post_condition で遷移状態を判定し、セッションで検証済みフラグを管理する。
-   * - confirm: Turnstile API 検証 → 成功時にセッション保存
-   * - complete: セッションの verified フラグ確認 → なければエラー
-   * - back: セッションの verified フラグを破棄
+   * confirm: Turnstile API 検証のみ（失敗時はリダイレクトフラグをセット）
+   * back: セッションの verified フラグを破棄
+   * complete: セッションの verified フラグ確認
    *
    * @param mixed $Validation MW WP Form Validation オブジェクト
    * @param mixed $data       POST データ配列
@@ -137,23 +141,18 @@ class Turnstile implements BootableWpHookInterface
 
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
-    \error_log('[Turnstile] validateMwForm: filter=' . \current_filter() . ' condition=' . $post_condition . ' session_key=' . $session_key);
 
-    // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
       unset($_SESSION[$session_key]);
       return $Validation;
     }
 
-    // 「確認画面 → 完了（メール送信）」: セッションの verified フラグを検証する
     if ($post_condition === 'complete') {
-      return $this->validateSessionOnComplete($Validation, $Data, $session_key);
+      return $this->validateSessionOnComplete($Validation, $session_key);
     }
 
-    // 「入力画面 → 確認画面」: 古いフラグを破棄してから Turnstile 検証を行う
     if ($post_condition === 'confirm') {
-      unset($_SESSION[$session_key]);
-      return $this->verifyAndSaveSession($Validation, $session_key, $Data);
+      return $this->verifyAndSaveSession($Validation, $session_key);
     }
 
     return $Validation;
@@ -162,25 +161,24 @@ class Turnstile implements BootableWpHookInterface
   /**
    * complete 遷移時のセッション検証
    *
-   * セッションに verified フラグがなければバリデーションエラーをセットする
+   * セッションに verified フラグがなければメール送信を停止するフラグを立てる
    *
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
-   * @param mixed  $Data        MW WP Form Data オブジェクト
    * @param string $session_key セッションキー
    */
-  private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
+  private function validateSessionOnComplete(mixed $Validation, string $session_key): mixed
   {
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
-      $_SESSION['turnstile_blocked'] = true;
+      $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
 
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
-      $_SESSION['turnstile_blocked'] = true;
+      $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
 
@@ -190,19 +188,25 @@ class Turnstile implements BootableWpHookInterface
   /**
    * confirm 遷移時の Turnstile API 検証 + セッション保存
    *
-   * 検証失敗時は turnstile_blocked フラグをセッションに立て、
-   * template_redirect（H ライン）で入力ページへリダイレクトする。
-   * MW WP Form の hidden フィールドは常に POST 値を持つため
-   * $Data->set() による空値セットでは required を通過させられない。
+   * 失敗時: turnstile_error_flash をセッションに立てる
+   *        → mwform_redirect_url_ フィルタで入力ページへ戻す
+   * 成功時: セッションに verified フラグを保存して確認画面へ進む
+   *
+   * MW WP Form が同一リクエストで複数回バリデーションを呼ぶ場合があるため、
+   * セッションに verified フラグがあれば再検証をスキップする。
    *
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
    * @param string $session_key セッションキー
-   * @param mixed  $Data        MW WP Form Data オブジェクト
    */
-  private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
+  private function verifyAndSaveSession(mixed $Validation, string $session_key): mixed
   {
-    // 同一リクエスト内での二重呼び出し対策（セッション書き込み前でも静的プロパティで判定）
-    if (!empty(self::$verified_in_request[$session_key]) || !empty($_SESSION[$session_key]['verified'])) {
+    // 検証済みならスキップ（MWF が同一リクエストで複数回バリデーションを呼ぶ対策）
+    if (!empty($_SESSION[$session_key]['verified'])) {
+      return $Validation;
+    }
+
+    // error_flash が既に立っていれば再検証不要
+    if (!empty($_SESSION['turnstile_error_flash'])) {
       return $Validation;
     }
 
@@ -211,28 +215,50 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
-      \error_log('[Turnstile] verifyAndSaveSession: no token → blocked');
-      $_SESSION['turnstile_blocked'] = true;
+      $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      \error_log('[Turnstile] verifyAndSaveSession: API fail → blocked');
-      $_SESSION['turnstile_blocked'] = true;
+      $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
 
-    // 検証成功: リクエスト内フラグとセッション両方に保存して確認画面へ進む
-    \error_log('[Turnstile] verifyAndSaveSession: success → saved session_key=' . $session_key);
-    self::$verified_in_request[$session_key] = true;
+    // 検証成功: セッションに保存して確認画面へ進む
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
     ];
 
     return $Validation;
+  }
+
+  /**
+   * mwform_redirect_url_ フィルタ
+   *
+   * turnstile_error_flash が立っていれば入力ページへリダイレクトさせる。
+   * MW WP Form の内部リダイレクト処理に割り込む形で動作するため、
+   * template_redirect を使った自前リダイレクトが不要になる。
+   *
+   * @param string $url  MW WP Form が決定したリダイレクト先 URL
+   * @param mixed  $Data MW WP Form Data オブジェクト
+   */
+  public function filterRedirectUrl(string $url, mixed $Data): string
+  {
+    if (empty($_SESSION['turnstile_error_flash'])) {
+      return $url;
+    }
+
+    // is_page() でフォームページ URL を特定する
+    foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
+      if (\is_page($page_id)) {
+        return \get_permalink($page_id) ?: $url;
+      }
+    }
+
+    return $url;
   }
 
   /**
@@ -274,7 +300,7 @@ class Turnstile implements BootableWpHookInterface
    * G: バリデーションをすり抜けた場合の最終防衛ライン
    *
    * セッションに verified フラグがなければメール宛先を空にして送信を無効化し、
-   * 入力ページへ戻すフラグをセッションに立てる。
+   * エラーフラッシュフラグをセッションに立てる。
    *
    * @param mixed $Mail   MW WP Form Mail オブジェクト
    * @param mixed $values フォームデータ
@@ -282,7 +308,6 @@ class Turnstile implements BootableWpHookInterface
    */
   public function blockMail(mixed $Mail, mixed $values, mixed $Data): mixed
   {
-    // current_filter() は mwform_mail_* / mwform_auto_mail_* なので validation キーに変換する
     $validation_key = \str_replace(
       ['mwform_auto_mail_', 'mwform_mail_'],
       'mwform_validation_',
@@ -294,51 +319,13 @@ class Turnstile implements BootableWpHookInterface
       return $Mail;
     }
 
-    \error_log('[Turnstile] verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
-
     $Mail->to  = '';
     $Mail->cc  = '';
     $Mail->bcc = '';
 
-    $_SESSION['turnstile_blocked'] = true;
-
-    return $Mail;
-  }
-
-  /**
-   * H: blocked フラグが立っていれば入力ページへリダイレクト
-   *
-   * MW WP Form がリダイレクト多用で Referer が残らないため、
-   * エラーメッセージはセッションのフラッシュメッセージで渡す。
-   */
-  public function redirectOnBlocked(): void
-  {
-    \error_log('[Turnstile] redirectOnBlocked called: blocked=' . (isset($_SESSION['turnstile_blocked']) ? 'true' : 'false') . ' flash=' . (isset($_SESSION['turnstile_error_flash']) ? 'true' : 'false'));
-
-    if (empty($_SESSION['turnstile_blocked'])) {
-      return;
-    }
-
-    unset($_SESSION['turnstile_blocked']);
-
-    // is_page() でフォームページ URL を特定する
-    $input_url = null;
-    foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
-      if (\is_page($page_id)) {
-        $input_url = \get_permalink($page_id);
-        break;
-      }
-    }
-
-    if (!$input_url) {
-      $input_url = \home_url('/');
-    }
-
-    // エラーメッセージをセッションに保存（フラッシュ）してリダイレクト
     $_SESSION['turnstile_error_flash'] = true;
 
-    \wp_safe_redirect($input_url);
-    exit;
+    return $Mail;
   }
 
   /**
@@ -357,7 +344,7 @@ class Turnstile implements BootableWpHookInterface
     unset($_SESSION['turnstile_error_flash']);
 
     $message = '<div class="turnstile-error" style="padding:16px;margin-bottom:24px;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
-      . '認証情報を確認できませんでした。お手数ですが、もう一度最初から入力してください。'
+      . Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。'
       . '</div>';
 
     return $message . $content;
