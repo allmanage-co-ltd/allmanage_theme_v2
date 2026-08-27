@@ -148,7 +148,7 @@ class Turnstile implements BootableWpHookInterface
     // 「入力画面 → 確認画面」: 古いフラグを破棄してから Turnstile 検証を行う
     if ($post_condition === 'confirm') {
       unset($_SESSION[$session_key]);
-      return $this->verifyAndSaveSession($Validation, $session_key);
+      return $this->verifyAndSaveSession($Validation, $session_key, $Data);
     }
 
     return $Validation;
@@ -196,7 +196,7 @@ class Turnstile implements BootableWpHookInterface
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
    * @param string $session_key セッションキー
    */
-  private function verifyAndSaveSession(mixed $Validation, string $session_key): mixed
+  private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
     $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
     $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
@@ -206,14 +206,16 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
-      $Validation->set_rule('turnstile-check', 'no_token', ['message' => $msg_no_token]);
+      $Data->set('turnstile-check', '');
+      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_no_token]);
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      $Validation->set_rule('turnstile-check', 'turnstile_failed', ['message' => $msg_failed]);
+      $Data->set('turnstile-check', '');
+      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_failed]);
       return $Validation;
     }
 
