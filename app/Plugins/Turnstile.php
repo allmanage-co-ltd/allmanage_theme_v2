@@ -29,6 +29,9 @@ class Turnstile implements BootableWpHookInterface
   /** 検証済みフラグの有効期限（秒） */
   private const SESSION_TTL = 300;
 
+  /** 同一リクエスト内での検証済みフラグ（セッション書き込み前の二重呼び出し対策） */
+  private static array $verified_in_request = [];
+
   /**
    * 初期化処理
    */
@@ -198,9 +201,8 @@ class Turnstile implements BootableWpHookInterface
    */
   private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
-    // 同一リクエストで複数回呼ばれる場合、検証済みなら再検証しない
-    if (!empty($_SESSION[$session_key]['verified'])) {
-      \error_log('[Turnstile] verifyAndSaveSession: already verified, skip');
+    // 同一リクエスト内での二重呼び出し対策（セッション書き込み前でも静的プロパティで判定）
+    if (!empty(self::$verified_in_request[$session_key]) || !empty($_SESSION[$session_key]['verified'])) {
       return $Validation;
     }
 
@@ -222,8 +224,9 @@ class Turnstile implements BootableWpHookInterface
       return $Validation;
     }
 
-    // 検証成功: セッションに保存して確認画面へ進む
+    // 検証成功: リクエスト内フラグとセッション両方に保存して確認画面へ進む
     \error_log('[Turnstile] verifyAndSaveSession: success → saved session_key=' . $session_key);
+    self::$verified_in_request[$session_key] = true;
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
