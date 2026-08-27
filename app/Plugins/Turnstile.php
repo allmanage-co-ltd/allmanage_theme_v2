@@ -213,23 +213,26 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
-      \error_log('[Turnstile] no token, setting rule');
-      // hidden の値を "0" のまま維持し、カスタムルール turnstile_check でエラー表示させる
-      $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_no_token]);
-      \error_log('[Turnstile] rule set done');
+      // $_POST を直接空にして required ルールに引っかけるのだ
+      $_POST['turnstile-check'] = '';
+      $Data->set('turnstile-check', '');
+      \error_log('[Turnstile] no token, POST cleared, value=' . print_r($Data->get('turnstile-check'), true));
+      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_no_token]);
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      \error_log('[Turnstile] api failed, setting rule');
-      $Validation->set_rule('turnstile-check', 'turnstile_check', ['message' => $msg_failed]);
+      $_POST['turnstile-check'] = '';
+      $Data->set('turnstile-check', '');
+      \error_log('[Turnstile] api failed, POST cleared');
+      $Validation->set_rule('turnstile-check', 'required', ['message' => $msg_failed]);
       return $Validation;
     }
 
-    // 検証成功: フィールドを "1" にセットしてカスタムルールを通過させ、セッションにも保存
-    $Data->set('turnstile-check', '1');
+    // 検証成功: セッションにのみ保存（フィールド値はそのまま）
+    \error_log('[Turnstile] verify success');
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
