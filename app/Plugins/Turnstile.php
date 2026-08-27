@@ -165,17 +165,23 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
   {
+    $form_key    = \str_replace('mwform_validation_', '', \current_filter());
+    $shared_Data = \MW_WP_Form_Data::connect($form_key);
+    $msg         = '認証情報を確認できませんでした。お手数ですが最初からやり直してください。';
+
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
-      $_SESSION['turnstile_blocked'] = true;
+      $shared_Data->set('turnstile-check', '0');
+      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg]);
       return $Validation;
     }
 
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
-      $_SESSION['turnstile_blocked'] = true;
+      $shared_Data->set('turnstile-check', '0');
+      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg]);
       return $Validation;
     }
 
