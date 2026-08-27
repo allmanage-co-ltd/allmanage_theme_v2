@@ -206,12 +206,16 @@ class Turnstile implements BootableWpHookInterface
       // noempty は空文字でもエラーになる（required は null のみエラー）
       $Data->set('turnstile-check', '');
       $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_no_token]);
-      // Data オブジェクトのインスタンスIDと form_key を確認
-      \error_log('[Turnstile] Data spl_id=' . spl_object_id($Data) . ' current_filter=' . \current_filter());
-      // noempty ルールオブジェクトが参照する Data を確認するため、直接 noempty を評価
-      $noempty_rule = new \MW_WP_Form_Validation_Rule_noEmpty($Data);
-      $noempty_msg  = $noempty_rule->rule('turnstile-check', ['message' => $msg_no_token]);
-      \error_log('[Turnstile] noempty direct result=' . var_export($noempty_msg, true));
+      \error_log('[Turnstile] Data spl_id=' . spl_object_id($Data));
+      // Validation_Rules シングルトンが持つ noempty オブジェクトの Data インスタンスIDを確認
+      $form_key = \str_replace('mwform_validation_', '', \current_filter());
+      $vRules   = \MW_WP_Form_Validation_Rules::instantiation($form_key);
+      $rules    = $vRules->get_validation_rules();
+      if (isset($rules['noempty'])) {
+        $noempty_data = (new \ReflectionProperty(\MW_WP_Form_Abstract_Validation_Rule::class, 'Data'))->getValue($rules['noempty']);
+        \error_log('[Turnstile] noempty->Data spl_id=' . ($noempty_data ? spl_object_id($noempty_data) : 'null'));
+        \error_log('[Turnstile] noempty->Data->get=' . var_export($noempty_data ? $noempty_data->get('turnstile-check') : 'N/A', true));
+      }
       return $Validation;
     }
 
