@@ -134,8 +134,6 @@ class Turnstile implements BootableWpHookInterface
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
 
-    \error_log('[Turnstile] validateMwForm called: post_condition=' . $post_condition . ' session_id=' . \session_id() . ' blocked=' . (isset($_SESSION['turnstile_blocked']) ? 'true' : 'false'));
-
     // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
       unset($_SESSION[$session_key]);
@@ -198,29 +196,28 @@ class Turnstile implements BootableWpHookInterface
    */
   private function verifyAndSaveSession(mixed $Validation, string $session_key, mixed $Data): mixed
   {
+    // 同一リクエストで複数回呼ばれる場合、検証済みなら再検証しない
+    if (!empty($_SESSION[$session_key]['verified'])) {
+      return $Validation;
+    }
+
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
 
-    \error_log('[Turnstile] verifyAndSaveSession: token=' . (empty($token) ? 'empty' : 'present'));
-
     if (empty($token)) {
-      \error_log('[Turnstile] no token → set blocked');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     $result = $this->callVerifyApi($token);
-    \error_log('[Turnstile] API result=' . \json_encode($result));
 
     if ($result === null || !$result['success']) {
-      \error_log('[Turnstile] API fail → set blocked');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     // 検証成功: セッションに保存して確認画面へ進む
-    \error_log('[Turnstile] success → save session key=' . $session_key);
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
