@@ -205,11 +205,13 @@ class Turnstile implements BootableWpHookInterface
     if (empty($token)) {
       // noempty は空文字でもエラーになる（required は null のみエラー）
       $Data->set('turnstile-check', '');
-      \error_log('[Turnstile] before set_rule, Data->get=' . var_export($Data->get('turnstile-check'), true));
       $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_no_token]);
-      // is_valid_field() で即時評価してエラーが出るか確認
-      $field_valid = $Validation->is_valid_field('turnstile-check');
-      \error_log('[Turnstile] is_valid_field result=' . var_export($field_valid, true) . ' errors=' . var_export($Data->get_validation_errors(), true));
+      // Data オブジェクトのインスタンスIDと form_key を確認
+      \error_log('[Turnstile] Data spl_id=' . spl_object_id($Data) . ' current_filter=' . \current_filter());
+      // noempty ルールオブジェクトが参照する Data を確認するため、直接 noempty を評価
+      $noempty_rule = new \MW_WP_Form_Validation_Rule_noEmpty($Data);
+      $noempty_msg  = $noempty_rule->rule('turnstile-check', ['message' => $msg_no_token]);
+      \error_log('[Turnstile] noempty direct result=' . var_export($noempty_msg, true));
       return $Validation;
     }
 
