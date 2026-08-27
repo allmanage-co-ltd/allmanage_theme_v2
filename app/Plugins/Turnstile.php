@@ -134,6 +134,7 @@ class Turnstile implements BootableWpHookInterface
 
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
+    \error_log('[Turnstile] validateMwForm: filter=' . \current_filter() . ' condition=' . $post_condition . ' session_key=' . $session_key);
 
     // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
