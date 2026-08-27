@@ -205,7 +205,11 @@ class Turnstile implements BootableWpHookInterface
     if (empty($token)) {
       // noempty は空文字でもエラーになる（required は null のみエラー）
       $Data->set('turnstile-check', '');
+      \error_log('[Turnstile] before set_rule, Data->get=' . var_export($Data->get('turnstile-check'), true));
       $Validation->set_rule('turnstile-check', 'noempty', ['message' => $msg_no_token]);
+      // is_valid_field() で即時評価してエラーが出るか確認
+      $field_valid = $Validation->is_valid_field('turnstile-check');
+      \error_log('[Turnstile] is_valid_field result=' . var_export($field_valid, true) . ' errors=' . var_export($Data->get_validation_errors(), true));
       return $Validation;
     }
 
