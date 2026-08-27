@@ -36,9 +36,10 @@ class Turnstile implements BootableWpHookInterface
   {
     \define('TURNSTILE_SECRET_KEY', Config::get('recaptcha.turnstile.secretkey') ?? '');
 
-    // セッション開始（mwform バリデーション前に必要）
-    \add_action('init', function (): void {
-      if (\session_status() === \PHP_SESSION_NONE) {
+    // セッション開始（mwform バリデーション前・ヘッダー送信前に必要）
+    // init アクションではヘッダー送信済みになることがあるため plugins_loaded で開始する
+    \add_action('plugins_loaded', function (): void {
+      if (\session_status() === \PHP_SESSION_NONE && !\headers_sent()) {
         \session_start();
       }
     }, 1);
@@ -133,6 +134,7 @@ class Turnstile implements BootableWpHookInterface
 
     $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
     $post_condition = $Data->get_post_condition();
+    \error_log('[Turnstile] post_condition=' . var_export($post_condition, true));
 
     // 「戻る」: 検証済みフラグを破棄して何もしない
     if ($post_condition === 'back') {
@@ -221,6 +223,7 @@ class Turnstile implements BootableWpHookInterface
     }
 
     $result = $this->callVerifyApi($token);
+    \error_log('[Turnstile] api result=' . var_export($result, true));
 
     if ($result === null || !$result['success']) {
       $shared_Data->set('turnstile-check', '0');
