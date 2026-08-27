@@ -168,9 +168,11 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, string $session_key): mixed
   {
-    $session = $_SESSION[$session_key] ?? [];
+    $session       = $_SESSION[$session_key] ?? [];
+    $error_message = Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。';
 
     if (empty($session['verified'])) {
+      $this->setMwFormValidationError($session_key, $error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
@@ -178,6 +180,7 @@ class Turnstile implements BootableWpHookInterface
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
+      $this->setMwFormValidationError($session_key, $error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
