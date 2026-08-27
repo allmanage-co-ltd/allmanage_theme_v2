@@ -2,6 +2,24 @@
 
 ---
 
+## [Unreleased] - 2026-08-27
+
+### Changed
+- `app/Plugins/Turnstile.php`: MW WP Form バリデーションをセッション管理方式に改修
+  - `validateMwForm()` を3引数化し `$Data->get_post_condition()` で遷移状態を正確に判定
+  - `confirm` 時に Turnstile API 検証 → 成功時にセッションへ `verified` フラグを保存
+  - `complete` 時にセッションフラグを検証 → 未保持の場合はバリデーションエラーで送信ブロック
+  - `back` 時はセッションフラグを破棄
+  - `SESSION_TTL`（5分）を定数化し、期限切れ時は自動クリア＆エラーを返すように
+  - `boot()` 内で `init` フックに `session_start()` を追加
+  - バリデーション hook 登録を `10, 2` → `10, 3` に変更（`$Data` を受け取るため）
+  - 旧 `verify()` メソッドを削除し `verifyAndSaveSession()` / `validateSessionOnComplete()` に分割
+  - G: `blockMail()` を追加 — セッション未検証時はメール宛先を空にして送信を完全ブロック
+  - H: `redirectOnBlocked()` を追加 — `template_redirect` で入力ページへ `wp_safe_redirect()`
+  - I: `showBlockedError()` を追加 — `?turnstile_error=1` クエリ付きURLでエラーバナーを表示
+
+---
+
 ## [Unreleased] - 2026-07-16 (3)
 
 ### Fixed

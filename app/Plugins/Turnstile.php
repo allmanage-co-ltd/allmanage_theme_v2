@@ -15,9 +15,20 @@ use WP_Post;
  * - MW WP Form / ログインフォームへの Turnstile 挿入・検証を担う
  * - フォームの追加は config の forms にスラッグ+フォームIDを足すだけ
  * - ログイン対応は config の login.use_add_turnstile を true にするだけ
+ *
+ * セッション管理フロー:
+ * - confirm: Turnstile API 検証 → 成功時にセッションへ verified フラグを保存
+ * - complete: セッションの verified フラグを確認 → なければバリデーションエラー
+ * - back: セッションの verified フラグを破棄
  */
 class Turnstile implements BootableWpHookInterface
 {
+  /** セッションキーのプレフィックス */
+  private const SESSION_PREFIX = 'turnstile_verified_';
+
+  /** 検証済みフラグの有効期限（秒） */
+  private const SESSION_TTL = 300;
+
   /**
    * 初期化処理
    */
@@ -25,17 +36,36 @@ class Turnstile implements BootableWpHookInterface
   {
     \define('TURNSTILE_SECRET_KEY', Config::get('recaptcha.turnstile.secretkey') ?? '');
 
+    // セッション開始（mwform バリデーション前に必要）
+    \add_action('init', function (): void {
+      if (\session_status() === \PHP_SESSION_NONE) {
+        \session_start();
+      }
+    }, 1);
+
     if (Config::get('recaptcha.turnstile.mwform.use_add_turnstile')) {
       \add_action('wp_enqueue_scripts', $this->enqueueMwFormScript(...));
 
       foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
+        $form_key = 'mw-wp-form-' . $form_id;
+
         \add_filter(
-          'mwform_validation_mw-wp-form-' . $form_id,
+          'mwform_validation_' . $form_key,
           $this->validateMwForm(...),
           10,
-          2
+          3
         );
+
+        // G: バリデーションをすり抜けた場合の最終防衛ライン（メール送信停止）
+        \add_filter('mwform_mail_' . $form_key, $this->blockMail(...), 10, 3);
+        \add_filter('mwform_auto_mail_' . $form_key, $this->blockMail(...), 10, 3);
       }
+
+      // H: メール停止フラグが立っていれば入力ページへリダイレクト
+      \add_action('template_redirect', $this->redirectOnBlocked(...), 1);
+
+      // I: 入力ページ上部にエラーメッセージを表示
+      \add_filter('the_content', $this->showBlockedError(...), 20);
     }
 
     if (Config::get('recaptcha.turnstile.login.use_add_turnstile')) {
@@ -86,38 +116,114 @@ class Turnstile implements BootableWpHookInterface
   /**
    * MW WP Form バリデーション処理
    *
-   * - 「戻る」遷移時はスキップ
-   * - 「送信（確認→完了）」遷移時はスキップ
-   * - トークン未取得・検証失敗時にエラーをセット
+   * MW WP Form の post_condition で遷移状態を判定し、セッションで検証済みフラグを管理する。
+   * - confirm: Turnstile API 検証 → 成功時にセッション保存
+   * - complete: セッションの verified フラグ確認 → なければエラー
+   * - back: セッションの verified フラグを破棄
+   *
+   * @param mixed $Validation MW WP Form Validation オブジェクト
+   * @param mixed $data       POST データ配列
+   * @param mixed $Data       MW WP Form Data オブジェクト
    */
-  public function validateMwForm(mixed $Validation, mixed $data): mixed
+  public function validateMwForm(mixed $Validation, mixed $data, mixed $Data): mixed
   {
-    static $is_verified = false;
-
-    if ($is_verified || empty($data)) {
+    if (empty($data) || !\is_object($Data)) {
       return $Validation;
     }
 
-    $has_word = function (array $words, array $form_data): bool {
-      foreach ($form_data as $val) {
-        if (\is_array($val)) continue;
-        if (\in_array($val, $words, true)) return true;
-      }
-      return false;
-    };
+    $session_key    = self::SESSION_PREFIX . \md5(\current_filter());
+    $post_condition = $Data->get_post_condition();
 
-    $back_words   = Config::get('recaptcha.turnstile.mwform.back_words') ?? [];
-    $submit_words = Config::get('recaptcha.turnstile.mwform.submit_words') ?? [];
-
-    if ($has_word($back_words, $data) || (isset($data['submitBack']) && $data['submitBack'] === 'back')) {
+    // 「戻る」: 検証済みフラグを破棄して何もしない
+    if ($post_condition === 'back') {
+      unset($_SESSION[$session_key]);
       return $Validation;
     }
 
-    if ($has_word($submit_words, $data)) {
+    // 「確認画面 → 完了（メール送信）」: セッションの verified フラグを検証する
+    if ($post_condition === 'complete') {
+      return $this->validateSessionOnComplete($Validation, $Data, $session_key);
+    }
+
+    // 「入力画面 → 確認画面」: 古いフラグを破棄してから Turnstile 検証を行う
+    if ($post_condition === 'confirm') {
+      unset($_SESSION[$session_key]);
+      return $this->verifyAndSaveSession($Validation, $session_key);
+    }
+
+    return $Validation;
+  }
+
+  /**
+   * complete 遷移時のセッション検証
+   *
+   * セッションに verified フラグがなければバリデーションエラーをセットする
+   *
+   * @param mixed  $Validation  MW WP Form Validation オブジェクト
+   * @param mixed  $Data        MW WP Form Data オブジェクト
+   * @param string $session_key セッションキー
+   */
+  private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
+  {
+    $session = $_SESSION[$session_key] ?? [];
+
+    if (empty($session['verified'])) {
+      $Data->set('turnstile-check', '');
+      $Validation->set_rule('turnstile-check', 'required', [
+        'message' => '認証情報を確認できませんでした。お手数ですが最初からやり直してください。',
+      ]);
       return $Validation;
     }
 
-    return $this->verify($Validation, 'turnstile-check');
+    $verified_at = (int) ($session['verified_at'] ?? 0);
+    if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
+      unset($_SESSION[$session_key]);
+      $Data->set('turnstile-check', '');
+      $Validation->set_rule('turnstile-check', 'required', [
+        'message' => '認証の有効期限が切れました。お手数ですが最初からやり直してください。',
+      ]);
+      return $Validation;
+    }
+
+    return $Validation;
+  }
+
+  /**
+   * confirm 遷移時の Turnstile API 検証 + セッション保存
+   *
+   * 検証成功時はセッションに verified フラグと検証時刻を保存する
+   *
+   * @param mixed  $Validation  MW WP Form Validation オブジェクト
+   * @param string $session_key セッションキー
+   */
+  private function verifyAndSaveSession(mixed $Validation, string $session_key): mixed
+  {
+    $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
+    $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
+
+    $token = isset($_POST['cf-turnstile-response'])
+      ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
+      : '';
+
+    if (empty($token)) {
+      $Validation->set_rule('turnstile-check', 'no_token', ['message' => $msg_no_token]);
+      return $Validation;
+    }
+
+    $result = $this->callVerifyApi($token);
+
+    if ($result === null || !$result['success']) {
+      $Validation->set_rule('turnstile-check', 'turnstile_failed', ['message' => $msg_failed]);
+      return $Validation;
+    }
+
+    // 検証成功: セッションに保存
+    $_SESSION[$session_key] = [
+      'verified'    => true,
+      'verified_at' => \time(),
+    ];
+
+    return $Validation;
   }
 
   /**
@@ -156,30 +262,77 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
-   * Turnstile トークンを検証し、失敗時は Validation にエラーをセットして返す
-   * MW WP Form のバリデーション処理から呼ぶ共通メソッド
+   * G: バリデーションをすり抜けた場合の最終防衛ライン
+   *
+   * セッションに verified フラグがなければメール宛先を空にして送信を無効化し、
+   * 入力ページへ戻すフラグをセッションに立てる。
+   *
+   * @param mixed $Mail   MW WP Form Mail オブジェクト
+   * @param mixed $values フォームデータ
+   * @param mixed $Data   MW WP Form Data オブジェクト
    */
-  private function verify(mixed $Validation, string $rule_key): mixed
+  public function blockMail(mixed $Mail, mixed $values, mixed $Data): mixed
   {
-    $msg_no_token = Config::get('recaptcha.turnstile.messages.no_token') ?? '';
-    $msg_failed   = Config::get('recaptcha.turnstile.messages.turnstile_failed') ?? '';
+    // current_filter() は mwform_mail_* / mwform_auto_mail_* なので validation キーに変換する
+    $validation_key = \str_replace(
+      ['mwform_auto_mail_', 'mwform_mail_'],
+      'mwform_validation_',
+      \current_filter()
+    );
+    $session_key = self::SESSION_PREFIX . \md5($validation_key);
 
-    $token = isset($_POST['cf-turnstile-response'])
-      ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
-      : '';
-
-    if (empty($token)) {
-      $Validation->set_rule($rule_key, 'no_token', ['message' => $msg_no_token]);
-      return $Validation;
+    if (!empty($_SESSION[$session_key]['verified'])) {
+      return $Mail;
     }
 
-    $result = $this->callVerifyApi($token);
+    \error_log('Turnstile: verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
 
-    if ($result === null || !$result['success']) {
-      $Validation->set_rule($rule_key, 'turnstile_failed', ['message' => $msg_failed]);
+    $Mail->to  = '';
+    $Mail->cc  = '';
+    $Mail->bcc = '';
+
+    $_SESSION['turnstile_blocked'] = true;
+
+    return $Mail;
+  }
+
+  /**
+   * H: メール停止フラグが立っていれば入力ページへリダイレクト
+   *
+   * mwform_complete_url_ は完了画面URL未設定時に発火しないため
+   * template_redirect で自前リダイレクトする。
+   */
+  public function redirectOnBlocked(): void
+  {
+    if (empty($_SESSION['turnstile_blocked'])) {
+      return;
     }
 
-    return $Validation;
+    unset($_SESSION['turnstile_blocked']);
+
+    $referer   = \wp_get_referer();
+    $input_url = $referer ?: \home_url('/');
+
+    \wp_safe_redirect(\add_query_arg('turnstile_error', '1', $input_url));
+    exit;
+  }
+
+  /**
+   * I: 入力ページ上部にエラーメッセージを表示する
+   *
+   * @param string $content 投稿コンテンツ
+   */
+  public function showBlockedError(string $content): string
+  {
+    if (empty($_GET['turnstile_error'])) {
+      return $content;
+    }
+
+    $message = '<div class="turnstile-error" style="padding:16px;margin-bottom:24px;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
+      . '認証情報を確認できませんでした。お手数ですが、もう一度最初から入力してください。'
+      . '</div>';
+
+    return $message . $content;
   }
 
   /**
