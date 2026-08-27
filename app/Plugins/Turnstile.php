@@ -62,11 +62,7 @@ class Turnstile implements BootableWpHookInterface
       }
 
       // H: メール停止フラグが立っていれば入力ページへリダイレクト
-      // MWF のリダイレクト直前（mwform_before_redirect_）に割り込む
-      foreach (\array_values($this->resolveMwFormIds()) as $form_id) {
-        \add_action('mwform_before_redirect_mw-wp-form-' . $form_id, $this->redirectOnBlocked(...));
-      }
-      // confirm 失敗時（MWF がリダイレクトしない場合）は template_redirect で拾う
+      // MWF の _template_redirect (priority 10000) より前に実行する
       \add_action('template_redirect', $this->redirectOnBlocked(...), 9999);
 
       // I: 入力ページ上部にエラーメッセージを表示
