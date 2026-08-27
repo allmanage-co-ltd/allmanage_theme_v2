@@ -8,3 +8,4 @@ CLAUDE.local.md
 
 # HooksAutoLoader キャッシュ（環境依存・git管理外）
 storage/cache/
+_plugin/
