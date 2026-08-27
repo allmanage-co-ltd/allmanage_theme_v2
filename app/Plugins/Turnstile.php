@@ -165,7 +165,7 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
   {
-    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile complete] session_id=' . \session_id() . ' key=' . $session_key . ' data=' . \print_r($_SESSION[$session_key] ?? 'NONE', true) . '</pre>';
+    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile complete] session_id=' . \esc_html(\session_id()) . ' key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key] ?? 'NONE', true)) . '</pre>';
 
     $session = $_SESSION[$session_key] ?? [];
 
@@ -225,7 +225,7 @@ class Turnstile implements BootableWpHookInterface
       'verified_at' => \time(),
     ];
 
-    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile confirm] session_id=' . \session_id() . ' key=' . $session_key . ' data=' . \print_r($_SESSION[$session_key], true) . '</pre>';
+    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile confirm] session_id=' . \esc_html(\session_id()) . ' key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key], true)) . '</pre>';
 
     return $Validation;
   }
@@ -285,7 +285,7 @@ class Turnstile implements BootableWpHookInterface
     );
     $session_key = self::SESSION_PREFIX . \md5($validation_key);
 
-    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile blockMail] session_id=' . \session_id() . ' validation_key=' . $validation_key . ' session_key=' . $session_key . ' data=' . \print_r($_SESSION[$session_key] ?? 'NONE', true) . '</pre>';
+    echo '<pre style="background:#fff;color:#000;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0">[Turnstile blockMail] session_id=' . \esc_html(\session_id()) . ' validation_key=' . \esc_html($validation_key) . ' session_key=' . \esc_html($session_key) . ' data=' . \esc_html(\print_r($_SESSION[$session_key] ?? 'NONE', true)) . '</pre>';
 
     if (!empty($_SESSION[$session_key]['verified'])) {
       return $Mail;
