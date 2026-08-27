@@ -36,10 +36,9 @@ class Turnstile implements BootableWpHookInterface
   {
     \define('TURNSTILE_SECRET_KEY', Config::get('recaptcha.turnstile.secretkey') ?? '');
 
-    // セッション開始（mwform バリデーション前・ヘッダー送信前に必要）
-    // init アクションではヘッダー送信済みになることがあるため plugins_loaded で開始する
-    \add_action('plugins_loaded', function (): void {
-      if (\session_status() === \PHP_SESSION_NONE && !\headers_sent()) {
+    // セッション開始（mwform バリデーション前に必要）
+    \add_action('init', function (): void {
+      if (\session_status() === \PHP_SESSION_NONE) {
         \session_start();
       }
     }, 1);
@@ -166,23 +165,17 @@ class Turnstile implements BootableWpHookInterface
    */
   private function validateSessionOnComplete(mixed $Validation, mixed $Data, string $session_key): mixed
   {
-    $form_key    = \str_replace('mwform_validation_', '', \current_filter());
-    $shared_Data = \MW_WP_Form_Data::connect($form_key);
-    $msg         = '認証情報を確認できませんでした。お手数ですが最初からやり直してください。';
-
     $session = $_SESSION[$session_key] ?? [];
 
     if (empty($session['verified'])) {
-      $shared_Data->set('turnstile-check', '0');
-      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg]);
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     $verified_at = (int) ($session['verified_at'] ?? 0);
     if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
       unset($_SESSION[$session_key]);
-      $shared_Data->set('turnstile-check', '0');
-      $Validation->set_rule('turnstile-check', 'nofalse', ['message' => $msg]);
+      $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
@@ -297,7 +290,7 @@ class Turnstile implements BootableWpHookInterface
       return $Mail;
     }
 
-    \error_log('[Turnstile] blockMail: verified フラグなし (' . \current_filter() . ')');
+    \error_log('[Turnstile] verified フラグなしのためメール送信を停止 (' . \current_filter() . ')');
 
     $Mail->to  = '';
     $Mail->cc  = '';
