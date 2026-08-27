@@ -304,9 +304,8 @@ class Turnstile implements BootableWpHookInterface
   /**
    * H: blocked フラグが立っていれば入力ページへリダイレクト
    *
-   * confirm 時の Turnstile 検証失敗・complete 時のセッション不正の両方をここで捌く。
-   * template_redirect はバリデーションフィルタ後・テンプレート出力前に発火するため、
-   * 確認画面が表示される前に入力ページへ戻せる。
+   * MW WP Form がリダイレクト多用で Referer が残らないため、
+   * エラーメッセージはセッションのフラッシュメッセージで渡す。
    */
   public function redirectOnBlocked(): void
   {
@@ -326,23 +325,30 @@ class Turnstile implements BootableWpHookInterface
     }
 
     if (!$input_url) {
-      $input_url = \wp_get_referer() ?: \home_url('/');
+      $input_url = \home_url('/');
     }
 
-    \wp_safe_redirect(\add_query_arg('turnstile_error', '1', $input_url));
+    // エラーメッセージをセッションに保存（フラッシュ）してリダイレクト
+    $_SESSION['turnstile_error_flash'] = true;
+
+    \wp_safe_redirect($input_url);
     exit;
   }
 
   /**
    * I: 入力ページ上部にエラーメッセージを表示する
    *
+   * セッションのフラッシュメッセージを使い、表示後に即削除する。
+   *
    * @param string $content 投稿コンテンツ
    */
   public function showBlockedError(string $content): string
   {
-    if (empty($_GET['turnstile_error'])) {
+    if (empty($_SESSION['turnstile_error_flash'])) {
       return $content;
     }
+
+    unset($_SESSION['turnstile_error_flash']);
 
     $message = '<div class="turnstile-error" style="padding:16px;margin-bottom:24px;color:#b00;font-weight:bold;background-color:#ffeaea;border:1px solid #b00;">'
       . '認証情報を確認できませんでした。お手数ですが、もう一度最初から入力してください。'
