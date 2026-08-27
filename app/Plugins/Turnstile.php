@@ -311,15 +311,7 @@ class Turnstile implements BootableWpHookInterface
 
     unset($_SESSION['turnstile_blocked']);
 
-    // is_page() で現在のフォームページ URL を特定する（POST中でも利用可）
-    $input_url = null;
-    foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
-      if (\is_page($page_id)) {
-        $input_url = \get_permalink($page_id);
-        break;
-      }
-    }
-    $input_url ??= \wp_get_referer() ?: \home_url('/');
+    $input_url = \wp_get_referer() ?: \home_url('/');
 
     \wp_safe_redirect(\add_query_arg('turnstile_error', '1', $input_url));
     exit;
