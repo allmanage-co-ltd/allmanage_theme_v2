@@ -199,6 +199,7 @@ class Turnstile implements BootableWpHookInterface
   {
     // 同一リクエストで複数回呼ばれる場合、検証済みなら再検証しない
     if (!empty($_SESSION[$session_key]['verified'])) {
+      \error_log('[Turnstile] verifyAndSaveSession: already verified, skip');
       return $Validation;
     }
 
@@ -207,6 +208,7 @@ class Turnstile implements BootableWpHookInterface
       : '';
 
     if (empty($token)) {
+      \error_log('[Turnstile] verifyAndSaveSession: no token → blocked');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
@@ -214,11 +216,13 @@ class Turnstile implements BootableWpHookInterface
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
+      \error_log('[Turnstile] verifyAndSaveSession: API fail → blocked');
       $_SESSION['turnstile_blocked'] = true;
       return $Validation;
     }
 
     // 検証成功: セッションに保存して確認画面へ進む
+    \error_log('[Turnstile] verifyAndSaveSession: success → saved session_key=' . $session_key);
     $_SESSION[$session_key] = [
       'verified'    => true,
       'verified_at' => \time(),
@@ -305,6 +309,8 @@ class Turnstile implements BootableWpHookInterface
    */
   public function redirectOnBlocked(): void
   {
+    \error_log('[Turnstile] redirectOnBlocked called: blocked=' . (isset($_SESSION['turnstile_blocked']) ? 'true' : 'false') . ' flash=' . (isset($_SESSION['turnstile_error_flash']) ? 'true' : 'false'));
+
     if (empty($_SESSION['turnstile_blocked'])) {
       return;
     }
