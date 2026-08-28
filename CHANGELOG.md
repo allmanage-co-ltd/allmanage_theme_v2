@@ -2,7 +2,33 @@
 
 ---
 
+## [Unreleased] - 2026-08-28
+
+### Added
+- `config/mwform.php`: `admin-mail-overrides` キーを追加
+  - フォームIDごとに to/cc/bcc/subject を定義できる
+  - `switch_field` + `cases` でフィールド値に応じた切り替えも対応
+
+### Changed
+- `app/Plugins/MwFormHook.php`: `entryAutobackMyMail` を config 駆動に変更
+  - `boot()` で `admin-mail-overrides` のフォームIDに対して自動的にフックを登録
+  - 定義済みフォームIDが 0 件の場合はフック自体登録しない
+
+---
+
 ## [Unreleased] - 2026-08-27
+
+### Added
+- `mw.php`: PHP 7 対応のスニペット版 Turnstile 統合ファイルを新規作成
+  - クラス版（`Turnstile.php`）で解決した問題をすべて反映
+  - `MW_WP_Form_Data::connect()->set_validation_error()` で直接バリデーションエラーをセット（`view_flg` の確認画面残留を防止）
+  - `mwform_redirect_url_` フィルタで入力ページへの戻りを保証（保険）
+  - セッションフラッシュ方式でエラーメッセージを表示（`the_content` フック）
+  - PHPSESSID 消去による complete バイパスを `set_validation_error` + `blockMail` の二重防衛で阻止
+  - `wp_get_referer()` を廃止しセッションフラッシュ + `get_permalink()` に変更
+  - `error_log` デバッグログをすべて削除
+
+---
 
 ### Changed
 - `app/Plugins/Turnstile.php`: Turnstile バイパス問題を根本解決

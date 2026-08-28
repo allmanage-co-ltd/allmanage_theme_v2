@@ -21,9 +21,10 @@ class MwFormHook implements BootableWpHookInterface
       return;
     }
 
-    // $contact_form_id = 1;
-    // add_filter("mwform_validation_mw-wp-form-{$contact_form_id}", $this->validation(...), 10, 3);
-    // add_filter("mwform_admin_mail_mw-wp-form-{$contact_form_id}", $this->entryAutobackMyMail(...), 10, 3);
+    // config/mwform.php の admin-mail-overrides に定義されたフォームIDごとにフックを登録
+    foreach (\array_keys(Config::get('mwform.admin-mail-overrides') ?? []) as $form_id) {
+      add_filter("mwform_admin_mail_mw-wp-form-{$form_id}", $this->entryAutobackMyMail(...), 10, 3);
+    }
 
     add_filter('mwform_default_content', $this->defaultContent(...));
     add_filter('mwform_default_settings', $this->defaultSettings(...), 10, 2);
@@ -83,21 +84,31 @@ class MwFormHook implements BootableWpHookInterface
   /**
    * 管理者メール制御
    *
-   * - フォーム内容に応じて送信先や件名を切り替える
+   * - config/mwform.php の admin-mail-overrides を参照して to/cc/bcc/subject を上書きする
+   * - switch_field が定義されていればその値で cases を引き、なければ default を使用する
    */
-  public function entryAutobackMyMail($Mail_raw, $values, $Data)
+  public function entryAutobackMyMail(mixed $Mail_raw, mixed $values, mixed $Data): mixed
   {
-    // switch ($Data->get('hoge')) {
-    //     case 'fuga':
-    //         $Mail_raw->to      = '';
-    //         $Mail_raw->bcc     = '';
-    //         $Mail_raw->subject = '';
-    //         // no break
-    //     default:
-    //         $Mail_raw->to      = '';
-    //         $Mail_raw->bcc     = '';
-    //         $Mail_raw->subject = '';
-    // }
+    $form_id  = $Mail_raw->id ?? null;
+    $overrides = Config::get("mwform.admin-mail-overrides.{$form_id}");
+
+    if (empty($overrides)) {
+      return $Mail_raw;
+    }
+
+    // switch_field が指定されていれば値に対応する cases を探す
+    $setting = $overrides['default'] ?? [];
+    if (!empty($overrides['switch_field'])) {
+      $field_value = $Data->get($overrides['switch_field']);
+      $setting     = $overrides['cases'][$field_value] ?? $setting;
+    }
+
+    foreach (['to', 'cc', 'bcc', 'subject'] as $key) {
+      if (isset($setting[$key]) && $setting[$key] !== '') {
+        $Mail_raw->$key = $setting[$key];
+      }
+    }
+
     return $Mail_raw;
   }
 
