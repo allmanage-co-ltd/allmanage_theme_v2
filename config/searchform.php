@@ -24,15 +24,13 @@ return [
     'news' => [
       'add_taxonomies' => true,
       'add_meta_keys' => [
-        'acf_is_public',
-        'acf_check',
-        'acf_price',
+        config('acf.news') ?? [],
       ],
     ],
     // 'works' => [
     //     'add_taxonomies' => false,
     //     'add_meta_keys' => [
-    //         //
+    //         config('acf.works') ?? [],
     //     ],
     // ],
   ]

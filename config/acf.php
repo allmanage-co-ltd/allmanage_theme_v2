@@ -15,6 +15,6 @@ return [
     'acf_check',
   ],
   'works' => [
-    // ...
+    // '',
   ]
 ];
