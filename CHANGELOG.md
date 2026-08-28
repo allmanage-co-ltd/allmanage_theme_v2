@@ -4,6 +4,9 @@
 
 ## [Unreleased] - 2026-08-28
 
+### Removed
+- `config/recaptcha.php`: 未使用の `back_words` / `submit_words` を削除
+
 ### Added
 - `config/mwform.php`: `admin-mail-overrides` キーを追加
   - フォームIDごとに to/cc/bcc/subject を定義できる
