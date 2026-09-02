@@ -2,6 +2,18 @@
 
 ---
 
+## [Unreleased] - 2026-09-02
+
+### Fixed
+- `app/Plugins/Turnstile.php`: Turnstile チェックなしで確認画面へ進める問題を修正
+  - `mwform_after_send_` フックを追加し、メール送信後に `verified` → `sent` フラグへ切り替える
+  - `complete_passed` フラグ（リクエストスコープ）を導入し、`blockMail` の判定を確実化
+  - `sent_replay` 経由では `complete_passed` を立てないことで完了画面後の再送信を防止
+  - `consumeSentFlags` を `shutdown` フックで実行し、完了画面表示後に `sent` フラグを破棄
+  - `filterRedirectUrl` の条件に `error_raised` フラグを追加し、誤リダイレクトを防止
+
+---
+
 ## [Unreleased] - 2026-08-28
 
 ### Removed

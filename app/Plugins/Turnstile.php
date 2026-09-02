@@ -17,20 +17,43 @@ use WP_Post;
  * - ログイン対応は config の login.use_add_turnstile を true にするだけ
  *
  * セッション管理フロー:
- * - confirm: Turnstile API 検証 → 成功時にセッションへ verified フラグを保存
- *            失敗時は turnstile_error_flash をセッションに立てる
- * - mwform_redirect_url_: turnstile_error_flash があれば入力ページへ戻す
- * - the_content: フラッシュメッセージがあればエラー表示して削除
- * - back: セッションの verified フラグを破棄
- * - complete: セッションの verified フラグ確認 → なければメール送信停止
+ * - confirm:    Turnstile API 検証 → 成功時にセッションへ verified フラグを保存
+ *               失敗時は MW_WP_Form_Data にエラーをセット（入力ページへ戻す）
+ * - complete:   verified/sent フラグ確認 → 正規通過時に complete_passed を記録
+ * - after_send: verified → sent に切り替え（完了画面表示のみ許可・再送信防止）
+ * - blockMail:  complete_passed フラグがなければメール送信停止
+ * - shutdown:   sent フラグを消費して二重送信防止
+ * - back:       verified フラグを破棄
  */
 class Turnstile implements BootableWpHookInterface
 {
   /** セッションキーのプレフィックス */
   private const SESSION_PREFIX = 'turnstile_verified_';
 
-  /** 検証済みフラグの有効期限（秒） */
-  private const SESSION_TTL = 300;
+  /** 検証済みフラグの有効期限（秒）: 確認画面滞在を考慮して余裕を持たせる */
+  private const VERIFY_TTL = 1800;
+
+  /** 送信済みフラグの有効期限（秒）: 完了画面を表示する直後のリクエストのみ */
+  private const SENT_TTL = 30;
+
+  /**
+   * リクエスト内の状態を保持するプロパティ
+   *
+   * MW WP Form は同一リクエスト内でバリデーションを複数回実行する。
+   * セッション（リクエストをまたぐ状態）とは別に、
+   * 「このリクエストで検証を通過したか」をメモリ上に保持する。
+   *
+   * complete_passed: verified 経由の正規通過。メール送信を許可する。
+   * sent_replay:     sent 経由の通過。完了画面の表示のみ許可し、メール送信は許可しない。
+   *
+   * @var array<string, mixed>
+   */
+  private array $request_state = [
+    'complete_passed'  => false,
+    'sent_replay'      => false,
+    'sent_replay_keys' => [],
+    'error_raised'     => false,
+  ];
 
   /**
    * 初期化処理
@@ -52,12 +75,20 @@ class Turnstile implements BootableWpHookInterface
       foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
         $form_key = 'mw-wp-form-' . $form_id;
 
-        // confirm: Turnstile 検証 / back: セッション破棄
+        // confirm: Turnstile 検証 / back: セッション破棄 / complete: セッション確認
         \add_filter(
           'mwform_validation_' . $form_key,
           $this->validateMwForm(...),
           10,
           3
+        );
+
+        // メール送信後に verified → sent へ切り替える
+        \add_action(
+          'mwform_after_send_' . $form_key,
+          $this->afterSend(...),
+          10,
+          1
         );
 
         // Turnstile 未検証なら入力ページへリダイレクトさせる
@@ -68,13 +99,16 @@ class Turnstile implements BootableWpHookInterface
           2
         );
 
-        // G: バリデーションをすり抜けた場合の最終防衛ライン（メール送信停止）
+        // バリデーションをすり抜けた場合の最終防衛ライン（メール送信停止）
         \add_filter('mwform_mail_' . $form_key, $this->blockMail(...), 10, 3);
         \add_filter('mwform_auto_mail_' . $form_key, $this->blockMail(...), 10, 3);
       }
 
-      // I: 入力ページ上部にエラーメッセージを表示
+      // 入力ページ上部にエラーメッセージを表示
       \add_filter('the_content', $this->showBlockedError(...), 20);
+
+      // 送信済みフラグをリクエスト終了時に消費する
+      \add_action('shutdown', $this->consumeSentFlags(...), 1);
     }
 
     if (Config::get('recaptcha.turnstile.login.use_add_turnstile')) {
@@ -125,9 +159,9 @@ class Turnstile implements BootableWpHookInterface
   /**
    * MW WP Form バリデーション処理
    *
-   * confirm: Turnstile API 検証のみ（失敗時はリダイレクトフラグをセット）
-   * back: セッションの verified フラグを破棄
-   * complete: セッションの verified フラグ確認
+   * confirm:  Turnstile API 検証のみ（失敗時はエラーをセット）
+   * back:     セッションの verified フラグを破棄
+   * complete: セッションの verified/sent フラグ確認
    *
    * @param mixed $Validation MW WP Form Validation オブジェクト
    * @param mixed $data       POST データ配列
@@ -161,29 +195,56 @@ class Turnstile implements BootableWpHookInterface
   /**
    * complete 遷移時のセッション検証
    *
-   * セッションに verified フラグがなければメール送信を停止するフラグを立てる
+   * 通過条件は2種類あり、権限が異なる。
+   *
+   * 1. sent フラグ:     メール送信完了後の完了画面表示リクエストのみ通過させる。
+   *                     complete_passed は立てないのでメール送信は許可しない。
+   * 2. verified フラグ: confirm 時の正規検証済み状態。complete_passed を立ててメール送信を許可する。
    *
    * @param mixed  $Validation  MW WP Form Validation オブジェクト
    * @param string $session_key セッションキー
    */
   private function validateSessionOnComplete(mixed $Validation, string $session_key): mixed
   {
+    // 同一リクエスト内の複数回呼び出し対策
+    if ($this->request_state['complete_passed'] || $this->request_state['sent_replay']) {
+      return $Validation;
+    }
+
     $session       = $_SESSION[$session_key] ?? [];
     $error_message = Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。';
 
+    // sent フラグ: 完了画面を表示する後続リクエストのため通過させる（メール送信は不可）
+    if (!empty($session['sent'])) {
+      $sent_at = (int) ($session['sent_at'] ?? 0);
+
+      if ($sent_at && (\time() - $sent_at) <= self::SENT_TTL) {
+        $this->request_state['sent_replay']          = true;
+        $this->request_state['sent_replay_keys'][]   = $session_key;
+        return $Validation;
+      }
+
+      // sent の有効期限切れ: フラグを破棄してエラーへ
+      unset($_SESSION[$session_key]);
+      $session = [];
+    }
+
     if (empty($session['verified'])) {
-      $this->setMwFormValidationError($session_key, $error_message);
+      $this->setMwFormValidationError($error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
 
     $verified_at = (int) ($session['verified_at'] ?? 0);
-    if (!$verified_at || (\time() - $verified_at) > self::SESSION_TTL) {
+    if (!$verified_at || (\time() - $verified_at) > self::VERIFY_TTL) {
       unset($_SESSION[$session_key]);
-      $this->setMwFormValidationError($session_key, $error_message);
+      $this->setMwFormValidationError($error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
+
+    // 正規通過: リクエスト状態にメール送信許可を記録
+    $this->request_state['complete_passed'] = true;
 
     return $Validation;
   }
@@ -208,6 +269,11 @@ class Turnstile implements BootableWpHookInterface
       return $Validation;
     }
 
+    // 前回の送信済みフラグが残っている場合は破棄する
+    if (!empty($_SESSION[$session_key]['sent'])) {
+      unset($_SESSION[$session_key]);
+    }
+
     $token = isset($_POST['cf-turnstile-response'])
       ? \sanitize_text_field(\wp_unslash($_POST['cf-turnstile-response']))
       : '';
@@ -215,7 +281,7 @@ class Turnstile implements BootableWpHookInterface
     $error_message = Config::get('recaptcha.turnstile.messages.no_token') ?? 'スパム対策のチェックを行ってください。';
 
     if (empty($token)) {
-      $this->setMwFormValidationError($session_key, $error_message);
+      $this->setMwFormValidationError($error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
@@ -223,7 +289,7 @@ class Turnstile implements BootableWpHookInterface
     $result = $this->callVerifyApi($token);
 
     if ($result === null || !$result['success']) {
-      $this->setMwFormValidationError($session_key, $error_message);
+      $this->setMwFormValidationError($error_message);
       $_SESSION['turnstile_error_flash'] = true;
       return $Validation;
     }
@@ -238,16 +304,55 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
+   * メール送信完了後に verified → sent へ切り替える
+   *
+   * セッションを即破棄すると完了画面を表示する後続リクエストで
+   * フラグが失われ、入力画面へ差し戻されてしまう。
+   * verified を落として二重送信を防ぎつつ、sent フラグを残して
+   * 完了画面の表示だけを許可する。
+   */
+  public function afterSend(mixed $Data): void
+  {
+    // このリクエストではメール送信完了として記録する
+    $this->request_state['complete_passed'] = true;
+
+    $filter_key  = \current_filter();
+    $session_key = self::SESSION_PREFIX . \md5(
+      \str_replace('mwform_after_send_', 'mwform_validation_', $filter_key)
+    );
+
+    $_SESSION[$session_key] = [
+      'verified' => false,
+      'sent'     => true,
+      'sent_at'  => \time(),
+    ];
+  }
+
+  /**
+   * 送信済みフラグをリクエスト終了時に消費する
+   *
+   * 完了画面を一度表示した時点で破棄することで、
+   * ブラウザバックによる再送信を遮断する。
+   */
+  public function consumeSentFlags(): void
+  {
+    foreach ($this->request_state['sent_replay_keys'] as $session_key) {
+      unset($_SESSION[$session_key]);
+    }
+
+    $this->request_state['sent_replay_keys'] = [];
+  }
+
+  /**
    * MW_WP_Form_Data シングルトンにバリデーションエラーをセットする
    *
    * current_filter() から form_key を抽出して Data::connect() でシングルトンを取得する。
    * clone された $Data（フィルタ第3引数）ではなくシングルトンを使うことで
    * is_valid() の判定に反映される。
    *
-   * @param string $session_key セッションキー（フィールド名として使用）
-   * @param string $message     エラーメッセージ
+   * @param string $message エラーメッセージ
    */
-  private function setMwFormValidationError(string $session_key, string $message): void
+  private function setMwFormValidationError(string $message): void
   {
     // current_filter() = 'mwform_validation_mw-wp-form-{id}' から form_key を抽出
     $form_key = (string) \str_replace('mwform_validation_', '', \current_filter());
@@ -256,14 +361,18 @@ class Turnstile implements BootableWpHookInterface
       return;
     }
 
+    $this->request_state['error_raised'] = true;
+
     $SharedData = \MW_WP_Form_Data::connect($form_key);
-    $SharedData->set_validation_error('cf-turnstile-response', 'turnstile', $message);
+    // フォームに配置した hidden フィールド名に合わせてエラーを登録する
+    $SharedData->set_validation_error('turnstile-check', 'turnstile', $message);
   }
 
   /**
    * mwform_redirect_url_ フィルタ
    *
-   * turnstile_error_flash が立っていれば入力ページへリダイレクトさせる。
+   * このリクエストでエラーを発生させた場合かつ error_flash が立っていれば
+   * 入力ページへリダイレクトさせる。
    * verifyAndSaveSession で MW WP Form のバリデーションエラーをセットするため
    * MW WP Form は自力で入力ページに戻るが、万一 URL が確認ページになった場合の保険。
    *
@@ -272,11 +381,14 @@ class Turnstile implements BootableWpHookInterface
    */
   public function filterRedirectUrl(string $url, mixed $Data): string
   {
+    if (empty($this->request_state['error_raised'])) {
+      return $url;
+    }
+
     if (empty($_SESSION['turnstile_error_flash'])) {
       return $url;
     }
 
-    // is_page() でフォームページ URL を特定する
     foreach ($this->resolveMwFormIds() as $page_id => $form_id) {
       if (\is_page($page_id)) {
         return \get_permalink($page_id) ?: $url;
@@ -322,10 +434,11 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
-   * G: バリデーションをすり抜けた場合の最終防衛ライン
+   * バリデーションをすり抜けた場合の最終防衛ライン
    *
-   * セッションに verified フラグがなければメール宛先を空にして送信を無効化し、
-   * エラーフラッシュフラグをセッションに立てる。
+   * complete_passed フラグ（verified 経由の正規通過）がなければ
+   * メール宛先を空にして送信を無効化する。
+   * sent 経由の通過（完了画面の再表示）では complete_passed が立たないためここで止まる。
    *
    * @param mixed $Mail   MW WP Form Mail オブジェクト
    * @param mixed $values フォームデータ
@@ -333,14 +446,7 @@ class Turnstile implements BootableWpHookInterface
    */
   public function blockMail(mixed $Mail, mixed $values, mixed $Data): mixed
   {
-    $validation_key = \str_replace(
-      ['mwform_auto_mail_', 'mwform_mail_'],
-      'mwform_validation_',
-      \current_filter()
-    );
-    $session_key = self::SESSION_PREFIX . \md5($validation_key);
-
-    if (!empty($_SESSION[$session_key]['verified'])) {
+    if ($this->request_state['complete_passed']) {
       return $Mail;
     }
 
@@ -354,7 +460,7 @@ class Turnstile implements BootableWpHookInterface
   }
 
   /**
-   * I: 入力ページ上部にエラーメッセージを表示する
+   * 入力ページ上部にエラーメッセージを表示する
    *
    * セッションのフラッシュメッセージを使い、表示後に即削除する。
    *
