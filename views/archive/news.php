@@ -1,11 +1,5 @@
 <?php
-// $news_query = wpquery()
-//   ->setPostType('news')
-//   ->setPerPage(10)
-//   ->setOrderByDate()
-//   ->build();
-
-$news_query = wpquery_archive('news', 10)->build();
+$news_query = wpquery_archive('news')->build();
 ?>
 
 <main class="p-news -archive">

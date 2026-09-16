@@ -16,15 +16,15 @@ declare(strict_types=1);
  * 50文字以上の記事タイトルを省略
  * 管理画面、投稿詳細ページを除く
  */
-// function mb_substr_title(string $title)
-// {
-//   $limit = 50;
-//   $exclusion = is_admin() || is_single() || is_singular();
+function mb_substr_title(string $title)
+{
+  $limit = 50;
+  $exclusion = is_admin() || is_single() || is_singular();
 
-//   if ($exclusion) return $title;
-//   if (mb_strlen($title) > $limit) {
-//     return mb_substr($title, 0, $limit) . '[...]';
-//   }
-//   return $title;
-// }
+  if ($exclusion) return $title;
+  if (mb_strlen($title) > $limit) {
+    return mb_substr($title, 0, $limit) . '[...]';
+  }
+  return $title;
+}
 // add_filter('the_title', 'mb_substr_title');
