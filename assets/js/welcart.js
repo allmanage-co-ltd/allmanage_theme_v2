@@ -1,4 +1,4 @@
-jQuery(function ($) {
+$(function () {
     /**
     * ウェルカート汎用JS
     */
