@@ -54,7 +54,7 @@ return [
             <script>
             $(function() {
                 $('.c-form__agreement .mwform-checkbox-field-text').html(
-                  '「<a href="/privacy" target="_blank" class="u-txt_ul">プライバシーポリシー</a>」に同意する'
+                  '「<a href="/privacypolicy" target="_blank" class="u-txt_ul">プライバシーポリシー</a>」に同意する'
                 );
             });
             </script>

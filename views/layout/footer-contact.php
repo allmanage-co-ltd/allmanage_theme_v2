@@ -13,6 +13,7 @@
       <div class="c-panel_contact__btn ">
         <a href="<?= url('contact') ?>">
           お問い合わせ
+        </a>
       </div>
     </div>
   </div>

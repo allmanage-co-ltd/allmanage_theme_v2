@@ -6,7 +6,7 @@ if (! is_page(['contact', 'confirm', 'thanks'])) {
 
 <?php
 the_component('totop');
-// the_cookie_modal(30, url('privacy'));
+the_cookie_modal(30, url('privacy'));
 ?>
 
 <footer class="l-footer">

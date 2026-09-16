@@ -14,7 +14,7 @@ use App\Helpers\Fmt;
  */
 class Cookie
 {
-  public function __construct(private $days = 365, private $link = '/privacy') {}
+  public function __construct(private $days = 365, private $link = '/privacypolicy') {}
 
   /**
    * Cookie同意UIを生成する

@@ -89,8 +89,12 @@ class AssetsEnqueuer implements BootableWpHookInterface
     }
   }
 
+  /** @var string[] type="module" として出力するハンドル */
+  private array $moduleHandles = [];
+
   /**
    * JSまとめて登録
+   * $scripts の値は string（src）か ['src' => string, 'module' => bool] を受け付ける
    */
   private function enqueueScripts(?array $scripts): void
   {
@@ -98,14 +102,39 @@ class AssetsEnqueuer implements BootableWpHookInterface
       return;
     }
 
-    foreach ($scripts as $handle => $src) {
+    foreach ($scripts as $handle => $script) {
+      $src    = \is_array($script) ? ($script['src'] ?? '') : $script;
+      $module = \is_array($script) && !empty($script['module']);
+      $handle = \is_string($handle) ? $handle : \md5((string) $src);
+
       wp_enqueue_script(
-        \is_string($handle) ? $handle : \md5((string) $src),
+        $handle,
         $src,
         ['jquery'],
         $this->version,
         true
       );
+
+      if ($module) {
+        $this->moduleHandles[] = $handle;
+      }
     }
+
+    add_filter('script_loader_tag', [$this, 'addModuleType'], 10, 2);
+  }
+
+  /**
+   * 指定ハンドルの script タグに type="module" を付与
+   */
+  public function addModuleType(string $tag, string $handle): string
+  {
+    if (!\in_array($handle, $this->moduleHandles, true)) {
+      return $tag;
+    }
+
+    // 既存の type 属性を除去してから module を付与
+    $tag = \preg_replace('/\stype=(["\']).*?\1/', '', $tag);
+
+    return \str_replace('<script ', '<script type="module" ', $tag);
   }
 }

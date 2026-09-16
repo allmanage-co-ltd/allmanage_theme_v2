@@ -14,12 +14,17 @@ return [
    */
   'css'       => [
     // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
+
     'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
+
     // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
     // 'https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css',
-    // 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.css',
+
+    'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.css',
+
     theme_uri() . '/assets/css/style.css',
     theme_uri() . '/assets/css/include.css',
+
     // theme_uri() . '/assets/css/welcart.css',
   ],
 
@@ -29,11 +34,21 @@ return [
   'js'        => [
     'https://cdn.jsdelivr.net/npm/flatpickr',
     'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ja.js',
+
     // 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
+
     'https://yubinbango.github.io/yubinbango/yubinbango.js',
-    // 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js',
+
+    'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js',
+
     theme_uri() . '/assets/js/scripts.js',
-    theme_uri() . '/assets/js/scripts_add.js',
+    // theme_uri() . '/assets/js/scripts_add.js',
+
+    'scripts_add' => [
+      'src'    => theme_uri() . '/assets/js/scripts_add.js',
+      'module' => true,
+    ],
+
     // theme_uri() . '/assets/js/welcart.js',
   ],
 

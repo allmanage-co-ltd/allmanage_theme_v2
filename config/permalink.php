@@ -14,7 +14,7 @@ return [
   'contact'   => home() . '/contact',
   'news'      => home() . '/news',
   'faq'       => home() . '/faq',
-  'privacy'   => home() . '/privacy',
+  'privacy'   => home() . '/privacypolicy',
 
   'instagram' => '',
   'x'         => '',

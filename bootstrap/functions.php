@@ -416,7 +416,7 @@ function the_postnavi(
  * 使用例:
  *   the_cookie_modal(60, url('privacy));
  */
-function the_cookie_modal($days = 365, $link = '/privacy'): void
+function the_cookie_modal($days = 365, $link = '/privacypolicy'): void
 {
   (new \App\Presenters\Cookie($days, $link))->render();
 }
