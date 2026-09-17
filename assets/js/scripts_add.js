@@ -7,6 +7,7 @@ import './_slick.js';
 import './_lightbox.js';
 import './_translate.js';
 import './_modal.js';
+import './_view-transition.js';
 
 /*********************************************
  * 案件専用カスタムはここ

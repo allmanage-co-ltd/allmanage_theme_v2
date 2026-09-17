@@ -68,6 +68,18 @@ function img_uri(): string
 }
 
 /**
+ * view-transition-apiに使用するインラインスタイルを出力
+ * $keyにはget_the_ID()等の一意なキーを入れる
+ *
+ * 詳細な使い方は下記参考
+ * https://ics.media/entry/230510/
+ */
+function view_transition_style(mixed $key)
+{
+  return 'style="view-transition-name: view-transition-img-' . $key . ';"';
+}
+
+/**
  * 設定値取得
  *
  * 使用例:

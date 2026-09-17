@@ -8,8 +8,8 @@
     }
   ],
   "liveSassCompile.settings.includeItems": [
-    "/assets/scss/style.scss",
-    // "/assets/scss/include.scss"
+    "**/assets/scss/style.scss",
+    // "**/assets/scss/include.scss"
   ],
   // エディタ設定
   "editor.detectIndentation": false,

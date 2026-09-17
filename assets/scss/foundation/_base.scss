@@ -209,3 +209,39 @@ textarea {
     min-height: 10em;
   }
 }
+
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.25s;
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  height: 100%;
+  object-fit: cover;
+  overflow: clip;
+}
+
+html:active-view-transition .p-staff_head__img.c-animation {
+  opacity: 1;
+  transform: none;
+}
+
+html:active-view-transition-type(back) {
+  &::view-transition-old(root) {
+    animation-name: slide-out-right;
+  }
+
+  &::view-transition-new(root) {
+    animation-name: slide-in-left;
+  }
+}
