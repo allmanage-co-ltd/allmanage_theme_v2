@@ -34,6 +34,8 @@
 
 /**
  * AIを活用して試験的に作成した「便利機能集」の一括読み込み
+ * 過去テーマやPHP7.4系で使いまわす想定のため、あえて独立させています。
+ * 今後も暇なとき増やしていきます。
  */
 require_once get_template_directory() . '/modules/index.php';
 
