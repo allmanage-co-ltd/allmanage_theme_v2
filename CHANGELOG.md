@@ -2,6 +2,19 @@
 
 ---
 
+## [Unreleased] - 2026-09-18
+
+### Added
+- `modules/index.php`: モジュール読み込みエントリポイントを新設
+  - AIで試験的に作成した便利機能モジュール集のハブファイル
+  - PHP 7.4 対応・テーマ本体のアーキテクチャに依存しない include 形式
+  - 不要な機能はこのファイルで1行コメントアウトするだけで無効化できる
+
+### Changed
+- `bootstrap/functions.php`: wp-manual の読み込みを `modules/index.php` 経由に変更
+
+---
+
 ## [Unreleased] - 2026-09-02
 
 ### Fixed
