@@ -72,7 +72,7 @@ class Log
             'section'   => $section,
             'user_id'   => $user_id,
             'is_admin'  => $is_admin ? 1 : 0,
-            'viewed_at' => current_time('mysql'),
+            'viewed_at' => current_time('mysql', true),
         ], ['%s', '%d', '%d', '%s']);
     }
 
@@ -83,7 +83,8 @@ class Log
     public function summary(int $days = 30): array
     {
         $this->ensure_table();
-        $since = gmdate('Y-m-d H:i:s', current_time('timestamp') - $days * DAY_IN_SECONDS);
+        // UTC で保存しているため比較も UTC で行う
+        $since = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
 
         $rows = $this->wpdb->get_results($this->wpdb->prepare(
             "SELECT section,
@@ -127,7 +128,7 @@ class Log
     public function prune(int $days = 365): void
     {
         $this->ensure_table();
-        $before = gmdate('Y-m-d H:i:s', current_time('timestamp') - $days * DAY_IN_SECONDS);
+        $before = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
         $this->wpdb->query($this->wpdb->prepare("DELETE FROM {$this->table} WHERE viewed_at < %s", $before));
     }
 }

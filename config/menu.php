@@ -35,6 +35,7 @@ return [
         'usces_orderlist',           // ウェルカート
         // 'csv-in-exporter',           // CSVダウンロード
         'inquiry-history',           // お問い合わせ履歴（mw form）
+        'wp-manual',    
       ],
     ],
 

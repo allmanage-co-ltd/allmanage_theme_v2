@@ -24,8 +24,14 @@
  */
 
 if (!defined('ABSPATH')) {
-    exit;
+  exit;
 }
 
 /** 管理画面マニュアル自動生成 - WP構成を解析してマニュアルページを自動生成する */
 require_once __DIR__ . '/wp-manual/wp-manual.php';
+
+/** 環境バッジ表示 - 管理バーにローカル/ステージングバッジを表示して誤操作を防ぐ */
+require_once __DIR__ . '/env-badge/env-badge.php';
+
+/** クエリモニター - ローカル/ステージング限定でクエリ数・遅いクエリを画面下部に表示する */
+require_once __DIR__ . '/query-monitor-lite/query-monitor-lite.php';
