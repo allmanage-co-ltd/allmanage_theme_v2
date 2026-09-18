@@ -1,5 +1,30 @@
 <?php
-$news_query = wpquery_archive('news')->build();
+
+$news_query = wpquery_archive('news', 12)->build();
+
+/**
+ * 上記の$args中身
+ */
+// $news_query = [
+//   'post_status'    => 'publish',
+//   'posts_per_page' => $per_page, // デフォルト10件
+//   'paged'          => max(1, get_query_var('paged') ?: get_query_var('page') ?: 1),
+//   'post_type'      => $post_type,
+//   'orderby'        => 'date',
+//   'order'          => 'DESC',
+// ];
+
+/**
+ * build()の前に追加条件も可能
+ * メソッド一覧は → app/Services/Query/MyWpQuery.php
+ */
+// $news_query = wpquery_archive('news', 12)
+//   ->setTaxQuery('news_cat', 'info')
+//   ->setMetaRelation('AND')
+//   ->setMetaQuery('pickup', 1)
+//   ->setMetaQuery('member_only', 1, '!=')
+//   ->setOrderByMeta('ranking', 'DESC')
+//   ->build();
 ?>
 
 <main class="p-news -archive">

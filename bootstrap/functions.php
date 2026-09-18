@@ -25,7 +25,7 @@
  *
  *--------------------------------------------- */
 
-
+require_once get_template_directory() . '/modules/wp-manual/wp-manual.php';
 
 /**---------------------------------------------
  *
@@ -38,7 +38,7 @@
  */
 function home(): string
 {
-  return home_url();
+    return home_url();
 }
 
 /**
@@ -46,7 +46,7 @@ function home(): string
  */
 function theme_uri(): string
 {
-  return rtrim(get_template_directory_uri(), '/');
+    return rtrim(get_template_directory_uri(), '/');
 }
 
 /**
@@ -54,7 +54,7 @@ function theme_uri(): string
  */
 function theme_dir(): string
 {
-  return rtrim(get_template_directory(), '/');
+    return rtrim(get_template_directory(), '/');
 }
 
 /**
@@ -64,7 +64,7 @@ function theme_dir(): string
  */
 function img_uri(): string
 {
-  return theme_uri() . '/assets/img';
+    return theme_uri() . '/assets/img';
 }
 
 /**
@@ -87,7 +87,7 @@ function view_transition_style(mixed $key)
  */
 function config(string $key, $default = null)
 {
-  return \App\Services\Config::get($key, $default);
+    return \App\Services\Config::get($key, $default);
 }
 
 /**
@@ -98,7 +98,7 @@ function config(string $key, $default = null)
  */
 function url(string $slug): string
 {
-  return \App\Services\Config::get("permalink.{$slug}", '/');
+    return \App\Services\Config::get("permalink.{$slug}", '/');
 }
 
 /**
@@ -115,7 +115,7 @@ function url(string $slug): string
  */
 function get_acf_fields(int $post_id, array $keys): array
 {
-  return \App\Plugins\Acf::getByKeys($post_id, $keys);
+    return \App\Plugins\Acf::getByKeys($post_id, $keys);
 }
 
 /**
@@ -129,7 +129,7 @@ function get_acf_fields(int $post_id, array $keys): array
  */
 function wpquery(): \App\Services\Query\MyWpQuery
 {
-  return \App\Services\Query\MyWpQuery::new();
+    return \App\Services\Query\MyWpQuery::new();
 }
 
 /**
@@ -141,7 +141,7 @@ function wpquery(): \App\Services\Query\MyWpQuery
  */
 function wpquery_archive(string|array $post_type, int $per_page = 10): \App\Services\Query\MyWpQuery
 {
-  return \App\Services\Query\MyWpQuery::forArchive($post_type, $per_page);
+    return \App\Services\Query\MyWpQuery::forArchive($post_type, $per_page);
 }
 
 /**
@@ -157,7 +157,7 @@ function wpquery_archive(string|array $post_type, int $per_page = 10): \App\Serv
  */
 function wpquery_tax(string|array $post_type, int $per_page = 10): \App\Services\Query\MyWpQuery
 {
-  return \App\Services\Query\MyWpQuery::forTaxArchive($post_type, $per_page);
+    return \App\Services\Query\MyWpQuery::forTaxArchive($post_type, $per_page);
 }
 
 /**
@@ -171,7 +171,7 @@ function wpquery_tax(string|array $post_type, int $per_page = 10): \App\Services
  */
 function datepicker(array $options = []): void
 {
-  (new \App\Presenters\Datepicker($options))->boot();
+    (new \App\Presenters\Datepicker($options))->boot();
 }
 
 /**
@@ -182,7 +182,7 @@ function datepicker(array $options = []): void
  */
 function slog()
 {
-  return \App\Services\Logger\Logger::app();
+    return \App\Services\Logger\Logger::app();
 }
 
 /**
@@ -197,7 +197,7 @@ function slog()
  */
 function sess(): \App\Services\Http\Session
 {
-  return new \App\Services\Http\Session();
+    return new \App\Services\Http\Session();
 }
 
 /**
@@ -211,7 +211,7 @@ function sess(): \App\Services\Http\Session
  */
 function curl(string $method, string $url, array $options = []): \App\Services\Http\Curl
 {
-  return \App\Services\Http\Curl::request($method, $url, $options);
+    return \App\Services\Http\Curl::request($method, $url, $options);
 }
 
 /**
@@ -222,7 +222,7 @@ function curl(string $method, string $url, array $options = []): \App\Services\H
  */
 function is_local(): bool
 {
-  return \App\Services\Http\Runtime::isLocal();
+    return \App\Services\Http\Runtime::isLocal();
 }
 
 /**
@@ -233,7 +233,7 @@ function is_local(): bool
  */
 function is_check_url(): bool
 {
-  return \App\Services\Http\Runtime::isCheckUrl();
+    return \App\Services\Http\Runtime::isCheckUrl();
 }
 
 /**
@@ -244,7 +244,7 @@ function is_check_url(): bool
  */
 function is_mobile(): bool
 {
-  return \App\Services\Http\Runtime::isMobile();
+    return \App\Services\Http\Runtime::isMobile();
 }
 
 /**
@@ -255,7 +255,7 @@ function is_mobile(): bool
  */
 function is_bot(): bool
 {
-  return \App\Services\Http\Runtime::isBot();
+    return \App\Services\Http\Runtime::isBot();
 }
 
 /**
@@ -270,7 +270,7 @@ function is_bot(): bool
  */
 function the_view(): void
 {
-  \App\Presenters\View::pages();
+    \App\Presenters\View::pages();
 }
 
 /**
@@ -281,7 +281,7 @@ function the_view(): void
  */
 function the_layout(string $name): void
 {
-  \App\Presenters\View::layout($name);
+    \App\Presenters\View::layout($name);
 }
 
 /**
@@ -295,7 +295,7 @@ function the_layout(string $name): void
  */
 function the_component(string $name, array $data = []): void
 {
-  \App\Presenters\View::component($name, $data);
+    \App\Presenters\View::component($name, $data);
 }
 
 /**
@@ -315,7 +315,7 @@ function the_component(string $name, array $data = []): void
  */
 function the_breadcrumb(): void
 {
-  (new \App\Presenters\Breadcrumb)->render();
+    (new \App\Presenters\Breadcrumb)->render();
 }
 
 /**
@@ -341,7 +341,7 @@ function the_breadcrumb(): void
  */
 function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '←', string $next_text = '→'): void
 {
-  (new \App\Presenters\Pagination($query, $range, $prev_text, $next_text))->render();
+    (new \App\Presenters\Pagination($query, $range, $prev_text, $next_text))->render();
 }
 
 /**
@@ -364,12 +364,12 @@ function the_pagination(\WP_Query $query, int $range = 5, string $prev_text = '�
  *   </div>
  */
 function the_postnavi(
-  string $archive_url = '/news',
-  string $archive_text = '一覧へ戻る',
-  string $prev_text = '← 前へ',
-  string $next_text = '次へ →',
+    string $archive_url = '/news',
+    string $archive_text = '一覧へ戻る',
+    string $prev_text = '← 前へ',
+    string $next_text = '次へ →',
 ): void {
-  (new \App\Presenters\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
+    (new \App\Presenters\PostNavigation($archive_url, $archive_text, $prev_text, $next_text))->render();
 }
 
 /**
@@ -380,5 +380,5 @@ function the_postnavi(
  */
 function the_cookie_modal($days = 365, $link = '/privacypolicy'): void
 {
-  (new \App\Presenters\Cookie($days, $link))->render();
+    (new \App\Presenters\Cookie($days, $link))->render();
 }
