@@ -2,6 +2,21 @@
 
 ---
 
+## [Unreleased] - 2026-10-14 (2)
+
+### Added
+- `app/Hooks/EnvBadge.php`: 環境バッジ機能をテーマ本体に統合。`BootableWpHookInterface` を実装しオートロードで自動起動
+- `app/Hooks/QueryMonitorLite.php`: クエリモニター機能をテーマ本体に統合。同上
+
+### Removed
+- `modules/env-badge/`: `app/Hooks/EnvBadge.php` に移行したため削除
+- `modules/query-monitor-lite/`: `app/Hooks/QueryMonitorLite.php` に移行したため削除
+
+### Changed
+- `modules/index.php`: env-badge・query-monitor-lite の読み込みを削除
+
+---
+
 ## [Unreleased] - 2026-10-14
 
 ### Added
