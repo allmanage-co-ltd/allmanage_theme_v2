@@ -2,6 +2,21 @@
 
 ---
 
+## [Unreleased] - 2026-10-14
+
+### Added
+- `config/seo.php`: Microsoft Clarity の計測キーを配列で管理する `clarity` キーを追加
+  - `gtags` / `gtm` と同じ構造（`['ラベル' => ['キー']]`）で複数キー対応
+- `app/Presenters/Metadata.php`: `getClarity()` メソッドを追加。`clarity` 設定からスクリプトを自動生成
+- `bootstrap/modules.php`: モジュール読み込みと案件別フィルター設定を `functions.php` から分離して新設
+- `README.md`: `modules/` ディレクトリの説明、`bootstrap/modules.php` の説明、`config/seo.php` の計測タグ設定例を追加
+
+### Changed
+- `config/seo.php`: `gtm` の設定を生タグ貼り付け方式から計測 ID のみの配列方式に変更（`gtags` と同じ構造に統一）
+- `app/Presenters/Metadata.php`: `getGtmHead()` / `getGtmBody()` を ID からスクリプトを自動生成する方式に刷新
+
+---
+
 ## [Unreleased] - 2026-09-24
 
 ### Added

@@ -229,24 +229,33 @@ class Metadata
 
   /**
    * headにGTMタグを出力する（<head>内 script タグ）
+   *
+   * - gtm はラベルキー付きの連想配列（例: ['allmanage' => ['GTM-XXXXXXXX']]）
+   * - 空のエントリはスキップする
    */
   public static function getGtmHead(): string
   {
-    $gtm_list = Config::get('seo.gtm', []);
+    $gtm_map = Config::get('seo.gtm', []);
     $html = '';
 
-    if (empty($gtm_list)) {
-      return $html;
-    }
+    foreach ((array) $gtm_map as $ids) {
+      foreach ((array) $ids as $id) {
+        if (empty($id)) {
+          continue;
+        }
 
-    foreach ($gtm_list as $gtm) {
-      $head = $gtm['head'] ?? '';
+        $html .= <<<HTML
 
-      if ($head === '') {
-        continue;
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{$id}');</script>
+    <!-- End Google Tag Manager -->
+
+    HTML;
       }
-
-      $html .= $head . "\n";
     }
 
     return $html;
@@ -254,24 +263,30 @@ class Metadata
 
   /**
    * bodyにGTMタグを出力する（<body>直後 noscript タグ）
+   *
+   * - gtm はラベルキー付きの連想配列（例: ['allmanage' => ['GTM-XXXXXXXX']]）
+   * - 空のエントリはスキップする
    */
   public static function getGtmBody(): string
   {
-    $gtm_list = Config::get('seo.gtm', []);
+    $gtm_map = Config::get('seo.gtm', []);
     $html = '';
 
-    if (empty($gtm_list)) {
-      return $html;
-    }
+    foreach ((array) $gtm_map as $ids) {
+      foreach ((array) $ids as $id) {
+        if (empty($id)) {
+          continue;
+        }
 
-    foreach ($gtm_list as $gtm) {
-      $body = $gtm['body'] ?? '';
+        $html .= <<<HTML
 
-      if ($body === '') {
-        continue;
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={$id}"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    HTML;
       }
-
-      $html .= $body . "\n";
     }
 
     return $html;
@@ -305,6 +320,42 @@ class Metadata
       gtag('config', "{$gtag}");
     </script>
     <!-- End Google tag (gtag.js) -->
+
+    HTML;
+      }
+    }
+
+    return $html;
+  }
+
+  /**
+   * headにMicrosoft Clarityタグを出力する
+   *
+   * - clarity はラベルキー付きの連想配列（例: ['allmanage' => ['yxdcw1u73i']]）
+   * - 空のエントリはスキップする
+   */
+  public static function getClarity(): string
+  {
+    $clarity_map = Config::get('seo.clarity', []);
+    $html = '';
+
+    foreach ((array) $clarity_map as $keys) {
+      foreach ((array) $keys as $key) {
+        if (empty($key)) {
+          continue;
+        }
+
+        $html .= <<<HTML
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "{$key}");
+    </script>
+    <!-- End Microsoft Clarity -->
 
     HTML;
       }

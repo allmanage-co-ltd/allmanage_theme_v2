@@ -37,46 +37,38 @@ return [
    */
   'gtags'              => [
     'allmanage' => [
-      'G-XXXXXXXX',
+      // 'G-XXXXXXXX',
     ],
     'forval'    => [
-      'G-XXXXXXXX'
+      // 'G-XXXXXXXX'
     ],
   ],
 
   /**
    * GTM
    *
-   * 計測タグを<<<HTML HTMLの中に貼り付け（インデント調整しないとIDEで警告出ます）
+   * 計測IDのみでOK
    */
   'gtm'                => [
     'allmanage' => [
-      // 'head' => <<<HTML
-
-      //   <!-- Google Tag Manager -->
-
-      //   <!-- End Google Tag Manager -->
-      // HTML,
-      // 'body' => <<<HTML
-
-      //   <!-- Google Tag Manager (noscript) -->
-
-      //   <!-- End Google Tag Manager (noscript) -->
-      // HTML,
+      // 'GTM-XXXXXXXX',
     ],
     'forval'    => [
-      // 'head' => <<<HTML
+      // 'GTM-XXXXXXXX',
+    ],
+  ],
 
-      //   <!-- Google Tag Manager -->
-
-      //   <!-- End Google Tag Manager -->
-      // HTML,
-      // 'body' => <<<HTML
-
-      //   <!-- Google Tag Manager (noscript) -->
-
-      //   <!-- End Google Tag Manager (noscript) -->
-      // HTML,
+  /**
+   * Microsoft Clarity
+   *
+   * 計測キーのみでOK
+   */
+  'clarity'            => [
+    'allmanage' => [
+      // 'XXXXXXXXXX',
+    ],
+    'forval'    => [
+      // 'XXXXXXXXXX',
     ],
   ],
 ];

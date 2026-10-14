@@ -20,6 +20,7 @@
 | `views`                   | テンプレートページのコーディング        | **必須**  |
 | `assets`                  | 画像、JS、CSS などの配置                | **必須**  |
 | `bootstrap/functions.php` | views から呼び出し可能なグローバル関数  | **必須**  |
+| `bootstrap/modules.php`   | モジュールの読み込みと案件別設定        | **必須**  |
 | `app/Project/`            | 案件固有の PHP ロジック                 | 任意      |
 | `app/Plugins/`            | プラグインの挙動を変えたい              | 任意      |
 | `app/Hooks/`              | WordPress の挙動を変えたい              | 任意      |
@@ -37,6 +38,42 @@ views/
 └── taxonomy/  # taxonomy-○○.php に対応
 ```
 
+### `modules`ディレクトリ内について
+
+案件をまたいで使い回せる独立した便利機能集です。`bootstrap/modules.php` で読み込みと案件別設定を行います。
+
+```sh
+modules/
+├── cookie-consent/      # GDPR 対応 Cookie 同意管理（バナー・モーダル・カテゴリ別ブロック）
+├── env-badge/           # 管理バーに環境バッジ表示（ローカル/ステージング/本番）
+├── query-monitor-lite/  # ローカル/ステージング限定でクエリ数・遅いクエリを画面下部に表示
+└── wp-manual/           # 管理画面マニュアル自動生成
+```
+
+各モジュールの詳細は `modules/README.md` を参照してください。
+
+### `config/seo.php` について
+
+計測タグは `config/seo.php` で管理します。計測 ID を配列に追加するだけでスクリプトが自動出力されます。
+
+```php
+// GA4（複数アカウント可）
+'gtags' => [
+  'allmanage' => ['G-XXXXXXXX'],
+  'forval'    => ['G-XXXXXXXX'],
+],
+
+// GTM（複数コンテナ可）
+'gtm' => [
+  'allmanage' => ['GTM-XXXXXXXX'],
+],
+
+// Microsoft Clarity（複数キー可）
+'clarity' => [
+  'allmanage' => ['XXXXXXXXXX'],
+],
+```
+
 ## テーマドキュメント一覧
 
 - [テーマについて（本ドキュメント）](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/README.md)
@@ -45,6 +82,7 @@ views/
 - [SASS の記載について](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/assets/scss/README.md)
 - [app ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/app/README.md)
 - [bootstrap ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/bootstrap/README.md)
+- [modules ディレクトリについて](https://github.com/allmanage-co-ltd/allmanage_theme_v2/blob/master/modules/README.md)
 
 ## 対応バージョン
 

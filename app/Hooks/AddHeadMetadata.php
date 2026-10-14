@@ -64,6 +64,7 @@ class AddHeadMetadata implements BootableWpHookInterface
     }
 
     echo Metadata::getGtags();
+    echo Metadata::getClarity();
     echo Metadata::getGtmHead();
   }
 
