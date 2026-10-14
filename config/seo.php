@@ -37,10 +37,10 @@ return [
    */
   'gtags'              => [
     'allmanage' => [
-      // 'G-XXXXXXXX',
+      'G-XXXXXXXX',
     ],
     'forval'    => [
-      // 'G-XXXXXXXX'
+      'G-XXXXXXXX'
     ],
   ],
 

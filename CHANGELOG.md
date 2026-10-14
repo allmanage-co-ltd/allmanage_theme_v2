@@ -2,6 +2,24 @@
 
 ---
 
+## [Unreleased] - 2026-09-24
+
+### Added
+- `modules/cookie-consent/`: GDPR 対応 Cookie 同意管理モジュールを新設
+  - PHP 側で同意判定し、許可されたカテゴリのタグのみ HTML に出力する設計（「許可されるまで GA4 が存在しない」方式）
+  - カテゴリ: necessary（必須）/ functional（機能）/ analytics（分析）/ marketing（広告）の 4 分類
+  - functional 非同意時は YouTube / Google Maps 等の iframe を自動ブロックしプレースホルダーを表示
+  - バナー（下部固定）→「詳細設定」モーダルでカテゴリ別トグル UI（ACF スタイルの「許可する / 拒否する」テキスト入りトグル）
+  - 保存時にページリロードして PHP 側の判定を確実に反映
+  - 同意後・拒否変更時に GA4 の `_ga` / `_ga_*` Cookie を削除
+  - 左下の常時表示ギアアイコンからいつでも設定変更可能
+  - 管理画面トップレベルメニューに「Cookie 一覧」スキャナーページを追加（既知 Cookie 定義 + ブラウザスキャン機能）
+  - `cookie_consent/primary_color` フィルターでメインカラーを 1 行で変更可能
+  - `cookie_consent/categories` フィルターで表示カテゴリをサイトごとに絞り込み可能
+  - ファイル冒頭コメントに functions.php コピペ用テンプレートを記載
+
+---
+
 ## [Unreleased] - 2026-09-18
 
 ### Changed

@@ -1,0 +1,413 @@
+/* cookie-consent.css — Cookie 同意 UI スタイル */
+
+/* ─────────────────────────────────────────────────────────────
+   CSS 変数（上書きでカスタマイズ可）
+───────────────────────────────────────────────────────────── */
+:root {
+    --cc-bg:           #ffffff;
+    --cc-surface:      #f8f9fa;
+    --cc-border:       #dee2e6;
+    --cc-text:         #212529;
+    --cc-text-muted:   #6c757d;
+    --cc-primary:      #0d6efd;  /* ← サイトのメインカラーに合わせて上書きする */
+    --cc-shadow:       0 4px 24px rgba(0, 0, 0, 0.15);
+    --cc-radius:       8px;
+    --cc-radius-sm:    4px;
+    --cc-z-banner:     9998;
+    --cc-z-modal:      9999;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   バナー（下部固定）
+───────────────────────────────────────────────────────────── */
+.cc-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--cc-z-banner);
+    background: var(--cc-bg);
+    border-top: 1px solid var(--cc-border);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+}
+
+.cc-banner__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cc-banner__text {
+    flex: 1;
+    margin: 0;
+    font-size: 14px;
+    color: var(--cc-text);
+    min-width: 200px;
+}
+
+.cc-banner__actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   モーダル
+───────────────────────────────────────────────────────────── */
+.cc-modal {
+    position: fixed;
+    inset: 0;
+    z-index: var(--cc-z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.cc-modal[hidden] {
+    display: none;
+}
+
+.cc-banner[hidden] {
+    display: none;
+}
+
+.cc-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.cc-modal__content {
+    position: relative;
+    background: var(--cc-bg);
+    border-radius: var(--cc-radius);
+    box-shadow: var(--cc-shadow);
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 32px;
+}
+
+.cc-modal__title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--cc-text);
+}
+
+.cc-modal__desc {
+    margin: 0 0 24px;
+    font-size: 14px;
+    color: var(--cc-text-muted);
+    line-height: 1.6;
+}
+
+.cc-modal__actions {
+    display: flex;
+    justify-content: center ;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+}
+
+.cc-modal__privacy {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: var(--cc-text-muted);
+    text-align: center;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   カテゴリリスト
+───────────────────────────────────────────────────────────── */
+.cc-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cc-category {
+    border-radius: var(--cc-radius-sm);
+    overflow: hidden;
+}
+
+.cc-category__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    background: var(--cc-surface);
+}
+
+.cc-category--required .cc-category__header {
+    opacity: 0.8;
+}
+
+.cc-category__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cc-category__name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cc-text);
+}
+
+.cc-category__desc {
+    font-size: 13px;
+    color: var(--cc-text-muted);
+    line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   トグルスイッチ（ACF スタイル：ラベルテキスト入り）
+   OFF時: [○ 拒否する]  ON時: [許可する ○]
+───────────────────────────────────────────────────────────── */
+.cc-toggle {
+    flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+    width: 90px;
+    height: 28px;
+    cursor: pointer;
+}
+
+.cc-toggle--always-on {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cc-primary);
+    white-space: nowrap;
+    width: auto;
+    height: auto;
+    cursor: default;
+}
+
+.cc-toggle__input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.cc-toggle__slider {
+    position: absolute;
+    inset: 0;
+    background: var(--cc-border);
+    border-radius: 28px;
+    transition: background 0.2s;
+}
+
+/* OFF 時: 「拒否する」を右側に表示 */
+.cc-toggle__slider::after {
+    content: '拒否する';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ON 時: 「許可する」を左側に表示 */
+.cc-toggle__input:checked + .cc-toggle__slider::after {
+    content: '許可する';
+    right: auto;
+    left: 8px;
+    color: #ffffff;
+}
+
+/* 玉（スライダー） */
+.cc-toggle__slider::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 3px;
+    top: 3px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.cc-toggle__input:checked + .cc-toggle__slider {
+    background: var(--cc-primary);
+}
+
+/* 玉を右端へ移動（幅90px - 玉22px - 左右margin3px×2 = 62px） */
+.cc-toggle__input:checked + .cc-toggle__slider::before {
+    transform: translateX(62px);
+}
+
+.cc-toggle__input:focus-visible + .cc-toggle__slider {
+    outline: 2px solid var(--cc-primary);
+    outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ボタン
+───────────────────────────────────────────────────────────── */
+.cc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--cc-radius-sm);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, transform 0.1s;
+    line-height: 1.4;
+    text-decoration: none;
+}
+
+.cc-btn:active {
+    transform: scale(0.97);
+}
+
+/* 「すべて許可」「Cookie を許可して表示」→ サイトのメインカラー */
+.cc-btn--accept {
+    background: var(--cc-primary);
+    color: #ffffff;
+}
+
+.cc-btn--accept:hover {
+    background: color-mix(in srgb, var(--cc-primary) 85%, #000);
+}
+
+/* 「すべて拒否」→ ニュートラルなグレー */
+.cc-btn--reject {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.cc-btn--reject:hover {
+    background: #565e64;
+}
+
+/* 「詳細設定」→ アウトラインボタン */
+.cc-btn--settings {
+    background: transparent;
+    color: var(--cc-text);
+    border: 1px solid var(--cc-border);
+}
+
+.cc-btn--settings:hover {
+    background: var(--cc-surface);
+}
+
+/* 「選択を保存」→ ニュートラルなダークグレー */
+.cc-btn--save {
+    background: #495057;
+    color: #ffffff;
+}
+
+.cc-btn--save:hover {
+    background: #343a40;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   リンク
+───────────────────────────────────────────────────────────── */
+.cc-link {
+    color: var(--cc-primary);
+    text-decoration: underline;
+}
+
+.cc-link:hover {
+    color: var(--cc-primary-dark);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   常時表示の設定ボタン（左下固定）
+───────────────────────────────────────────────────────────── */
+.cc-settings-trigger {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: var(--cc-z-banner);
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s, background 0.2s, transform 0.2s;
+}
+
+.cc-settings-trigger:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.7);
+    transform: rotate(30deg);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   iframe プレースホルダー
+───────────────────────────────────────────────────────────── */
+.cc-iframe-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 32px 16px;
+    background: var(--cc-surface);
+    border: 1px solid var(--cc-border);
+    border-radius: var(--cc-radius);
+    text-align: center;
+    min-height: 160px;
+}
+
+.cc-iframe-placeholder p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--cc-text-muted);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   レスポンシブ
+───────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .cc-banner__inner {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .cc-banner__actions {
+        flex-direction: column;
+    }
+
+    .cc-modal__content {
+        padding: 20px;
+    }
+
+    .cc-modal__actions {
+        flex-direction: column;
+    }
+
+    .cc-modal__actions .cc-btn {
+        width: 100%;
+    }
+}

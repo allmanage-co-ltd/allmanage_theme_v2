@@ -35,3 +35,6 @@ require_once __DIR__ . '/env-badge/env-badge.php';
 
 /** クエリモニター - ローカル/ステージング限定でクエリ数・遅いクエリを画面下部に表示する */
 require_once __DIR__ . '/query-monitor-lite/query-monitor-lite.php';
+
+/** Cookie 同意管理 - GDPR 対応。許可されたカテゴリのタグのみ PHP 側で出力する */
+require_once __DIR__ . '/cookie-consent/cookie-consent.php';
