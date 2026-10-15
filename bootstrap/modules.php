@@ -26,10 +26,10 @@ add_filter('cookie_consent/categories', function ($cats) {
 });
 
 /** バナーに表示するサイト名 */
-add_filter('cookie_consent/site_name', fn() => 'ALLMANAGE');
+add_filter('cookie_consent/site_name', fn() => config('seo.name'));
 
 /** プライバシーポリシーページの URL */
-add_filter('cookie_consent/privacy_url', fn() => '/privacypolicy/');
+add_filter('cookie_consent/privacy_url', fn() => url('privacypolicy'));
 
 /** サイトのメインカラー（許可ボタン・トグル ON・リンク色に適用） */
 add_filter('cookie_consent/primary_color', fn() => '#FC7231');

@@ -2,6 +2,20 @@
 
 ---
 
+## [Unreleased] - 2026-10-15
+
+### Added
+- `config/plugin.php`: Classic Editor プラグインを管理対象に追加
+
+### Changed
+- `bootstrap/modules.php`: `cookie_consent/site_name` を固定文字列から `config('seo.name')` に変更
+- `bootstrap/modules.php`: `cookie_consent/privacy_url` を固定パスから `url('privacypolicy')` に変更
+- `config/permalink.php`: `privacy` キーを `privacypolicy` にリネームし `url()` 参照先を統一
+- `views/layout/footer.php`: コメント内の `url('privacy')` を `url('privacypolicy')` に修正
+- `docker-compose.yaml`: コンテナ名に `${name}` サフィックスを追加し複数環境での競合を防止
+
+---
+
 ## [Unreleased] - 2026-10-14 (2)
 
 ### Added

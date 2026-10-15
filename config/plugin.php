@@ -37,6 +37,11 @@ return [
     //   'repo' => 'advanced-custom-fields',
     // ],
     [
+      'name' => 'Classic Editor',
+      'slug' => 'classic-editor/classic-editor.php',
+      'repo' => 'classic-editor',
+    ],
+    [
       'name' => 'Post Types Order',
       'slug' => 'post-types-order/post-types-order.php',
       'repo' => 'post-types-order',

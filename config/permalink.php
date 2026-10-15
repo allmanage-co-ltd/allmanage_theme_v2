@@ -6,18 +6,18 @@ return [
    *
    * echo url('home');
    */
-  'home'      => home() . '/',
-  'company'   => home() . '/company',
-  'recruit'   => home() . '/recruit',
-  'esg-sdgs'  => home() . '/esg-sdgs',
-  'about'     => home() . '/about',
-  'contact'   => home() . '/contact',
-  'news'      => home() . '/news',
-  'faq'       => home() . '/faq',
-  'privacy'   => home() . '/privacypolicy',
+  'home'          => home() . '/',
+  'company'       => home() . '/company',
+  'recruit'       => home() . '/recruit',
+  'esg-sdgs'      => home() . '/esg-sdgs',
+  'about'         => home() . '/about',
+  'contact'       => home() . '/contact',
+  'news'          => home() . '/news',
+  'faq'           => home() . '/faq',
+  'privacypolicy' => home() . '/privacypolicy',
 
-  'instagram' => '',
-  'x'         => '',
-  'facebook'  => '',
-  'line'      => '',
+  'instagram'     => '',
+  'x'             => '',
+  'facebook'      => '',
+  'line'          => '',
 ];
