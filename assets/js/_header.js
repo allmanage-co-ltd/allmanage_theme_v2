@@ -96,4 +96,14 @@ $(function () {
     $(window).on("scroll", handleScroll);
     handleResize();
 
+    /*********************************************
+     * 子メニュー展開
+     ********************************************/
+    document.querySelectorAll('.js-gnaviToggle').forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+            const item = toggle.closest('.js-gnaviItem');
+            const isOpen = item.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+    });
 });

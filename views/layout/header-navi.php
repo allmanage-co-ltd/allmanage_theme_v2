@@ -14,8 +14,26 @@
           the_component('searchform');
           ?>
           <ul class="l-gnavi__list">
-            <li class="l-gnavi__item ">
+            <li class="l-gnavi__item">
               <a href="<?= url('home') ?>" class="l-gnavi__link">トップ</a>
+            </li>
+            <li class="l-gnavi__item -hasChild js-gnaviItem">
+              <div class="l-gnavi__parent">
+                <a href="<?= url('home') ?>" class="l-gnavi__link">親メニュー</a>
+              </div>
+              <div class="l-gnavi__childWrap">
+                <ul class="l-gnavi__child">
+                  <li class="l-gnavi__childItem">
+                    <a href="<?= url('home') ?>" class="l-gnavi__childLink">子メニュー</a>
+                  </li>
+                  <li class="l-gnavi__childItem">
+                    <a href="<?= url('home') ?>" class="l-gnavi__childLink">子メニュー</a>
+                  </li>
+                  <li class="l-gnavi__childItem">
+                    <a href="<?= url('home') ?>" class="l-gnavi__childLink">子メニュー</a>
+                  </li>
+                </ul>
+              </div>
             </li>
             <li class="l-gnavi__item">
               <a href="<?= url('news') ?>" class="l-gnavi__link">新着情報</a>

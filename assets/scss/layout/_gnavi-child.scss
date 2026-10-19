@@ -1,0 +1,153 @@
+.l-gnavi {
+  &__item.-hasChild {
+    position: relative;
+  }
+
+  &__parent {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  &__child {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__childLink {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.6rem;
+    white-space: nowrap;
+    color: #2b1f1d;
+    text-decoration: none;
+
+    // 右端の矢印
+    &::after {
+      content: "";
+      flex-shrink: 0;
+      width: 0.6rem;
+      height: 0.6rem;
+      border-top: 2px solid currentColor;
+      border-right: 2px solid currentColor;
+      rotate: 45deg;
+      opacity: 0.4;
+      transition: opacity 0.3s, translate 0.3s;
+    }
+  }
+
+  // PC：ホバーで展開する
+  @media screen and (min-width: 992px) {
+
+    // 子メニューがあることを示す▼
+    &__item.-hasChild &__parent::after {
+      content: "";
+      width: 0.6rem;
+      height: 0.6rem;
+      margin-left: 0.8rem;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      rotate: 45deg;
+      opacity: 0.5;
+      transition: rotate 0.3s, translate 0.3s;
+    }
+
+    &__item.-hasChild:hover &__parent::after,
+    &__item.-hasChild:focus-within &__parent::after {
+      rotate: 225deg;
+    }
+
+    &__childWrap {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      z-index: 10;
+      min-width: 24rem;
+      padding-top: 1.4rem;
+      translate: -50% 0.8rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s, translate 0.3s;
+    }
+
+    &__item.-hasChild:hover &__childWrap,
+    &__item.-hasChild:focus-within &__childWrap {
+      opacity: 1;
+      visibility: visible;
+      translate: -50% 0;
+    }
+
+    &__child {
+      position: relative;
+      padding: 0.8rem 0;
+      background: #fff;
+      border-top: 3px solid $main;
+      border-radius: 0 0 0.8rem 0.8rem;
+      box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.14);
+
+      // 親を指す吹き出しの三角
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        border: 0.8rem solid transparent;
+        border-bottom-color: $main;
+        translate: -50% -3px;
+      }
+    }
+
+    &__childItem:not(:last-child) {
+      border-bottom: 1px solid #ececec;
+    }
+
+    &__childLink {
+      padding: 1.3rem 2.4rem;
+      font-size: 1.5rem;
+      transition: background-color 0.3s, padding-left 0.3s;
+
+      // ホバー時に左に出るアクセントバー
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 3px;
+        background: $main;
+        scale: 1 0;
+        transition: scale 0.3s;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          padding-left: 2.8rem;
+          background: #f5f7fa;
+
+          &::before {
+            scale: 1 1;
+          }
+
+          &::after {
+            opacity: 1;
+            translate: 0.3rem 0;
+          }
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid $main;
+        outline-offset: -2px;
+      }
+    }
+  }
+
+  // SP：子メニューは表示しない
+  @media screen and (max-width: 991.9px) {
+    &__childWrap {
+      display: none;
+    }
+  }
+}

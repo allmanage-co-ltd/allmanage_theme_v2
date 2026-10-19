@@ -560,6 +560,7 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   float: left;
   height: 100%;
   min-height: 1px;
+  display: none;
 }
 [dir=rtl] .slick-slide {
   float: right;
@@ -568,9 +569,6 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   display: block;
 }
 .slick-slide.slick-loading img {
-  display: none;
-}
-.slick-slide {
   display: none;
 }
 .slick-slide.dragging img {
@@ -797,7 +795,7 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   line-height: 1;
   display: inline-block;
   position: relative;
-  text-align: center;
+  text-align: left;
   font-weight: 500;
 }
 @media (min-width: 1400px) {
@@ -960,6 +958,133 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   }
   .l-gnavi__tel .num {
     font-size: 2.8rem;
+  }
+}
+
+.l-gnavi__item.-hasChild {
+  position: relative;
+}
+.l-gnavi__parent {
+  display: inline-flex;
+  align-items: center;
+}
+.l-gnavi__child {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.l-gnavi__childLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  white-space: nowrap;
+  color: #2b1f1d;
+  text-decoration: none;
+}
+.l-gnavi__childLink::after {
+  content: "";
+  flex-shrink: 0;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  rotate: 45deg;
+  opacity: 0.4;
+  transition: opacity 0.3s, translate 0.3s;
+}
+@media screen and (min-width: 992px) {
+  .l-gnavi__item.-hasChild .l-gnavi__parent::after {
+    content: "";
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-left: 0.8rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    rotate: 45deg;
+    opacity: 0.5;
+    transition: rotate 0.3s, translate 0.3s;
+  }
+  .l-gnavi__item.-hasChild:hover .l-gnavi__parent::after, .l-gnavi__item.-hasChild:focus-within .l-gnavi__parent::after {
+    rotate: 225deg;
+  }
+  .l-gnavi__childWrap {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 10;
+    min-width: 24rem;
+    padding-top: 1.4rem;
+    translate: -50% 0.8rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s, translate 0.3s;
+  }
+  .l-gnavi__item.-hasChild:hover .l-gnavi__childWrap, .l-gnavi__item.-hasChild:focus-within .l-gnavi__childWrap {
+    opacity: 1;
+    visibility: visible;
+    translate: -50% 0;
+  }
+  .l-gnavi__child {
+    position: relative;
+    padding: 0.8rem 0;
+    background: #fff;
+    border-top: 3px solid #FC7231;
+    border-radius: 0 0 0.8rem 0.8rem;
+    box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.14);
+  }
+  .l-gnavi__child::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    border: 0.8rem solid transparent;
+    border-bottom-color: #FC7231;
+    translate: -50% -3px;
+  }
+  .l-gnavi__childItem:not(:last-child) {
+    border-bottom: 1px solid #ececec;
+  }
+  .l-gnavi__childLink {
+    padding: 1.3rem 2.4rem;
+    font-size: 1.5rem;
+    transition: background-color 0.3s, padding-left 0.3s;
+  }
+  .l-gnavi__childLink::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: #FC7231;
+    scale: 1 0;
+    transition: scale 0.3s;
+  }
+}
+@media screen and (min-width: 992px) and (hover: hover) {
+  .l-gnavi__childLink:hover {
+    padding-left: 2.8rem;
+    background: #f5f7fa;
+  }
+  .l-gnavi__childLink:hover::before {
+    scale: 1 1;
+  }
+  .l-gnavi__childLink:hover::after {
+    opacity: 1;
+    translate: 0.3rem 0;
+  }
+}
+@media screen and (min-width: 992px) {
+  .l-gnavi__childLink:focus-visible {
+    outline: 2px solid #FC7231;
+    outline-offset: -2px;
+  }
+}
+@media screen and (max-width: 991.9px) {
+  .l-gnavi__childWrap {
+    display: none;
   }
 }
 
@@ -3638,7 +3763,7 @@ html:active-view-transition-type(back)::view-transition-new(root) {
   HOME>COMMON
 --------------------------------------------*/
 .p-home {
-  height: 40vw;
+  padding-top: 300px;
 }
 /*--------------------------------------------
   key
@@ -5018,4 +5143,6 @@ div.wpforms-container-full .wpforms-confirmation-container-full .c-btn__icon {
   width: 3.2rem !important;
   height: 0.55rem !important;
   margin-left: 0.5rem !important;
-}/*# sourceMappingURL=style.css.map */
+}
+
+/*# sourceMappingURL=style.css.map */
