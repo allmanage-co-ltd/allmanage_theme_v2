@@ -27,6 +27,10 @@ class SetupTheme implements BootableWpHookInterface
     add_action('after_switch_theme', $this->defaultPermalinkSlug(...));
     add_action('option_posts_per_page', $this->defaultPostsPerPage(...), 10, 1);
     add_action('admin_notices', $this->adminNoticeRequiredPlugins(...));
+    add_filter('auto_update_plugin', '__return_true'); // 全プラグインを自動更新
+    add_filter('auto_update_theme', '__return_true'); // 全テーマを自動更新
+    add_filter('auto_update_core_minor', '__return_true'); // コアのマイナー更新を自動化
+    add_filter('allow_major_auto_core_updates', '__return_true'); // コアのメジャー更新も許可
   }
 
   /**
@@ -58,7 +62,18 @@ class SetupTheme implements BootableWpHookInterface
   public function removeWpFeatures(): void
   {
     // デフォルトタイトルタグを削除
-    // remove_theme_support('title-tag');
+    remove_theme_support('title-tag');
+    // WordPressとAIOSEOのgeneratorタグを削除
+    remove_action('wp_head', 'wp_generator');
+    add_action('template_redirect', function () {
+      ob_start(function ($html) {
+        return preg_replace(
+          '/<meta\s+name=["\']generator["\'][^>]*>/i',
+          '',
+          $html
+        );
+      });
+    });
     // 絵文字関連の機能を無効化
     remove_filter('the_content_feed', 'wp_staticize_emoji'); // RSSフィード内の絵文字を画像化する機能を停止
     remove_filter('comment_text_rss', 'wp_staticize_emoji'); // RSSコメント内の絵文字を画像化する機能を停止

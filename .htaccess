@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Git管理ディレクトリへのアクセスを禁止
+RewriteRule (^|/)\.git(/|$) - [F,L,NC]

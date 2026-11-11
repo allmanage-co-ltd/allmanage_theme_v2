@@ -2,6 +2,13 @@
 
 ---
 
+## [Unreleased] - 2026-11-11
+
+### Added
+- `app/Hooks/SetupTheme.php`: WordPress コア（メジャー含む）・プラグイン・テーマの自動更新を有効化するフィルターを追加
+
+---
+
 ## [Unreleased] - 2026-10-15
 
 ### Added
