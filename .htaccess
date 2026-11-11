@@ -1,4 +1,19 @@
 RewriteEngine On
 
-# Git管理ディレクトリへのアクセスを禁止
+# 隠しディレクトリ・開発用ディレクトリへのアクセスを禁止
 RewriteRule (^|/)\.git(/|$) - [F,L,NC]
+RewriteRule (^|/)\.claude(/|$) - [F,L,NC]
+RewriteRule (^|/)\.codex(/|$) - [F,L,NC]
+RewriteRule (^|/)\.serena(/|$) - [F,L,NC]
+RewriteRule (^|/)\.github(/|$) - [F,L,NC]
+RewriteRule (^|/)\.vscode(/|$) - [F,L,NC]
+RewriteRule (^|/)\.phpunit\.cache(/|$) - [F,L,NC]
+
+# 開発・ビルド用ファイルへのアクセスを禁止
+<FilesMatch "\.(json|lock|neon|md|yaml|yml|sh|txt)$">
+  Require all denied
+</FilesMatch>
+
+# ログ・一時ファイルディレクトリへのアクセスを禁止
+RewriteRule (^|/)storage(/|$) - [F,L,NC]
+RewriteRule (^|/)docker(/|$) - [F,L,NC]

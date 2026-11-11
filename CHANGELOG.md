@@ -10,6 +10,8 @@
 
 ### Changed
 - `app/Hooks/SetupTheme.php`: セキュリティ関連の処理を SetupSecurity.php に移行
+- `.htaccess`: `.claude` / `.codex` / `.serena` / `.github` / `.vscode` 等の隠しディレクトリと開発用ファイルへのアクセスを禁止
+- `.htaccess.txt`: ドメインルート用の `.htaccess` 設定メモをgit管理対象として追加
 
 ---
 
