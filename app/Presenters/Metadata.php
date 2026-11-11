@@ -23,7 +23,6 @@ class Metadata
     $favicon = Config::get('seo.favicon', img_uri() . '/favicon.ico');
 
     return <<<HTML
-    <meta name="author" content="allmanage">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

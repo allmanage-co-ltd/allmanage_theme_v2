@@ -5,7 +5,11 @@
 ## [Unreleased] - 2026-11-11
 
 ### Added
+- `app/Hooks/SetupSecurity.php`: セキュリティ強化クラスを新規作成（バージョン情報隠蔽・REST API /users 削除・XML-RPC 無効化・ログインエラー汎用化・author アーカイブリダイレクト・?ver= 削除・コメント機能無効化）
 - `app/Hooks/SetupTheme.php`: WordPress コア（メジャー含む）・プラグイン・テーマの自動更新を有効化するフィルターを追加
+
+### Changed
+- `app/Hooks/SetupTheme.php`: セキュリティ関連の処理を SetupSecurity.php に移行
 
 ---
 

@@ -27,10 +27,10 @@ class SetupTheme implements BootableWpHookInterface
     add_action('after_switch_theme', $this->defaultPermalinkSlug(...));
     add_action('option_posts_per_page', $this->defaultPostsPerPage(...), 10, 1);
     add_action('admin_notices', $this->adminNoticeRequiredPlugins(...));
-    add_filter('auto_update_plugin', '__return_true'); // 全プラグインを自動更新
-    add_filter('auto_update_theme', '__return_true'); // 全テーマを自動更新
-    add_filter('auto_update_core_minor', '__return_true'); // コアのマイナー更新を自動化
-    add_filter('allow_major_auto_core_updates', '__return_true'); // コアのメジャー更新も許可
+    add_filter('auto_update_plugin', '__return_true');
+    add_filter('auto_update_theme', '__return_true');
+    add_filter('auto_update_core_minor', '__return_true');
+    add_filter('allow_major_auto_core_updates', '__return_true');
   }
 
   /**
@@ -63,39 +63,23 @@ class SetupTheme implements BootableWpHookInterface
   {
     // デフォルトタイトルタグを削除
     remove_theme_support('title-tag');
-    // WordPressとAIOSEOのgeneratorタグを削除
-    remove_action('wp_head', 'wp_generator');
-    add_action('template_redirect', function () {
-      ob_start(function ($html) {
-        return preg_replace(
-          '/<meta\s+name=["\']generator["\'][^>]*>/i',
-          '',
-          $html
-        );
-      });
-    });
     // 絵文字関連の機能を無効化
-    remove_filter('the_content_feed', 'wp_staticize_emoji'); // RSSフィード内の絵文字を画像化する機能を停止
-    remove_filter('comment_text_rss', 'wp_staticize_emoji'); // RSSコメント内の絵文字を画像化する機能を停止
-    remove_filter('wp_mail', 'wp_staticize_emoji_for_email'); // メール内の絵文字を画像化する機能を停止
-    remove_action('wp_head', 'print_emoji_detection_script', 7); // 絵文字検出用JavaScriptの出力を停止
-    remove_action('admin_print_scripts', 'print_emoji_detection_script'); // 管理画面の絵文字検出用JavaScriptを停止
-    remove_action('wp_print_styles', 'print_emoji_styles'); // フロントエンドの絵文字用CSSを停止
-    remove_action('admin_print_styles', 'print_emoji_styles'); // 管理画面の絵文字用CSSを停止
-    // REST API関連のリンクを無効化
-    remove_action('wp_head', 'rest_output_link_wp_head'); // <head>内のREST APIリンクを停止
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
     // oEmbed関連のリンクと機能を無効化
-    remove_action('wp_head', 'wp_oembed_add_discovery_links'); // oEmbed discovery用のlinkタグを停止
-    remove_action('wp_head', 'wp_oembed_add_host_js'); // oEmbed用JavaScriptの読み込みを停止
+    remove_action('wp_head', 'wp_oembed_add_discovery_links');
+    remove_action('wp_head', 'wp_oembed_add_host_js');
     // 短縮URLの出力を停止
-    remove_action('wp_head', 'wp_shortlink_wp_head'); // <head>内の短縮URL(shortlink)を停止
+    remove_action('wp_head', 'wp_shortlink_wp_head');
     // 前後の記事へのリンクを停止
-    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head'); // rel="prev" / rel="next" のlinkタグを停止
-    // 外部サービス用のリンクを停止
-    remove_action('wp_head', 'wlwmanifest_link'); // Windows Live Writerマニフェストのlinkタグを停止
-    remove_action('wp_head', 'rsd_link'); // Really Simple Discovery (RSD) のlinkタグを停止
+    remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
     // DNSプリフェッチを停止
-    remove_action('wp_head', 'wp_resource_hints', 2); // dns-prefetch等のリソースヒントを停止
+    remove_action('wp_head', 'wp_resource_hints', 2);
     // 固定ページのみ自動整形機能を無効化
     if (is_page()) {
       remove_filter('the_content', 'wpautop');
