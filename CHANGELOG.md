@@ -2,6 +2,15 @@
 
 ---
 
+## [Unreleased] - 2026-11-13
+
+### Added
+- `app/Plugins/SiteGuard.php` / `SiteGuardHook.php`: SiteGuard WP Plugin のデフォルト設定を自動注入する連携クラスを追加。SiteGuard 自身がプラグイン有効化時に初期値を書くため、`theme_defaults_applied` フラグで注入済みを管理。アップデート通知（コア・プラグイン・テーマ）はすべて無効化に設定。
+- `app/Hooks/PurgePostsHook.php`: 管理画面の投稿一覧に「全件削除」リンクを追加する機能を実装。標準投稿・カスタム投稿タイプに対応。100件ずつバッチ削除し進捗バーで状況確認できる。
+- `app/Hooks/SetupSecurity.php`: `blockSpamPost()` を追加。post タイプへのスパム新規投稿を `wp_insert_post_empty_content` フィルタでブロックする。
+
+---
+
 ## [Unreleased] - 2026-11-11
 
 ### Added

@@ -97,17 +97,18 @@ return [
       'view'       => 'csv-in-exporter.php',
     ],
     /**
-     * 管理画面にmwformのお問い合わせ履歴ページを表示
-     */
-    'inquiry-history' => [
-      'show'       => true,
-      'page_title' => 'お問い合わせ履歴',
-      'menu_title' => 'お問い合わせ履歴',
-      'capability' => 'edit_posts',
-      'slug'       => 'inquiry-history',
-      'redirect'   => 'edit.php?post_type=mw-wp-form&page=mw-wp-form-save-data',
-      'icon'       => 'dashicons-email-alt',
-      'position'   => 30,
-    ],
+   * 管理画面にmwformのお問い合わせ履歴ページを表示
+   * 202611.セキュリティ面を考慮してDB内にメールを残さない方針になりました
+   */
+    // 'inquiry-history' => [
+    //   'show'       => true,
+    //   'page_title' => 'お問い合わせ履歴',
+    //   'menu_title' => 'お問い合わせ履歴',
+    //   'capability' => 'edit_posts',
+    //   'slug'       => 'inquiry-history',
+    //   'redirect'   => 'edit.php?post_type=mw-wp-form&page=mw-wp-form-save-data',
+    //   'icon'       => 'dashicons-email-alt',
+    //   'position'   => 30,
+    // ],
   ],
 ];

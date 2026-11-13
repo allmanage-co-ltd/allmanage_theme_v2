@@ -220,7 +220,7 @@ EOT,
       ],
 
       // その他
-      'usedb'                 => true,
+      'usedb'                 => false,
       'input_url'             => '/contact/',
       'confirmation_url'      => '/contact/confirm/',
       'complete_url'          => '/contact/thanks/',

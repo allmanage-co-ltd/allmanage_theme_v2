@@ -38,6 +38,9 @@ class SetupSecurity implements BootableWpHookInterface
     add_filter('style_loader_src', $this->removeAssetVersion(...), 9999);
     add_filter('script_loader_src', $this->removeAssetVersion(...), 9999);
 
+    // post タイプへのスパム投稿をブロック（新規作成のみ対象）
+    add_filter('wp_insert_post_empty_content', $this->blockSpamPost(...), 10, 2);
+
     // コメント機能の完全無効化
     add_action('admin_init', $this->disableComments(...));
     add_filter('comments_open', '__return_false', 20, 2);
@@ -131,5 +134,23 @@ class SetupSecurity implements BootableWpHookInterface
   {
     global $wp_admin_bar;
     $wp_admin_bar->remove_menu('comments');
+  }
+
+  /**
+   * post タイプへのスパム新規投稿をブロックする。
+   * 既存記事の更新（ID あり）は通常通り処理させる。
+   *
+   * @param bool                 $maybe_empty
+   * @param array<string, mixed> $postarr
+   */
+  public function blockSpamPost(bool $maybe_empty, array $postarr): bool
+  {
+    $post_type = isset($postarr['post_type']) ? (string) $postarr['post_type'] : 'post';
+
+    if ($post_type === 'post' && empty($postarr['ID'])) {
+      return true;
+    }
+
+    return $maybe_empty;
   }
 }
