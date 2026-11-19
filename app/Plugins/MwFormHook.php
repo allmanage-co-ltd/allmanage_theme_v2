@@ -278,6 +278,7 @@ EOT,
 
       // その他
       'usedb'                 => false,
+      'querystring'           => true,
       'input_url'             => '/contact/',
       'confirmation_url'      => '/contact/confirm/',
       'complete_url'          => '/contact/thanks/',
