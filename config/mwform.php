@@ -15,7 +15,7 @@ return [
    * フォームID => [ 設定 ]
    */
   'admin-mail-overrides' => [
-    // 1 => [
+    // 999 => [
     //   'switch_field' => 'お問い合わせ先',
     //   'cases'        => [
     //     '本社' => [
@@ -48,7 +48,7 @@ return [
     'agreement' => [
       'is_page' => [
         'contact',
-        // '',
+        // 'entry',
       ],
       'script' => <<<HTML
             <script>
@@ -65,13 +65,14 @@ return [
       'is_page' => [
         'confirm',
         'thanks',
-        // '',
-        // '',
+        // 'entry-confirm',
+        // 'entry-thanks',
       ],
       'script' => <<<HTML
         <script type="text/javascript">
         $(function() {
           if ($('.mw_wp_form_confirm, .mw_wp_form_complete').length) {
+            $('.c-form__note').hide();
             $('.c-form__notes').hide();
             $('.c-form__privacy').hide();
             $('.c-form__agreement').hide();

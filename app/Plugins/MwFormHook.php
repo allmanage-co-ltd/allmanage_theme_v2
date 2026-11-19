@@ -33,6 +33,63 @@ class MwFormHook implements BootableWpHookInterface
     add_filter('user_can_richedit', $this->disableVisualEditor(...));
     add_action('load-post.php', $this->disableVisualEditor(...));
     add_action('load-post-new.php', $this->disableVisualEditor(...));
+    add_action('admin_footer', $this->disableUseDbScript(...));
+    add_filter('sanitize_post_meta_mw-wp-form', $this->forceDisableUseDb(...));
+  }
+
+  /**
+   * DB保存禁止時のエラーメッセージ
+   */
+  private const USEDB_DISABLED_MESSAGE = "2026年11月以降は履歴をデータベースに履歴を残さない方針になりました。\n※昨今の情報漏洩や不正アクセス増加に伴うリスクヘッジのため";
+
+  /**
+   * 問い合わせデータのDB保存チェックを禁止するスクリプト出力
+   *
+   * - MW WP Form 編集画面でのみ出力
+   * - チェック時にエラーを表示してチェックを外す
+   */
+  public function disableUseDbScript(): void
+  {
+    $screen = get_current_screen();
+    if (!$screen || $screen->base !== 'post' || $screen->post_type !== 'mw-wp-form') {
+      return;
+    }
+
+    $message = \esc_js(self::USEDB_DISABLED_MESSAGE);
+
+    echo <<<HTML
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const checkbox = document.querySelector('input[name="mw-wp-form[usedb]"]');
+      if (!checkbox) return;
+
+      const error = document.createElement('p');
+      error.style.cssText = 'color:#d63638;font-weight:bold;margin:4px 0 0;display:none;white-space:pre-line;';
+      error.textContent = '{$message}';
+      checkbox.closest('label').after(error);
+
+      checkbox.addEventListener('change', () => {
+        if (!checkbox.checked) return;
+        checkbox.checked = false;
+        error.style.display = 'block';
+      });
+    });
+    </script>
+    HTML;
+  }
+
+  /**
+   * 問い合わせデータのDB保存設定を強制的に無効化
+   *
+   * - フォーム設定の保存時に usedb を false に上書きする
+   */
+  public function forceDisableUseDb(mixed $value): mixed
+  {
+    if (\is_array($value) && !empty($value['usedb'])) {
+      $value['usedb'] = false;
+    }
+
+    return $value;
   }
 
   /**

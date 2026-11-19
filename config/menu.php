@@ -23,11 +23,6 @@ return [
      * 表示したいメニューを記載
      */
     'visible'        => [
-      // edit.php?post_type={post_type}
-      // 'post_type' => [
-      //   'news',
-      //   'works',
-      // ],
       'post_type' => array_keys(config('cms.post_types') ?? []),
       // admin.php?page={option}
       'option'    => [
@@ -35,7 +30,7 @@ return [
         'usces_orderlist',           // ウェルカート
         // 'csv-in-exporter',           // CSVダウンロード
         'inquiry-history',           // お問い合わせ履歴（mw form）
-        'wp-manual',    
+        'wp-manual',
       ],
     ],
 
