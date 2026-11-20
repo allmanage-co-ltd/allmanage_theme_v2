@@ -28,29 +28,30 @@ $(function () {
     });
 
     /*********************************************
-     * ヘッダースクロールアニメーション
+     * スクロールアニメーション
      ********************************************/
     const $header = $(".l-header");
 
-    $(window).on("load scroll", function () {
-        const windowHeight = $(window).height();
-        const winWidth = $(window).width();
+    const animeTargets = document.querySelectorAll(".js-anime");
+    if (animeTargets.length) {
         const winWidthSm = 941;
-        const topWindow = $(window).scrollTop();
+        // PCは画面下から1/5、SPは1/10の位置で発火
+        const bottomMargin = $(window).width() > winWidthSm ? "-20%" : "-10%";
 
-        $(".js-anime").each(function () {
-            const self = $(this);
-            const targetPosition = self.offset().top;
-            const triggerPosition =
-                winWidth > winWidthSm
-                    ? targetPosition - windowHeight + windowHeight / 5
-                    : targetPosition - windowHeight + windowHeight / 10;
+        const animeObserver = new IntersectionObserver(function (entries, obs) {
+            entries.forEach(function (entry) {
+                // 表示領域に入った、または既に通過済みの要素にクラスを付与
+                if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
+                    entry.target.classList.add("scrolled");
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { rootMargin: "0px 0px " + bottomMargin + " 0px" });
 
-            if (topWindow > triggerPosition) {
-                self.addClass("scrolled");
-            }
+        animeTargets.forEach(function (el) {
+            animeObserver.observe(el);
         });
-    });
+    }
 
     /*********************************************
      * ヘッダー表示制御
